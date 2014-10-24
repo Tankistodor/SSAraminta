@@ -1,0 +1,25 @@
+blockWallCasing1.name=Wall Casing Tier 1
+blockWallCasing2.name=Wall Casing Tier 2
+blockWallCasing3.name=Wall Casing Tier 3
+blockWallCasing4.name=Wall Casing Tier 4
+blockWallCasing5.name=Wall Casing Tier 5
+blockWallCasing6.name=Wall Casing Tier 6
+blockWallCasingBlack.name=Wall Casing Black
+blockWallCasingRed.name=Wall Casing Red
+blockWallCasingGreen.name=Wall Casing Green
+blockWallCasingBrown.name=Wall Casing Brown
+blockWallCasingBlue.name=Wall Casing Blue
+blockWallCasingPurple.name=Wall Casing Purple
+blockWallCasingCyan.name=Wall Casing Cyan
+blockWallCasingLightGray.name=Wall Casing LightGray
+blockWallCasingGray.name=Wall Casing Gray
+blockWallCasingPink.name=Wall Casing Pink
+blockWallCasingLime.name=Wall Casing Lime
+blockWallCasingYellow.name=Wall Casing Yellow
+blockWallCasingLightBlue.name=Wall Casing LightBlue
+blockWallCasingMagenta.name=Wall Casing Magenta
+blockWallCasingOrange.name=Wall Casing Orange
+blockWallCasingWhite.name=Wall Casing White
+blockWallCasing1.description=Write here anything1
+blockWallCasing1.desc=Write here anything2
+

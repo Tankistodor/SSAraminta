@@ -1,0 +1,16 @@
+[
+{
+  "modid": "ss",
+  "name": "Space Station Araminta",
+  "description": "Fun Roleplay Mod in orbital Space.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Tankistodor"],
+  "credits": "The Forge and FML guys, for making this example",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
