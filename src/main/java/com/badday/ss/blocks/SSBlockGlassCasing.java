@@ -22,7 +22,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class SSBlockGlassCasing extends SSMetaBlock implements ISSSealedBlock {
 
 	public SSBlockGlassCasing(String assetName) {
-		super(assetName, Material.rock);
+		super(assetName, Material.glass);
 		this.setBlockUnbreakable();
         this.setBlockTextureName(SS.ASSET_PREFIX + assetName);
         this.setBlockName(assetName);

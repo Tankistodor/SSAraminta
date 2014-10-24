@@ -13,7 +13,7 @@ public class SSTileEntityAirVent extends TileEntity {
 
 	private final int COOLDOWN = 20;
 	public long ticks = 0;
-	public GasPressure gasPressure;
+	public GasPressure gasPressure = null;
 	public boolean active = false;
 
 	public SSTileEntityAirVent(World w, int meta) {

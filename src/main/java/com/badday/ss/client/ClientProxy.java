@@ -1,9 +1,7 @@
 package com.badday.ss.client;
 
 import com.badday.ss.CommonProxy;
-import com.badday.ss.blocks.SSBlockAirNormalRender;
 
-import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 
 public class ClientProxy extends CommonProxy {

@@ -18,6 +18,7 @@ import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
 import com.badday.ss.api.ISSGasBlock;
 import com.badday.ss.core.utils.GasPressure;
+import com.badday.ss.core.utils.WorldUtils;
 
 public class SSBlockGas extends BlockContainer implements ISSGasBlock {
 
@@ -112,18 +113,12 @@ public class SSBlockGas extends BlockContainer implements ISSGasBlock {
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block blockBroken) {
 		if (blockBroken != Blocks.air) {
-			TileEntity tt = world.getTileEntity(x, y, z);
-			if (tt instanceof SSTileEntityGasBlock) {
-				SSTileEntityGasBlock t = (SSTileEntityGasBlock) tt;
-				if (t != null) {
-					if (t.getTileEntityAirVent() != null) {
-						((SSTileEntityAirVent) t.getTileEntityAirVent()).gasPressure.fullcheck();
-						if (SS.Debug) {
-							System.out.println("[" + SS.MODNAME + "] onNeighborBlockChange " + blockBroken.toString() + " x:" + x + " y:" + y + " z:" + z);
-						}
-
-					}
-				}
+			GasPressure gp = WorldUtils.getGasPressure(world,x,y,z);
+			if (gp != null) {
+				gp.fullcheck();
+				if (SS.Debug) {
+					System.out.println("[" + SS.MODNAME + "] onNeighborBlockChange " + blockBroken.toString() + " x:" + x + " y:" + y + " z:" + z);
+				}	
 			}
 		}
 	}
