@@ -11,6 +11,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 import com.badday.ss.blocks.SSBlockAirVent;
 import com.badday.ss.blocks.SSBlockGas;
+import com.badday.ss.blocks.SSBlockGlassCasing;
 import com.badday.ss.blocks.SSBlockWallCasing;
 import com.badday.ss.blocks.SSBlockWallCasingRaw;
 import com.badday.ss.blocks.SSFuidTextrures;
@@ -30,9 +31,11 @@ public class SSConfig {
 	// Blocks
 	public static Block ssBlockWallCasingRaw; // metal rods
 	public static Block ssBlockWallCasingC; // metal rods
+	public static Block ssBlockGlassCasing;
 	public static Block ssBlockAir;
 	public static Block ssBlockGas;
-	public static Block ssBlockAirGenerator;
+	//public static Block ssBlockAirGenerator;
+	
 
 	public static Fluid fluidMethaneGas;
 	public static Fluid fluidOxygenGas;
@@ -134,6 +137,9 @@ public class SSConfig {
 			ItemStack multiBlockStack = new ItemStack(ssBlockWallCasingC, 1, i);
 		}
 
+		ssBlockGlassCasing = new SSBlockGlassCasing("blockGlassCasing");
+		GameRegistry.registerBlock(ssBlockGlassCasing, "blockGlassCasing");
+		
 		/*
 		// AIR GENERATOR
 		ssBlockAirGenerator = (new BlockAirGenerator(0, Material.rock)).setHardness(0.5F).setStepSound(Block.soundTypeMetal);
