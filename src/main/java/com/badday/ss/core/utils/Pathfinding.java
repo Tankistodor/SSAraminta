@@ -1,6 +1,7 @@
 package com.badday.ss.core.utils;
 
 
+import com.badday.ss.SSConfig;
 import com.badday.ss.api.SSAPI;
 import net.minecraft.world.World;
 
@@ -16,7 +17,7 @@ public class Pathfinding {
   private BlockVec3 start;
   private BlockVec3 end;
   private float maxDistance = -1;
-  private float sqrMaxDistance = -1;
+  private float sqrMaxDistance = SSConfig.ssPathfinderMaxDistance*SSConfig.ssPathfinderMaxDistance; // TODO: Make right later
   private double maxDistanceToEnd = 0;
 
   private HashMap<BlockVec3, Node> openList = new HashMap<BlockVec3, Pathfinding.Node>();

@@ -76,6 +76,10 @@ public class SSConfig {
 	public static Item ssWelder;
 	
 	public static int ssAirVentBlockArea = 2048;
+	/**
+	 * max distance for pathfinder check airvent
+	 */
+	public static int ssPathfinderMaxDistance = 64; 
 
 	static Configuration config;
 
@@ -103,6 +107,7 @@ public class SSConfig {
 		System.out.println("[" + SS.MODNAME + "] Loading Global config");
 		SS.Debug = SSSettings.getBooleanFor(config, "global", "debug", SS.Debug, "Debug mode");
 		ssAirVentBlockArea = SSSettings.getIntFor(config, "global", "airVentMaxAreaSize",ssAirVentBlockArea,"Max area in bloks for Air Vent");
+		ssPathfinderMaxDistance = SSSettings.getIntFor(config, "global", "PathfinderMaxDistance",ssPathfinderMaxDistance,"Max distance for pathfinder check");
 		
 	}
 

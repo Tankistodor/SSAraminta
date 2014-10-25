@@ -51,7 +51,7 @@ public class SSCommandPathfinder extends CommandBase
               }
             }
 
-            System.out.println("[" + SS.MODNAME + "] Pathfinding work to " + x + " " + y + "" + z + " complite. Result: " + p.isDone());
+            System.out.println("[" + SS.MODNAME + "] Pathfinding work to " + x + " " + y + "" + z + " complite. Result: " + p.isDone() + " Path: " + p.getResult().size());
             System.out.println("[" + SS.MODNAME + "] Pathfinding work time: " + (time2 - time1) / 1000000.0D + "ms");
 
             if (astring.length == 4)
