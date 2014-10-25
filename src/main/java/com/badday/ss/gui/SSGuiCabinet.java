@@ -16,7 +16,7 @@ public class SSGuiCabinet extends GuiContainer {
 	private final int ROWLENGHT = 9;
 	
     public enum ResourceList {
-        IRON(new ResourceLocation("ironchest", "textures/gui/ironcontainer.png"));
+        IRON(new ResourceLocation("cabinet", "textures/gui/cabinet.png"));
         public final ResourceLocation location;
         private ResourceList(ResourceLocation loc) {
             this.location = loc;

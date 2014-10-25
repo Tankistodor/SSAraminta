@@ -14,6 +14,8 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 
 import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
+import com.badday.ss.core.utils.BlockVec3;
+import com.badday.ss.core.utils.Pathfinding;
 import com.badday.ss.core.utils.SpaceTeleporter;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -60,6 +62,22 @@ public class SpaceEventHandler
 		/*if (entity instanceof EntityPlayerMP) { 
 			updatePlayerCloakState(entity);
 		}*/
+		
+		
+		if (entity.worldObj.provider.dimensionId == SS.instance.spaceDimID) {
+			this.lastTimer++;
+			if (this.lastTimer > 40) {
+				this.lastTimer = 0;
+				long time1 = System.nanoTime();
+				Pathfinding p = new Pathfinding(entity.worldObj, new BlockVec3(entity), new BlockVec3(0,0,0));
+				p.iterate(1024);
+				long time2 = System.nanoTime();
+				if (SS.Debug) {
+					System.out.println("[" + SS.MODNAME + "] Pathfinding work complite. Result: "+p.isDone());
+					System.out.println("[" + SS.MODNAME + "] Pathfinding work time: "+(time2 - time1) / 1000000.0D + "ms");
+				}
+			}
+		}
 
 		// If player in vaccum, check and start consuming air cells
 		if (entity.worldObj.provider.dimensionId == SS.instance.spaceDimID)
