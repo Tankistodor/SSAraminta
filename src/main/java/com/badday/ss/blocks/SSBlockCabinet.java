@@ -73,7 +73,8 @@ public class SSBlockCabinet extends BlockContainer {
 	@Override
     public int getRenderType()
     {
-        return 22;
+        //return 22;
+		return SS.proxy.cabinetRenderId;
     }
 
 	public String getUnlocalizedName() {

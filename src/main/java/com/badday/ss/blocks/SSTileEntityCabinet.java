@@ -31,6 +31,7 @@ public class SSTileEntityCabinet extends TileEntity implements IInventory {
 	private int facing;
 	private boolean inventoryTouched;
 	private boolean hadStuff;
+	public boolean mirror = false;
 
 	public SSTileEntityCabinet() {
 		this(0);
@@ -362,4 +363,6 @@ public class SSTileEntityCabinet extends TileEntity implements IInventory {
 	    {
 
 	    }
+	    
+	    public ForgeDirection getOrientation() { return ForgeDirection.getOrientation(facing); }
 }

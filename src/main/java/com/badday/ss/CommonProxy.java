@@ -6,6 +6,8 @@ import net.minecraft.world.World;
 
 public class CommonProxy {
 
+	public int cabinetRenderId = 22;
+
 	public boolean hasClient()
 	  {
 	    return false;

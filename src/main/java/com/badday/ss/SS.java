@@ -87,7 +87,7 @@ public class SS {
 		SSConfig.RegisterBlocks();
 		SSConfig.RegisterGases();
 	
-		proxy.load();
+		
 		
 		spaceBiome = (new BiomeSpace(23)).setColor(0).setDisableRain().setBiomeName("Space");
 		this.spaceProviderID = 14;
@@ -110,7 +110,7 @@ public class SS {
 					renderIdBreathableAir));*/
 			
 		}
-		
+		proxy.init(event);
 		
 	}
 
