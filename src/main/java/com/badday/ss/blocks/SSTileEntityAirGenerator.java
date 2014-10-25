@@ -13,6 +13,7 @@ import com.badday.ss.SSConfig;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 
+@Deprecated
 public class SSTileEntityAirGenerator extends TileEntity implements IEnergySink
 {
     public boolean addedToEnergyNet = false;

@@ -10,6 +10,7 @@ import com.badday.ss.SSConfig;
 import com.badday.ss.core.utils.BlockVec3;
 import com.badday.ss.core.utils.WorldUtils;
 
+@Deprecated
 public class SSTileEntityGasBlock extends TileEntity {
 
 	/**

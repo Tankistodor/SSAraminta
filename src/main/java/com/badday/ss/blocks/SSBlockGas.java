@@ -20,6 +20,7 @@ import com.badday.ss.api.ISSGasBlock;
 import com.badday.ss.core.utils.GasPressure;
 import com.badday.ss.core.utils.WorldUtils;
 
+@Deprecated
 public class SSBlockGas extends BlockContainer implements ISSGasBlock {
 
 	private final int TICK_RATE = 200;
