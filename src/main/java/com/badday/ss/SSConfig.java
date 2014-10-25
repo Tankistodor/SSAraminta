@@ -2,7 +2,6 @@ package com.badday.ss;
 
 import java.io.File;
 
-import com.badday.ss.api.SSAPI;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,7 +9,9 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
+import com.badday.ss.api.SSAPI;
 import com.badday.ss.blocks.SSBlockAirVent;
+import com.badday.ss.blocks.SSBlockCabinet;
 import com.badday.ss.blocks.SSBlockGas;
 import com.badday.ss.blocks.SSBlockGlassCasing;
 import com.badday.ss.blocks.SSBlockWallCasing;
@@ -20,6 +21,7 @@ import com.badday.ss.blocks.SSTileEntityAirVent;
 import com.badday.ss.blocks.SSTileEntityGasBlock;
 import com.badday.ss.core.utils.SSSettings;
 import com.badday.ss.items.SSItemBlock;
+import com.badday.ss.items.SSItemBlockCabinet;
 import com.badday.ss.items.SSItemMetaBlockWallCasing;
 import com.badday.ss.items.SSItemMetaBlockWallCasingRaw;
 import com.badday.ss.items.SSItemScrewdriver;
@@ -72,7 +74,6 @@ public class SSConfig {
 	// Items
 	public static Item ssScrewDriver;
 	public static Item ssWelder;
-	
 	
 	public static int ssAirVentBlockArea = 2048;
 
@@ -142,6 +143,9 @@ public class SSConfig {
 
 		ssBlockGlassCasing = new SSBlockGlassCasing("blockGlassCasing");
 		GameRegistry.registerBlock(ssBlockGlassCasing, "blockGlassCasing");
+		
+		ssBlockCabinet = new SSBlockCabinet("grayCabinet");
+		GameRegistry.registerBlock(ssBlockCabinet, SSItemBlockCabinet.class, "grayCabinet");
 		
 		/*
 		// AIR GENERATOR
