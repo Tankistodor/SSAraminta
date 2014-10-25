@@ -97,6 +97,7 @@ public class SSBlockAirVent extends BlockContainer {
             return false;
         }
 
+        /*
         SSTileEntityAirGenerator gen = (SSTileEntityAirGenerator)par1World.getTileEntity(par2, par3, par4);
 
         if (gen != null)
@@ -104,7 +105,7 @@ public class SSBlockAirVent extends BlockContainer {
             //par5EntityPlayer.addChatMessage("[AirGen] Energy level: " + gen.getCurrentEnergyValue() + " Eu");
         	par5EntityPlayer.addChatComponentMessage(new ChatComponentText("[AirVent]"));
         }
-
+		*/
         return true;
     }
     
