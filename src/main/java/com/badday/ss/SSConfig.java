@@ -2,6 +2,7 @@ package com.badday.ss;
 
 import java.io.File;
 
+import com.badday.ss.api.SSAPI;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -157,7 +158,9 @@ public class SSConfig {
 		ssBlockGas = new SSBlockGas("ssBlockGas"); // gasBlock
 		GameRegistry.registerBlock(ssBlockGas, SSItemBlock.class, ssBlockGas.getUnlocalizedName());
 		GameRegistry.registerTileEntity(SSTileEntityGasBlock.class, "ssBlockGas");
-		
+
+    SSAPI.softBlocks.add(ssBlockGas);
+
 		ssBlockAirVent = new SSBlockAirVent("ssBlockAirVent");
 		GameRegistry.registerBlock(ssBlockAirVent, "ssBlockAirVent");
 		GameRegistry.registerTileEntity(SSTileEntityAirVent.class, "ssBlockAirVent");

@@ -5,7 +5,9 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.badday.ss.api.SSAPI;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.DimensionManager;
@@ -95,7 +97,7 @@ public class SS {
 		
 		MinecraftForge.EVENT_BUS.register(new AntiFallDamage());
 		MinecraftForge.EVENT_BUS.register(new SpaceEventHandler());
-		
+
 		if (FMLCommonHandler.instance().getSide().isClient()) {
 			
 			/*int renderIdBreathableAir = RenderingRegistry
@@ -138,6 +140,13 @@ public class SS {
 	}
 	
 	public void initData(){
+
+    SSAPI.softBlocks.add(Blocks.snow);
+    SSAPI.softBlocks.add(Blocks.vine);
+    SSAPI.softBlocks.add(Blocks.fire);
+    SSAPI.softBlocks.add(Blocks.air);
+
+
 		SpaceHelmets = new HashSet<Integer>();
 		Item ss = GameRegistry.findItem("IC2", "itemArmorHazmatHelmet");
 		SpaceHelmets.add(Item.getIdFromItem(ss));
