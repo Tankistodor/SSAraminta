@@ -51,6 +51,7 @@ public class SSBlockAirVent extends BlockContainer {
 		iconBuffer[ICON_SIDE_ACTIVATED] = par1IconRegister.registerIcon("ss:airgenSideActive");
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public IIcon getIcon(int side, int metadata) {
 		if (side == 0 || side == 1) {
@@ -64,10 +65,19 @@ public class SSBlockAirVent extends BlockContainer {
 
 		return iconBuffer[ICON_BOTTOM];
 	}
+	
+    /**
+     * Overridden by {@link #createTileEntity(World, int)}
+     */
+    @Override
+    public TileEntity createNewTileEntity(World w, int i)
+    {
+        return null;
+    }
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
-		return new SSTileEntityAirVent(world,meta);
+	public TileEntity createTileEntity(World world, int meta) {
+		return new SSTileEntityAirVent();
 	}
 	
 	/**

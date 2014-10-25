@@ -34,6 +34,8 @@ public class SSConfig {
 	public static Block ssBlockGlassCasing;
 	public static Block ssBlockAir;
 	public static Block ssBlockGas;
+	public static Block ssBlockAirVent;
+	public static Block ssBlockCabinet;
 	//public static Block ssBlockAirGenerator;
 	
 
@@ -60,7 +62,7 @@ public class SSConfig {
 
 	// TODO: Добавить
 
-	public static Block ssBlockAirVent;
+	
 	public static Block ssBlockAirDetector;
 	public static Block ssBlockDoorGate;
 	public static Block ssBlockDoor2Gate;

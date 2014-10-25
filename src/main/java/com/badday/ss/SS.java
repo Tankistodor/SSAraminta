@@ -13,6 +13,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 import com.badday.ss.core.utils.SpaceTpCommand;
 import com.badday.ss.events.AntiFallDamage;
+import com.badday.ss.events.SSPacketHandler;
 import com.badday.ss.events.SSTickHandlerClient;
 import com.badday.ss.events.SoundHandler;
 import com.badday.ss.events.SpaceEventHandler;
@@ -69,6 +70,8 @@ public class SS {
 			.println("["+SS.MODNAME+"] Registering sounds event handler...");
 			MinecraftForge.EVENT_BUS.register(new SoundHandler());
 		}
+		
+		SSPacketHandler.INSTANCE.ordinal();
 	}
 	
 	@EventHandler

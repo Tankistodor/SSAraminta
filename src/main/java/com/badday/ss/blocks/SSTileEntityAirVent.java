@@ -1,5 +1,6 @@
 package com.badday.ss.blocks;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -15,10 +16,6 @@ public class SSTileEntityAirVent extends TileEntity {
 	public long ticks = 0;
 	public GasPressure gasPressure = null;
 	public boolean active = false;
-
-	public SSTileEntityAirVent(World w, int meta) {
-		super();
-	}
 
 	@Override
 	public void updateEntity() {
@@ -50,12 +47,12 @@ public class SSTileEntityAirVent extends TileEntity {
 				this.gasPressure = new GasPressure(worldObj, new BlockVec3(this));
 				if (SS.Debug)
 					System.out.println("[" + SS.MODNAME + "] create gasPressure class");
-				//this.gasPressure.fullcheck();
+				// this.gasPressure.fullcheck();
 			}
 
 		}
-		
-		if (!this.worldObj.isRemote && this.ticks % (COOLDOWN*5) == 0) {
+
+		if (!this.worldObj.isRemote && this.ticks % (COOLDOWN * 5) == 0) {
 			if (this.gasPressure != null) {
 				this.gasPressure.fullcheck();
 			}
@@ -93,6 +90,16 @@ public class SSTileEntityAirVent extends TileEntity {
 	public boolean isNormalAir() {
 		// TODO Добавить определение смеси газов и пригодность для дыхания
 		return true;
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound tag) {
+		super.readFromNBT(tag);
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound tag) {
+		super.writeToNBT(tag);
 	}
 
 }

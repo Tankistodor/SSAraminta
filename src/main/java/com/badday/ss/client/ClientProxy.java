@@ -1,7 +1,10 @@
 package com.badday.ss.client;
 
+import net.minecraft.world.World;
+
 import com.badday.ss.CommonProxy;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 
 public class ClientProxy extends CommonProxy {
@@ -21,5 +24,10 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerBlockHandler(new SSBlockAirNormalRender(
 				renderIdBreathableAir));*/
 
+	}
+	
+	@Override
+	public World getClientWorld() {
+		return FMLClientHandler.instance().getClient().theWorld;
 	}
 }

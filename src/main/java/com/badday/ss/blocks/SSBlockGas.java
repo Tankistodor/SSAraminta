@@ -112,7 +112,7 @@ public class SSBlockGas extends BlockContainer implements ISSGasBlock {
 	 */
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block blockBroken) {
-		if (blockBroken != Blocks.air) {
+		if (blockBroken != Blocks.air && !world.isRemote){
 			GasPressure gp = WorldUtils.getGasPressure(world,x,y,z);
 			if (gp != null) {
 				gp.fullcheck();
