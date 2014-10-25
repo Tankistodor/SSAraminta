@@ -2,6 +2,7 @@ package com.badday.ss;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 
 public class CommonProxy {
 
@@ -31,6 +32,11 @@ public class CommonProxy {
 	public void init(FMLInitializationEvent event) {
 		
 		
+	}
+
+	public World getClientWorld() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

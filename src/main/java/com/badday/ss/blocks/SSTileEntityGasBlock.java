@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
 import com.badday.ss.core.utils.BlockVec3;
+import com.badday.ss.core.utils.WorldUtils;
 
 public class SSTileEntityGasBlock extends TileEntity {
 
@@ -36,13 +37,13 @@ public class SSTileEntityGasBlock extends TileEntity {
 		}
 		return false;
 	}
-
 	
 	public SSTileEntityAirVent getTileEntityAirVent() {
-		TileEntity t = head.getTileEntity(worldObj);
+		return WorldUtils.get(worldObj, head.x, head.y, head.z, SSTileEntityAirVent.class);
+		/*TileEntity t = head.getTileEntity(worldObj);
 		if (t instanceof SSTileEntityAirVent)
 			return (SSTileEntityAirVent) t;
-		return null;
+		return null;*/
 	}
 	
 	@Override
