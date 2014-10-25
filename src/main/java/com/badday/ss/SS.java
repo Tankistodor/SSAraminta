@@ -13,6 +13,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 
+import com.badday.ss.core.utils.SSCommandPathfinder;
 import com.badday.ss.core.utils.SpaceTpCommand;
 import com.badday.ss.events.AntiFallDamage;
 import com.badday.ss.events.SSPacketHandler;
@@ -127,6 +128,7 @@ public class SS {
 	@EventHandler
 	public void serverLoad(FMLServerStartingEvent event) {
 		event.registerServerCommand(new SpaceTpCommand());
+		event.registerServerCommand(new SSCommandPathfinder());
 	}
 	
 	public static int getEntityId() {

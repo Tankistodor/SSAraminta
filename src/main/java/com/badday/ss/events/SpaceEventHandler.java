@@ -64,7 +64,7 @@ public class SpaceEventHandler
 		}*/
 		
 		
-		if (entity.worldObj.provider.dimensionId == SS.instance.spaceDimID) {
+		/*if (entity.worldObj.provider.dimensionId == SS.instance.spaceDimID) {
 			this.lastTimer++;
 			if (this.lastTimer > 40) {
 				this.lastTimer = 0;
@@ -77,7 +77,7 @@ public class SpaceEventHandler
 					System.out.println("[" + SS.MODNAME + "] Pathfinding work time: "+(time2 - time1) / 1000000.0D + "ms");
 				}
 			}
-		}
+		}*/
 
 		// If player in vaccum, check and start consuming air cells
 		if (entity.worldObj.provider.dimensionId == SS.instance.spaceDimID)
