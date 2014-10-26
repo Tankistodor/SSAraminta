@@ -1,21 +1,26 @@
 package com.badday.ss.blocks;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.badday.ss.SS;
+import com.badday.ss.SSConfig;
 import com.google.common.collect.Lists;
 
 import cpw.mods.fml.relauncher.Side;
@@ -23,15 +28,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class SSBlockCabinet extends BlockContainer {
 
-	private IIcon[] iconBuffer;
+	@SideOnly(Side.CLIENT)
+	protected IIcon[] icons;
 	
-	public static final int GRAY_METADATA = 0;
-    public static final int O2_METADATA = 1;
-    public static final int MEDICAL_METADATA = 2;
-    public static final int FIRE_METADATA = 3;
-    public static final int BIO_METADATA = 4;
-    public static final int ELECTRIC_METADATA = 5;
-
 	public SSBlockCabinet(String asset) {
 		super(Material.iron);
 		this.setBlockName(asset);
@@ -39,7 +38,7 @@ public class SSBlockCabinet extends BlockContainer {
 		this.setBlockUnbreakable();
 		this.setStepSound(soundTypeMetal);
 		this.setCreativeTab(SS.ssTab);
-		isBlockContainer = true;
+		this.isBlockContainer = true;
 		// 30 - to blocks on vertical
 		setBlockBounds(1 / 16.0F, 1 / 16.0F, 1 / 16.0F, 15 / 16.0F, 30 / 16.0F, 15 / 16.0F);
 	}
@@ -86,9 +85,50 @@ public class SSBlockCabinet extends BlockContainer {
 
 	@Override
 	public String getUnlocalizedName() {
-		return "grayCabinet";
+		return super.getUnlocalizedName().substring(5);
 	}
 
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerBlockIcons(IIconRegister icon) {
+		this.icons = new IIcon[SSConfig.ssCabinet_unlocalizedName.length];
+		for (int i = 0; i < SSConfig.ssCabinet_unlocalizedName.length; i++) {
+			
+			if (SS.Debug)
+				System.out.println("[" + SS.MODNAME + "] try to registerBlockIcon "
+						+ SSConfig.ssCabinet_unlocalizedName[i] + " " + i);
+			
+			icons[i] = icon.registerIcon(SS.ASSET_PREFIX
+					+ SSConfig.ssCabinet_unlocalizedName[i]);
+		}
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IIcon getIcon(int side, int meta) {
+		if (meta >= this.icons.length) {
+			if (SS.Debug)
+				System.out.println("[" + SS.MODNAME + "] try getIcon Icons.length: "
+						+ this.icons.length + " meta: "+ meta);
+			return null;
+		}
+		try {
+			return this.icons[meta];
+		} catch (Exception e) {
+			SS.LogMSG("Error BlockID: " + this.getUnlocalizedName() + " Meta: " + meta);
+
+		}
+		return null;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
+		return this.getIcon(side, world.getBlockMetadata(x, y, z));
+	}	
+	
+	/*
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister par1IconRegister) {
@@ -108,8 +148,17 @@ public class SSBlockCabinet extends BlockContainer {
 	public IIcon getIcon(int side, int metadata) {
 		// TODO:
 		return iconBuffer[side];
-	}
+	}*/
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void getSubBlocks(Item par1, CreativeTabs tab, List list) {
+		for (int i = 0; i < SSConfig.ssCabinet_unlocalizedName.length; i++) {
+			list.add(new ItemStack(this, 1, i));
+		}
+	}
+	
 	@Override
 	public void onBlockAdded(World world, int i, int j, int k) {
 		super.onBlockAdded(world, i, j, k);

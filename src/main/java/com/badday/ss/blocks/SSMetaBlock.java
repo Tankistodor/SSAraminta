@@ -21,7 +21,6 @@ public abstract class SSMetaBlock extends Block {
 	public SSMetaBlock(String internamName, Material mat) {
 		super(mat);
 		this.setBlockName(internamName);
-		//this.setBlockTextureName(SS.MODNAME+":"+internamName);
 		this.setCreativeTab(SS.ssTab);
 	}	
 

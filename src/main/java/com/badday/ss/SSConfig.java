@@ -58,6 +58,9 @@ public class SSConfig {
 			"blockWallCasingPink", "blockWallCasingLime", "blockWallCasingYellow", "blockWallCasingLightBlue", "blockWallCasingMagenta",
 			"blockWallCasingOrange", "blockWallCasingWhite" };
 
+	public static final String[] ssCabinet_unlocalizedName = { "cabinetGray", "cabinetRed", "cabinetGreen", "cabinetYellow", "cabinetBlack", "cabinetWhite",
+			"cabinetO2", "cabinetMedical", "cabinetFire", "cabinetHazard", "cabinetIndustry" };
+
 	// TODO: Добавить
 	public static Block ssBlockAirDetector;
 	public static Block ssBlockDoorGate;
