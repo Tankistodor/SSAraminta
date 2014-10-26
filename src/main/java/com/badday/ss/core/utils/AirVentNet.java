@@ -33,7 +33,7 @@ public final class AirVentNet {
     airvents_coord_x.remove(to_remove.x);
   }
 
-  public static List getNearbyAirvents(World world, int x, int y, int z) {
+  public static List getNearbyAirvents(int x, int y, int z) {
     int radius = SSConfig.ssPathfinderMaxDistance;
     BlockVec3 candidate;
     List neighbours = new ArrayList();

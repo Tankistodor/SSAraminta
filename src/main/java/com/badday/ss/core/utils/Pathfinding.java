@@ -44,6 +44,11 @@ public class Pathfinding {
     nextIteration = startNode;
   }
 
+  public int find_distance() {
+
+    return -1;
+  }
+
   public void iterate() {
     iterate(PATH_ITERATIONS);
   }
