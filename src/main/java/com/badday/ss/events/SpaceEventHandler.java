@@ -2,6 +2,7 @@ package com.badday.ss.events;
 
 import java.util.HashMap;
 
+import com.badday.ss.core.utils.AirVentNet;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -38,6 +39,16 @@ public class SpaceEventHandler
 		cloakPlayersTimers = new HashMap<String, Integer>();
 		this.lastTimer = 0;
 	}
+
+  @SubscribeEvent
+  public void addToVentNet(AirNetAddEvent event) {
+    AirVentNet.registerAirVent(event.coords);
+  }
+
+  @SubscribeEvent
+  public void removeFromVentNet(AirNetRemoveEvent event) {
+    AirVentNet.removeAirVent(event.coords);
+  }
 
 	@SubscribeEvent
 	public void livingUpdate(LivingUpdateEvent event)

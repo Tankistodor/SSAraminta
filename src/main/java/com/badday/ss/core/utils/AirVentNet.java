@@ -17,7 +17,7 @@ public final class AirVentNet {
   public static ConcurrentHashMap airvents_coord_x = new ConcurrentHashMap();
 
   public static void registerAirVent(BlockVec3 vent) {
-    String index = vent.x + "-" + vent.y + '-' + vent.z;
+    String index = vent.x + ":" + vent.y + ":" + vent.z;
     airvents.put(index, vent);
 
     //Fast search, bitch!
@@ -26,7 +26,7 @@ public final class AirVentNet {
   }
 
   public static void removeAirVent(BlockVec3 vent) {
-    String index = vent.x + "-" + vent.y + '-' + vent.z;
+    String index = vent.x + ":" + vent.y + ":" + vent.z;
     airvents.remove(index);
     airvents_coord_x.remove(vent.x);
   }
