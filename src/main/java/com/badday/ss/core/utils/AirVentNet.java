@@ -16,21 +16,19 @@ public final class AirVentNet {
   public static ConcurrentHashMap airvents = new ConcurrentHashMap();
   public static ConcurrentHashMap airvents_coord_x = new ConcurrentHashMap();
 
-  public static int registerAirVent(BlockVec3 vent) {
-    int index = airvents.size();
+  public static void registerAirVent(BlockVec3 vent) {
+    String index = vent.x + "-" + vent.y + '-' + vent.z;
     airvents.put(index, vent);
 
     //Fast search, bitch!
     //Anyway, we need better hash function for this
     airvents_coord_x.put(vent.x, index);
-
-    return index;
   }
 
-  public static void removeAirVent(int airvent_id) {
-    BlockVec3 to_remove = (BlockVec3) airvents.get(airvent_id);
-    airvents.remove(airvent_id);
-    airvents_coord_x.remove(to_remove.x);
+  public static void removeAirVent(BlockVec3 vent) {
+    String index = vent.x + "-" + vent.y + '-' + vent.z;
+    airvents.remove(index);
+    airvents_coord_x.remove(vent.x);
   }
 
   public static List getNearbyAirvents(int x, int y, int z) {
