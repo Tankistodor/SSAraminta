@@ -365,4 +365,7 @@ public class SSTileEntityCabinet extends TileEntity implements IInventory {
 	    }
 	    
 	    public ForgeDirection getOrientation() { return ForgeDirection.getOrientation(facing); }
+	    
+	    
+	    
 }

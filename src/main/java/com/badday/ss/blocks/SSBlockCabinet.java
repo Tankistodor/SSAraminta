@@ -2,6 +2,7 @@ package com.badday.ss.blocks;
 
 import java.util.ArrayList;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -24,6 +25,13 @@ public class SSBlockCabinet extends BlockContainer {
 
 	private IIcon[] iconBuffer;
 	
+	public static final int GRAY_METADATA = 0;
+    public static final int O2_METADATA = 1;
+    public static final int MEDICAL_METADATA = 2;
+    public static final int FIRE_METADATA = 3;
+    public static final int BIO_METADATA = 4;
+    public static final int ELECTRIC_METADATA = 5;
+
 	public SSBlockCabinet(String asset) {
 		super(Material.iron);
 		this.setBlockName(asset);
@@ -32,7 +40,8 @@ public class SSBlockCabinet extends BlockContainer {
 		this.setStepSound(soundTypeMetal);
 		this.setCreativeTab(SS.ssTab);
 		isBlockContainer = true;
-		setBlockBounds(0.0625F, 0F, 0.0625F, 0.9375F, 0.875F, 0.9375F);
+		// 30 - to blocks on vertical
+		setBlockBounds(1 / 16.0F, 1 / 16.0F, 1 / 16.0F, 15 / 16.0F, 30 / 16.0F, 15 / 16.0F);
 	}
 
 	@Override
@@ -46,14 +55,13 @@ public class SSBlockCabinet extends BlockContainer {
 	}
 
 	/**
-     * Overridden by {@link #createTileEntity(World, int)}
-     */
-    @Override
-    public TileEntity createNewTileEntity(World w, int i)
-    {
-    	return null;  
-    }
-	
+	 * Overridden by {@link #createTileEntity(World, int)}
+	 */
+	@Override
+	public TileEntity createNewTileEntity(World w, int i) {
+		return null;
+	}
+
 	@Override
 	public TileEntity createTileEntity(World arg0, int arg1) {
 		return new SSTileEntityCabinet();
@@ -69,23 +77,24 @@ public class SSBlockCabinet extends BlockContainer {
 		TileEntity te = world.getTileEntity(x, y, z);
 		return ((te != null) ? te.receiveClientEvent(eventId, eventPar) : false);
 	}
-	
-	@Override
-    public int getRenderType()
-    {
-        //return 22;
-		return SS.proxy.cabinetRenderId;
-    }
 
+	@Override
+	public int getRenderType() {
+		// return 22;
+		return SS.proxy.cabinetRenderId;
+	}
+
+	@Override
 	public String getUnlocalizedName() {
 		return "grayCabinet";
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister par1IconRegister) {
 		iconBuffer = new IIcon[6];
-		//iconBuffer[0] = par1IconRegister.registerIcon("ss:"+this.getUnlocalizedName());
+		// iconBuffer[0] =
+		// par1IconRegister.registerIcon("ss:"+this.getUnlocalizedName());
 		iconBuffer[0] = par1IconRegister.registerIcon("ss:iron_top");
 		iconBuffer[1] = par1IconRegister.registerIcon("ss:iron_top");
 		iconBuffer[2] = par1IconRegister.registerIcon("ss:iron_side");
@@ -93,89 +102,109 @@ public class SSBlockCabinet extends BlockContainer {
 		iconBuffer[4] = par1IconRegister.registerIcon("ss:iron_side");
 		iconBuffer[5] = par1IconRegister.registerIcon("ss:iron_side");
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public IIcon getIcon(int side, int metadata) {
-		// TODO: 
+		// TODO:
 		return iconBuffer[side];
 	}
-	
+
 	@Override
-    public void onBlockAdded(World world, int i, int j, int k)
+	public void onBlockAdded(World world, int i, int j, int k) {
+		super.onBlockAdded(world, i, j, k);
+		world.markBlockForUpdate(i, j, k);
+	}
+
+	@Override
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
+		ArrayList<ItemStack> items = Lists.newArrayList();
+		ItemStack stack = new ItemStack(this, 1, metadata);
+		items.add(stack);
+		return items;
+	}
+
+	@Override
+	public boolean onBlockActivated(World world, int i, int j, int k, EntityPlayer player, int i1, float f1, float f2, float f3) {
+		TileEntity te = world.getTileEntity(i, j, k);
+
+		if (te == null || !(te instanceof SSTileEntityCabinet)) {
+			return true;
+		}
+
+		if (world.isSideSolid(i, j + 1, k, ForgeDirection.DOWN)) {
+			return true;
+		}
+
+		if (world.isRemote) {
+			return true;
+		}
+
+		player.openGui(SS.instance, ((SSTileEntityCabinet) te).getType(), world, i, j, k);
+		return true;
+	}
+
+	@Override
+	public void onBlockPlacedBy(World world, int i, int j, int k, EntityLivingBase entityliving, ItemStack itemStack) {
+		byte chestFacing = 0;
+		int facing = MathHelper.floor_double(((entityliving.rotationYaw * 4F) / 360F) + 0.5D) & 3;
+		if (facing == 0) {
+			chestFacing = 2;
+		}
+		if (facing == 1) {
+			chestFacing = 5;
+		}
+		if (facing == 2) {
+			chestFacing = 3;
+		}
+		if (facing == 3) {
+			chestFacing = 4;
+		}
+		TileEntity te = world.getTileEntity(i, j, k);
+		if (te != null && te instanceof SSTileEntityCabinet) {
+			SSTileEntityCabinet teic = (SSTileEntityCabinet) te;
+			teic.wasPlaced(entityliving, itemStack);
+			teic.setFacing(chestFacing);
+			world.markBlockForUpdate(i, j, k);
+		}
+	}
+
+	@Override
+	public int damageDropped(int i) {
+		return i;
+	}
+	
+	/**
+	 * Check is top block is clean
+	 */
+	@Override
+	public boolean canPlaceBlockOnSide(World world, int x, int y, int z, int side) {
+		Block block = world.getBlock(x, y + 1, z);
+
+		if (block.getMaterial() != Material.air && !block.isReplaceable(world, x, y + 1, z)) {
+			return false;
+		}
+		return true;
+	}
+
+	/*
+    @Override
+    public String getShiftDescription(int meta)
     {
-        super.onBlockAdded(world, i, j, k);
-        world.markBlockForUpdate(i, j, k);
+        switch (meta)
+        {
+        case BASIC_METADATA:
+            return GCCoreUtil.translate("tile.solarBasic.description");
+        case ADVANCED_METADATA:
+            return GCCoreUtil.translate("tile.solarAdv.description");
+        }
+        return "";
     }
 
-	 @Override
-	    public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
-	    {
-	        ArrayList<ItemStack> items = Lists.newArrayList();
-	        ItemStack stack = new ItemStack(this,1,metadata);
-	        items.add(stack);
-	        return items;
-	    }
-	    @Override
-	    public boolean onBlockActivated(World world, int i, int j, int k, EntityPlayer player, int i1, float f1, float f2, float f3)
-	    {
-	        TileEntity te = world.getTileEntity(i, j, k);
-
-	        if (te == null || !(te instanceof SSTileEntityCabinet))
-	        {
-	            return true;
-	        }
-
-	        if (world.isSideSolid(i, j + 1, k, ForgeDirection.DOWN))
-	        {
-	            return true;
-	        }
-
-	        if (world.isRemote)
-	        {
-	            return true;
-	        }
-
-	        player.openGui(SS.instance, ((SSTileEntityCabinet) te).getType(), world, i, j, k);
-	        return true;
-	    }
-
-	    
-	    @Override
-	    public void onBlockPlacedBy(World world, int i, int j, int k, EntityLivingBase entityliving, ItemStack itemStack)
-	    {
-	        byte chestFacing = 0;
-	        int facing = MathHelper.floor_double((double) ((entityliving.rotationYaw * 4F) / 360F) + 0.5D) & 3;
-	        if (facing == 0)
-	        {
-	            chestFacing = 2;
-	        }
-	        if (facing == 1)
-	        {
-	            chestFacing = 5;
-	        }
-	        if (facing == 2)
-	        {
-	            chestFacing = 3;
-	        }
-	        if (facing == 3)
-	        {
-	            chestFacing = 4;
-	        }
-	        TileEntity te = world.getTileEntity(i, j, k);
-	        if (te != null && te instanceof SSTileEntityCabinet)
-	        {
-	        	SSTileEntityCabinet teic = (SSTileEntityCabinet) te;
-	            teic.wasPlaced(entityliving, itemStack);
-	            teic.setFacing(chestFacing);
-	            world.markBlockForUpdate(i, j, k);
-	        }
-	    }
-	    
-	    @Override
-	    public int damageDropped(int i)
-	    {
-	        return i;
-	    }
+    @Override
+    public boolean showDescription(int meta)
+    {
+        return true;
+    }*/
 	
 }

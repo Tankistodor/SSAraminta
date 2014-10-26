@@ -58,7 +58,7 @@ public class SSBlockWallCasing extends SSMetaBlock implements ISSSealedBlock {
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void getSubBlocks(Item par1, CreativeTabs tab, List list) {
-		for (int i = 0; i < SSConfig.ssWallCasingC_name.length; i++) {
+		for (int i = 0; i < SSConfig.ssWallCasingC_unlocalizedName.length; i++) {
 			list.add(new ItemStack(this, 1, i));
 		}
 	}

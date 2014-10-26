@@ -41,7 +41,6 @@ public class SSConfig {
 	public static Block ssBlockCabinet;
 	//public static Block ssBlockAirGenerator;
 	
-
 	public static Fluid fluidMethaneGas;
 	public static Fluid fluidOxygenGas;
 	public static Fluid fluidNitrogenGas;
@@ -59,13 +58,7 @@ public class SSConfig {
 			"blockWallCasingPink", "blockWallCasingLime", "blockWallCasingYellow", "blockWallCasingLightBlue", "blockWallCasingMagenta",
 			"blockWallCasingOrange", "blockWallCasingWhite" };
 
-	public static final String[] ssWallCasingC_name = { "Wall Casing Black", "Wall Casing Red", "Wall Casing Green", "Wall Casing Brown", "Wall Casing Blue",
-			"Wall Casing Purple", "Wall Casing Cyan", "Wall Casing LightGray", "Wall Casing Gray", "Wall Casing Pink", "Wall Casing Lime",
-			"Wall Casing Yellow", "Wall Casing LightBlue", "Wall Casing Magenta", "Wall Casing Orange", "Wall Casing White" };
-
 	// TODO: Добавить
-
-	
 	public static Block ssBlockAirDetector;
 	public static Block ssBlockDoorGate;
 	public static Block ssBlockDoor2Gate;
