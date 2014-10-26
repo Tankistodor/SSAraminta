@@ -1,5 +1,8 @@
 package com.badday.ss.blocks;
 
+import com.badday.ss.events.AirNetAddEvent;
+import com.badday.ss.events.AirNetRemoveEvent;
+import ic2.api.energy.event.EnergyTileLoadEvent;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -9,6 +12,7 @@ import com.badday.ss.core.utils.BlockVec3;
 import com.badday.ss.core.utils.GasPressure;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import net.minecraftforge.common.MinecraftForge;
 
 public class SSTileEntityAirVent extends TileEntity {
 
@@ -16,6 +20,8 @@ public class SSTileEntityAirVent extends TileEntity {
 	public long ticks = 0;
 	public GasPressure gasPressure = null;
 	public boolean active = false;
+
+  public boolean added_to_airvent_net = false;
 
 	@Override
 	public void updateEntity() {
@@ -27,6 +33,11 @@ public class SSTileEntityAirVent extends TileEntity {
 		if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
 			return;
 		}
+
+    if(!added_to_airvent_net) {
+      MinecraftForge.EVENT_BUS.post(new AirNetAddEvent(new BlockVec3(this)));
+      added_to_airvent_net = true;
+    }
 
 		// Air vent works only in spaces
 		if (worldObj.provider.dimensionId != SS.instance.spaceDimID) {
@@ -80,13 +91,25 @@ public class SSTileEntityAirVent extends TileEntity {
 	public void invalidate() {
 		super.invalidate();
 		this.gasPressure = null;
+    if(added_to_airvent_net) {
+      MinecraftForge.EVENT_BUS.post(new AirNetRemoveEvent(new BlockVec3(this)));
+      added_to_airvent_net = false;
+    }
 	}
 
-	/**
-	 * Gas suitable for breathing
-	 * 
-	 * @return
-	 */
+  @Override
+  public void onChunkUnload() {
+    if(added_to_airvent_net) {
+      MinecraftForge.EVENT_BUS.post(new AirNetRemoveEvent(new BlockVec3(this)));
+      added_to_airvent_net = false;
+    }
+  }
+
+    /**
+     * Gas suitable for breathing
+     *
+     * @return
+     */
 	public boolean isNormalAir() {
 		// TODO Добавить определение смеси газов и пригодность для дыхания
 		return true;
