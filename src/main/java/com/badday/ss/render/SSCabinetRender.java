@@ -17,13 +17,19 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class SSCabinetRender extends TileEntitySpecialRenderer {
 	
+	public SSCabinetRender() {
+		super();
+		loadTextures();
+	}
+
 	private SSCabinetModel cabinetModel = new SSCabinetModel();
 	public static ResourceLocation[] textures;//      = new ResourceLocation("ss:textures/model/cabinet.png");
 	public static final ResourceLocation textureCabinetGray      = new ResourceLocation("ss:textures/model/cabinetGray.png");
 		
 	public static void loadTextures() {
+		textures = new ResourceLocation[SSConfig.ssCabinet_unlocalizedName.length];
 		for (int i = 0; i < SSConfig.ssCabinet_unlocalizedName.length; i++) {
-			textures[i] = new ResourceLocation("ss:textures/model/"+SSConfig.ssCabinet_unlocalizedName[i]);
+			textures[i] = new ResourceLocation("ss:textures/model/"+SSConfig.ssCabinet_unlocalizedName[i]+".png");
 		}
 	}
 	

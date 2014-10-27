@@ -40,6 +40,7 @@ public class ClientProxy extends CommonProxy {
 		 * RenderingRegistry.registerBlockHandler(new SSBlockAirNormalRender(
 		 * renderIdBreathableAir));
 		 */
+		//SSCabinetRender.loadTextures();
 		SSConfig.cabinetRenderId = registerTileEntityRenderer(SSTileEntityCabinet.class, new SSCabinetRender());
 		if (SS.Debug) System.out.println("[" + SS.MODNAME + "] render handler " + SSConfig.cabinetRenderId);
 

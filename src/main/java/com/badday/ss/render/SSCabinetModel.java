@@ -14,7 +14,7 @@ public class SSCabinetModel extends ModelBase {
 	
 	private IModelCustom model;
 	
-	protected ResourceLocation modelPath() { return SSCabinetRender.textureLockerLarge; }
+	//protected ResourceLocation modelPath() { return SSCabinetRender.textureLockerLarge; }
 	
 	public SSCabinetModel() {
 		//model = AdvancedModelLoader.loadModel(modelPath());
