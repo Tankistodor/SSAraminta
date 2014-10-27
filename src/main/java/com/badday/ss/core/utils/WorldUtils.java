@@ -1,7 +1,9 @@
 package com.badday.ss.core.utils;
 
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -9,6 +11,10 @@ import net.minecraft.world.World;
 import com.badday.ss.blocks.SSTileEntityAirVent;
 import com.badday.ss.blocks.SSTileEntityGasBlock;
 import com.badday.ss.world.space.SpaceProvider;
+
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class WorldUtils {
 
@@ -78,5 +84,18 @@ public class WorldUtils {
 		TileEntity t = world.getTileEntity(x, y, z);
 		return (tileClass.isInstance(t) ? (T)t : null);
 	}
+	
+	@SideOnly(Side.CLIENT)
+    public static EntityClientPlayerMP getPlayerBaseClientFromPlayer(EntityPlayer player, boolean ignoreCase)
+    {
+        EntityClientPlayerMP clientPlayer = FMLClientHandler.instance().getClientPlayerEntity();
+
+        if (clientPlayer == null && player != null)
+        {
+        	System.out.println("Warning: Could not find player base client instance for player " + player.getGameProfile().getName());
+        }
+
+        return clientPlayer;
+    }
 	
 }

@@ -5,7 +5,6 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.badday.ss.api.SSAPI;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -13,9 +12,11 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 
+import com.badday.ss.api.SSAPI;
 import com.badday.ss.core.utils.SSCommandPathfinder;
 import com.badday.ss.core.utils.SpaceTpCommand;
 import com.badday.ss.events.AntiFallDamage;
+import com.badday.ss.events.GuiHandler;
 import com.badday.ss.events.SSPacketHandler;
 import com.badday.ss.events.SSTickHandlerClient;
 import com.badday.ss.events.SoundHandler;
@@ -33,6 +34,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -117,6 +119,7 @@ public class SS {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		FMLCommonHandler.instance().bus().register(SSTickHandlerClient.class);
+		NetworkRegistry.INSTANCE.registerGuiHandler(this.instance,new GuiHandler());
 	}
 	
 	@EventHandler

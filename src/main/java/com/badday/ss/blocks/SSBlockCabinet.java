@@ -22,6 +22,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
 import com.badday.ss.core.utils.BlockVec3;
+import com.badday.ss.gui.SSGuiIDs;
 import com.google.common.collect.Lists;
 
 import cpw.mods.fml.relauncher.Side;
@@ -189,8 +190,8 @@ public class SSBlockCabinet extends BlockContainer {
 		if (world.isRemote) {
 			return true;
 		}
-
-		player.openGui(SS.instance, ((SSTileEntityCabinet) te).getType(), world, i, j, k);
+		//player.openGui(SS.instance, ((SSTileEntityCabinet) te).getType(), world, i, j, k);
+		player.openGui(SS.instance, SSGuiIDs.GUI_ID_CABINET, world, i, j, k);
 		return true;
 	}
 

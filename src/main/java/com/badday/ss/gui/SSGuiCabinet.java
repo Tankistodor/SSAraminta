@@ -1,7 +1,6 @@
 package com.badday.ss.gui;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 
@@ -14,7 +13,13 @@ import com.badday.ss.containers.SSContainerCabinet;
 public class SSGuiCabinet extends GuiContainer {
 	
 	private final int ROWLENGHT = 9;
+	private static final ResourceLocation guiTexture = new ResourceLocation("cabinet", "textures/gui/cabinet.png");
+	private final SSTileEntityCabinet cabinet;
 	
+	private static final int xSize = 184;
+	private static final int ySize = 202;
+	
+	/*
     public enum ResourceList {
         IRON(new ResourceLocation("cabinet", "textures/gui/cabinet.png"));
         public final ResourceLocation location;
@@ -57,13 +62,20 @@ public class SSGuiCabinet extends GuiContainer {
 
     private GUI type;
 
-    private SSGuiCabinet(GUI type, IInventory player, IInventory chest)
+*/
+	
+    public SSGuiCabinet(IInventory player, SSTileEntityCabinet chest)
     {
-        super(type.makeContainer(player, chest));
-        this.type = type;
-        this.xSize = type.xSize;
-        this.ySize = type.ySize;
+        super(new SSContainerCabinet(player,chest,0,xSize,ySize));
+        cabinet = chest;
         this.allowUserInput = false;
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public void initGui()
+    {
+    
     }
 
     @Override
@@ -71,7 +83,7 @@ public class SSGuiCabinet extends GuiContainer {
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         // new "bind tex"
-        this.mc.getTextureManager().bindTexture(type.guiResourceList.location);
+        this.mc.getTextureManager().bindTexture(guiTexture);
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2;
         drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
