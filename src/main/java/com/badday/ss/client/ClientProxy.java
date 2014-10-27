@@ -8,6 +8,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import com.badday.ss.CommonProxy;
+import com.badday.ss.SS;
+import com.badday.ss.SSConfig;
 import com.badday.ss.blocks.SSTileEntityCabinet;
 import com.badday.ss.render.SSCabinetRender;
 import com.badday.ss.render.SSRenderHandlers;
@@ -18,8 +20,6 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 
 public class ClientProxy extends CommonProxy {
-
-	public static int cabinetRenderId;
 	
 	public static final Map<Class<? extends TileEntity>, SSRenderHandlers> renderingHandlers =
 			new HashMap<Class<? extends TileEntity>, SSRenderHandlers>();
@@ -40,8 +40,8 @@ public class ClientProxy extends CommonProxy {
 		 * RenderingRegistry.registerBlockHandler(new SSBlockAirNormalRender(
 		 * renderIdBreathableAir));
 		 */
-
-		cabinetRenderId = registerTileEntityRenderer(SSTileEntityCabinet.class, new SSCabinetRender());
+		SSConfig.cabinetRenderId = registerTileEntityRenderer(SSTileEntityCabinet.class, new SSCabinetRender());
+		if (SS.Debug) System.out.println("[" + SS.MODNAME + "] render handler " + SSConfig.cabinetRenderId);
 
 	}
 

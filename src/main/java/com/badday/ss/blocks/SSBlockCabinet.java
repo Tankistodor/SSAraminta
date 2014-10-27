@@ -50,7 +50,7 @@ public class SSBlockCabinet extends BlockContainer {
 
 	@Override
 	public boolean renderAsNormalBlock() {
-		return true;
+		return false;
 	}
 
 	/**
@@ -77,10 +77,10 @@ public class SSBlockCabinet extends BlockContainer {
 		return ((te != null) ? te.receiveClientEvent(eventId, eventPar) : false);
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public int getRenderType() {
-		// return 22;
-		return SS.proxy.cabinetRenderId;
+		return SSConfig.cabinetRenderId;
 	}
 
 	@Override

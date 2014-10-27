@@ -27,7 +27,7 @@ public class SSTileEntityCabinet extends TileEntity implements IInventory {
 	private int numUsingPlayers;
 	private int type;
 	public ItemStack[] chestContents;
-	private ItemStack[] topStacks;
+	//private ItemStack[] topStacks;
 	private int facing;
 	private boolean inventoryTouched;
 	private boolean hadStuff;
@@ -37,17 +37,16 @@ public class SSTileEntityCabinet extends TileEntity implements IInventory {
 		this(0);
 	}
 
-	public ItemStack[] getContents() {
-		return chestContents;
-	}
-
 	protected SSTileEntityCabinet(int type) {
 		super();
 		this.type = type;
 		this.chestContents = new ItemStack[getSizeInventory()];
-		this.topStacks = new ItemStack[8];
+		//this.topStacks = new ItemStack[8];
 	}
-
+	
+	public ItemStack[] getContents() {
+		return chestContents;
+	}
 	
 	@Override
     public void updateEntity()

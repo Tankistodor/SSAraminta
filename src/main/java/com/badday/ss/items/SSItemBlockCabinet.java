@@ -19,6 +19,7 @@ public class SSItemBlockCabinet  extends SSItemMetaBlock {
 		setMaxDamage(0);
 		setHasSubtypes(true);
 		setMaxStackSize(1);
+		this.bFull3D = false;
 	}
 	
 	@Override
@@ -31,6 +32,7 @@ public class SSItemBlockCabinet  extends SSItemMetaBlock {
 		return SSConfig.ssCabinet_unlocalizedName[itemstack.getItemDamage()];
 	}
 	
+	
 	@SideOnly(Side.CLIENT)
 	@Override
 	public IIcon getIconFromDamage(int meta) {
@@ -41,12 +43,19 @@ public class SSItemBlockCabinet  extends SSItemMetaBlock {
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean flag)
 	{
-		list.add("Finished wall casing. No crafted. No destroyed.");
+		list.add("Station cabinet.");
 	   	super.addInformation(itemstack, player, list, flag);
     }
 	
+	/*
 	@SideOnly(Side.CLIENT)
 	@Override
 	public boolean requiresMultipleRenderPasses() { return true; }
+	
+	*/
+	@Override
+	public boolean isFull3D() {
+		return false;
+	}
 	
 }

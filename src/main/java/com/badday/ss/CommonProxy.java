@@ -1,12 +1,10 @@
 package com.badday.ss;
 
-import cpw.mods.fml.common.event.FMLInitializationEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 
 public class CommonProxy {
-
-	public int cabinetRenderId = 22;
 
 	public boolean hasClient()
 	  {
