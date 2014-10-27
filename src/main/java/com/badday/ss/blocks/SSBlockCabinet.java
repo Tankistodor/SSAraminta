@@ -21,6 +21,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
+import com.badday.ss.core.utils.BlockVec3;
 import com.google.common.collect.Lists;
 
 import cpw.mods.fml.relauncher.Side;
@@ -212,11 +213,26 @@ public class SSBlockCabinet extends BlockContainer {
 		TileEntity te = world.getTileEntity(i, j, k);
 		if (te != null && te instanceof SSTileEntityCabinet) {
 			SSTileEntityCabinet teic = (SSTileEntityCabinet) te;
+			teic.onCreate(new BlockVec3(i, j, k));
 			teic.wasPlaced(entityliving, itemStack);
 			teic.setFacing(chestFacing);
 			world.markBlockForUpdate(i, j, k);
 		}
 	}
+	
+	
+    @Override
+    public void breakBlock(World var1, int var2, int var3, int var4, Block var5, int var6)
+    {
+        final TileEntity var9 = var1.getTileEntity(var2, var3, var4);
+
+        if (var9 instanceof SSTileEntityCabinet)
+        {
+            ((SSTileEntityCabinet) var9).onDestroy(var9);
+        }
+
+        super.breakBlock(var1, var2, var3, var4, var5, var6);
+    }
 
 	@Override
 	public int damageDropped(int i) {

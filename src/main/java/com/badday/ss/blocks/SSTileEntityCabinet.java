@@ -16,10 +16,12 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.badday.ss.SSConfig;
-import com.badday.ss.events.SSPacketHandler;
+import com.badday.ss.api.IMultiBlock;
 import com.badday.ss.containers.SSContainerCabinet;
+import com.badday.ss.core.utils.BlockVec3;
+import com.badday.ss.events.SSPacketHandler;
 
-public class SSTileEntityCabinet extends TileEntity implements IInventory {
+public class SSTileEntityCabinet extends TileEntity implements IInventory,IMultiBlock {
 
 	private int ticksSinceSync = -1;
 	public float prevLidAngle;
@@ -364,6 +366,26 @@ public class SSTileEntityCabinet extends TileEntity implements IInventory {
 	    }
 	    
 	    public ForgeDirection getOrientation() { return ForgeDirection.getOrientation(facing); }
+
+	    @Override
+	    public boolean onActivated(EntityPlayer entityPlayer)
+	    {
+	        return this.getBlockType().onBlockActivated(this.worldObj, this.xCoord, this.yCoord, this.zCoord, entityPlayer, 0, this.xCoord, this.yCoord, this.zCoord);
+	    }
+
+		@Override
+		public void onCreate(BlockVec3 placedPosition) {
+			final BlockVec3 vecStrut = new BlockVec3(placedPosition.x, placedPosition.y + 1, placedPosition.z);
+			((SSBlockMultiFake) SSConfig.fakeBlock).makeFakeBlock(this.worldObj, vecStrut, placedPosition, 0);
+		}
+
+		@Override
+		public void onDestroy(TileEntity callingBlock) {
+			final BlockVec3 thisBlock = new BlockVec3(this);
+			this.worldObj.setBlockToAir(thisBlock.x , thisBlock.y + 1,thisBlock.z);
+			this.worldObj.func_147480_a(thisBlock.x, thisBlock.y, thisBlock.z, true);
+			
+		}
 	    
 	    
 	    

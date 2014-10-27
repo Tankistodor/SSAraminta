@@ -14,14 +14,17 @@ import com.badday.ss.blocks.SSBlockAirVent;
 import com.badday.ss.blocks.SSBlockCabinet;
 import com.badday.ss.blocks.SSBlockGas;
 import com.badday.ss.blocks.SSBlockGlassCasing;
+import com.badday.ss.blocks.SSBlockMultiFake;
 import com.badday.ss.blocks.SSBlockWallCasing;
 import com.badday.ss.blocks.SSBlockWallCasingRaw;
 import com.badday.ss.blocks.SSFuidTextrures;
 import com.badday.ss.blocks.SSTileEntityAirVent;
 import com.badday.ss.blocks.SSTileEntityGasBlock;
+import com.badday.ss.blocks.SSTileEntityMultiFake;
 import com.badday.ss.core.utils.SSSettings;
 import com.badday.ss.items.SSItemBlock;
 import com.badday.ss.items.SSItemBlockCabinet;
+import com.badday.ss.items.SSItemHidden;
 import com.badday.ss.items.SSItemMetaBlockWallCasing;
 import com.badday.ss.items.SSItemMetaBlockWallCasingRaw;
 import com.badday.ss.items.SSItemScrewdriver;
@@ -39,6 +42,7 @@ public class SSConfig {
 	public static Block ssBlockGas;
 	public static Block ssBlockAirVent;
 	public static Block ssBlockCabinet;
+	public static Block fakeBlock;
 	//public static Block ssBlockAirGenerator;
 	
 	public static Fluid fluidMethaneGas;
@@ -146,6 +150,10 @@ public class SSConfig {
 
 		ssBlockGlassCasing = new SSBlockGlassCasing("blockGlassCasing");
 		GameRegistry.registerBlock(ssBlockGlassCasing, "blockGlassCasing");
+		
+		fakeBlock = new SSBlockMultiFake("fakeBlock");
+		GameRegistry.registerBlock(fakeBlock, SSItemHidden.class, fakeBlock.getUnlocalizedName());
+		GameRegistry.registerTileEntity(SSTileEntityMultiFake.class, "fakeBlock");
 		
 		ssBlockCabinet = new SSBlockCabinet("grayCabinet");
 		GameRegistry.registerBlock(ssBlockCabinet, SSItemBlockCabinet.class, "grayCabinet");
