@@ -210,7 +210,7 @@ public class SSTileEntityCabinet extends TileEntity implements IInventory,IMulti
 	@Override
     public boolean hasCustomInventoryName()
     {
-        return false;
+        return true;
     }
 
 	@Override
