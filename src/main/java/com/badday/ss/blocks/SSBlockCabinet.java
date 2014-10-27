@@ -39,8 +39,8 @@ public class SSBlockCabinet extends BlockContainer {
 		this.setStepSound(soundTypeMetal);
 		this.setCreativeTab(SS.ssTab);
 		this.isBlockContainer = true;
-		// 30 - to blocks on vertical
-		setBlockBounds(1 / 16.0F, 1 / 16.0F, 1 / 16.0F, 15 / 16.0F, 30 / 16.0F, 15 / 16.0F);
+		// 32 - to blocks on vertical
+		setBlockBounds(1 / 16.0F, 1 / 16.0F, 1 / 16.0F, 15 / 16.0F, 32.0F / 16.0F, 15 / 16.0F);
 	}
 
 	@Override
@@ -57,13 +57,13 @@ public class SSBlockCabinet extends BlockContainer {
 	 * Overridden by {@link #createTileEntity(World, int)}
 	 */
 	@Override
-	public TileEntity createNewTileEntity(World w, int i) {
+	public TileEntity createNewTileEntity(World world, int meta) {
 		return null;
 	}
 
 	@Override
-	public TileEntity createTileEntity(World arg0, int arg1) {
-		return new SSTileEntityCabinet();
+	public TileEntity createTileEntity(World world, int meta) {
+		return new SSTileEntityCabinet(meta);
 	}
 
 	@Override

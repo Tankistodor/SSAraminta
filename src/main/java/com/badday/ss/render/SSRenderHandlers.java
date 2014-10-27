@@ -50,15 +50,16 @@ public class SSRenderHandlers implements ISimpleBlockRenderingHandler {
 	public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer) {
 		tileEntity.blockType = block;
 		tileEntity.blockMetadata = metadata;
-		/*if (tileEntity instanceof SSTileEntityCabinet)
-			((SSTileEntityCabinet)tileEntity).ticksExisted =
-				Minecraft.getMinecraft().thePlayer.ticksExisted;*/
+		//if (tileEntity instanceof SSTileEntityCabinet)
+		//	((SSTileEntityCabinet)tileEntity).ticksExisted =
+		//		Minecraft.getMinecraft().thePlayer.ticksExisted;
 		GL11.glTranslatef(0, yOffset, 0);
 		GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
-		GL11.glScalef(scale, scale, scale);
+		GL11.glScalef(scale, scale*0.5f, scale);
 		GL11.glPushMatrix();
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		tileEntityRenderer.renderTileEntityAt(tileEntity, -0.5, -0.5, -0.5, 0);
+		//tileEntityRenderer.renderTileEntityAt(tileEntity, -0.5, -0.5, -0.5, 0);
+		tileEntityRenderer.renderTileEntityAt(tileEntity, -0.5, -1, -0.5, 0);
 		GL11.glPopMatrix();
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 	}

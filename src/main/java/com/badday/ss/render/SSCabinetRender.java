@@ -7,6 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import com.badday.ss.SSConfig;
 import com.badday.ss.blocks.SSTileEntityCabinet;
 import com.badday.ss.core.utils.DirectionUtils;
 
@@ -17,8 +18,15 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class SSCabinetRender extends TileEntitySpecialRenderer {
 	
 	private SSCabinetModel cabinetModel = new SSCabinetModel();
-	public static final ResourceLocation textureLockerLarge      = new ResourceLocation("ss:textures/model/cabinet.png");
+	public static ResourceLocation[] textures;//      = new ResourceLocation("ss:textures/model/cabinet.png");
+	public static final ResourceLocation textureCabinetGray      = new ResourceLocation("ss:textures/model/cabinetGray.png");
 		
+	public static void loadTextures() {
+		for (int i = 0; i < SSConfig.ssCabinet_unlocalizedName.length; i++) {
+			textures[i] = new ResourceLocation("ss:textures/model/"+SSConfig.ssCabinet_unlocalizedName[i]);
+		}
+	}
+	
 	public void renderTileEntityAt(SSTileEntityCabinet cabinetTE, double x, double y, double z, float partialTicks) {
 		
 		float scale = 1.0F / 16;
@@ -30,7 +38,11 @@ public class SSCabinetRender extends TileEntitySpecialRenderer {
 		int index = (cabinetTE.mirror ? 1 : 0);
 		SSCabinetModel model = cabinetModel;
 		//bindTexture(locker.getResource());
-		bindTexture(textureLockerLarge);
+		/*if (cabinetTE.getType() == 2) {
+			bindTexture(textureLockerLarge);
+		}*/
+		bindTexture(textures[cabinetTE.getType()]);
+		
 		
 		GL11.glPushMatrix();
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
