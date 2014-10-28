@@ -37,14 +37,14 @@ public class SSTileEntityCabinet extends TileEntity implements IInventory,IMulti
 	public boolean mirror = false;
 
 	public SSTileEntityCabinet() {
-		this(SSGuiIDs.GUI_ID_CABINET);
+		//this(SSGuiIDs.GUI_ID_CABINET);
+		this(0);
 	}
 
-	protected SSTileEntityCabinet(int type) {
+	public SSTileEntityCabinet(int type) {
 		super();
 		this.type = type;
 		this.chestContents = new ItemStack[getSizeInventory()];
-		//this.topStacks = new ItemStack[8];
 	}
 	
 	public ItemStack[] getContents() {
@@ -164,22 +164,17 @@ public class SSTileEntityCabinet extends TileEntity implements IInventory,IMulti
 
 	@Override
 	public String getInventoryName() {
-		switch (this.type) {
-		case 0:
 			return "gray";
-		default:
-			return "gray";
-		}
 	}
 
 	@Override
 	public int getInventoryStackLimit() {
-		return 64;
+		return 1;
 	}
 
 	@Override
 	public int getSizeInventory() {
-		return 54;
+		return SSConfig.ssCabinetSize;
 	}
 
 	@Override
@@ -211,7 +206,7 @@ public class SSTileEntityCabinet extends TileEntity implements IInventory,IMulti
 	@Override
     public boolean hasCustomInventoryName()
     {
-        return true;
+        return false; // Как в IronChest
     }
 
 	@Override

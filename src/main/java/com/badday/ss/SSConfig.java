@@ -19,6 +19,7 @@ import com.badday.ss.blocks.SSBlockWallCasing;
 import com.badday.ss.blocks.SSBlockWallCasingRaw;
 import com.badday.ss.blocks.SSFuidTextrures;
 import com.badday.ss.blocks.SSTileEntityAirVent;
+import com.badday.ss.blocks.SSTileEntityCabinet;
 import com.badday.ss.blocks.SSTileEntityGasBlock;
 import com.badday.ss.blocks.SSTileEntityMultiFake;
 import com.badday.ss.core.utils.SSSettings;
@@ -80,6 +81,8 @@ public class SSConfig {
 	 * max distance for pathfinder check airvent
 	 */
 	public static int ssPathfinderMaxDistance = 64; 
+	
+	public static int ssCabinetSize =  36;
 	
 	public static int cabinetRenderId;
 
@@ -157,6 +160,7 @@ public class SSConfig {
 		
 		ssBlockCabinet = new SSBlockCabinet("grayCabinet");
 		GameRegistry.registerBlock(ssBlockCabinet, SSItemBlockCabinet.class, "grayCabinet");
+		GameRegistry.registerTileEntity(SSTileEntityCabinet.class, "grayCabinet");
 		
 		/*
 		// AIR GENERATOR

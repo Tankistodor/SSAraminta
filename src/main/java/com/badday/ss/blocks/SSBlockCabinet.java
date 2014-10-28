@@ -130,28 +130,6 @@ public class SSBlockCabinet extends BlockContainer {
 		return this.getIcon(side, world.getBlockMetadata(x, y, z));
 	}	
 	
-	/*
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
-		iconBuffer = new IIcon[6];
-		// iconBuffer[0] =
-		// par1IconRegister.registerIcon("ss:"+this.getUnlocalizedName());
-		iconBuffer[0] = par1IconRegister.registerIcon("ss:iron_top");
-		iconBuffer[1] = par1IconRegister.registerIcon("ss:iron_top");
-		iconBuffer[2] = par1IconRegister.registerIcon("ss:iron_side");
-		iconBuffer[3] = par1IconRegister.registerIcon("ss:iron_front");
-		iconBuffer[4] = par1IconRegister.registerIcon("ss:iron_side");
-		iconBuffer[5] = par1IconRegister.registerIcon("ss:iron_side");
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public IIcon getIcon(int side, int metadata) {
-		// TODO:
-		return iconBuffer[side];
-	}*/
-
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@SideOnly(Side.CLIENT)
 	@Override
@@ -191,7 +169,8 @@ public class SSBlockCabinet extends BlockContainer {
 			return true;
 		}
 		//player.openGui(SS.instance, ((SSTileEntityCabinet) te).getType(), world, i, j, k);
-		player.openGui(SS.instance, SSGuiIDs.GUI_ID_CABINET, world, i, j, k);
+		//player.openGui(SS.instance, SSGuiIDs.GUI_ID_CABINET, world, i, j, k);
+		player.openGui(SS.instance, -1, world, i, j, k);
 		return true;
 	}
 

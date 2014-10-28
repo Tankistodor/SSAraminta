@@ -1,9 +1,14 @@
 package com.badday.ss.core.utils;
 
+import java.lang.reflect.Method;
+import java.util.Iterator;
+
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -96,6 +101,50 @@ public class WorldUtils {
         }
 
         return clientPlayer;
+    }
+	
+	public static EntityPlayerMP getPlayerBaseServerFromPlayer(EntityPlayer player, boolean ignoreCase)
+    {
+        if (player == null)
+        {
+            return null;
+        }
+
+        if (player instanceof EntityPlayerMP)
+        {
+            return (EntityPlayerMP) player;
+        }
+
+        return getPlayerBaseServerFromPlayerUsername(player.getCommandSenderName(), ignoreCase);
+    }
+
+	public static EntityPlayerMP getPlayerBaseServerFromPlayerUsername(String username, boolean ignoreCase)
+    {
+        MinecraftServer server = MinecraftServer.getServer();
+
+        if (server != null)
+        {
+                Iterator iterator = server.getConfigurationManager().playerEntityList.iterator();
+                EntityPlayerMP entityplayermp;
+
+                do
+                {
+                    if (!iterator.hasNext())
+                    {
+                        return null;
+                    }
+
+                    entityplayermp = (EntityPlayerMP) iterator.next();
+                }
+                while (!entityplayermp.getCommandSenderName().equalsIgnoreCase(username));
+
+                return entityplayermp;
+            
+        }
+
+        System.out.println("Warning: Could not find player base server instance for player " + username);
+
+        return null;
     }
 	
 }

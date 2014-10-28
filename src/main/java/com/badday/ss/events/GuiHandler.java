@@ -2,10 +2,14 @@ package com.badday.ss.events;
 
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 
+import com.badday.ss.SS;
 import com.badday.ss.blocks.SSTileEntityCabinet;
+import com.badday.ss.containers.SSContainerCabinet;
 import com.badday.ss.core.utils.BlockVec3;
 import com.badday.ss.core.utils.WorldUtils;
 import com.badday.ss.gui.SSGuiCabinet;
@@ -48,9 +52,28 @@ public class GuiHandler implements IGuiHandler {
 	}
 
 	@Override
-	public Object getServerGuiElement(int arg0, EntityPlayer arg1, World arg2, int arg3, int arg4, int arg5) {
+	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		 
-		return null;
+		EntityPlayerMP playerBase = WorldUtils.getPlayerBaseServerFromPlayer(player, false);
+
+        if (playerBase == null)
+        {
+            player.addChatMessage(new ChatComponentText("[" + SS.MODNAME + "] player instance null server-side. This is a bug."));
+            return null;
+        }
+        
+        TileEntity tile = world.getTileEntity(x, y, z);
+
+        if (tile != null)
+        {
+        	if (tile instanceof SSTileEntityCabinet)
+            {
+        		return new SSContainerCabinet(player.inventory, ((SSTileEntityCabinet) tile), 2, 4);
+        		
+            }
+        }
+                
+        return null;
 	}
 
 }

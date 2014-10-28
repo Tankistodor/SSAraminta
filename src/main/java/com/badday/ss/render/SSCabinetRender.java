@@ -36,19 +36,11 @@ public class SSCabinetRender extends TileEntitySpecialRenderer {
 	public void renderTileEntityAt(SSTileEntityCabinet cabinetTE, double x, double y, double z, float partialTicks) {
 		
 		float scale = 1.0F / 16;
-		
-		//boolean large = cabinetTE.isConnected();
 		boolean large = true;
-		//if (large && !locker.isMain()) return;
-		
 		int index = (cabinetTE.mirror ? 1 : 0);
 		SSCabinetModel model = cabinetModel;
-		//bindTexture(locker.getResource());
-		/*if (cabinetTE.getType() == 2) {
-			bindTexture(textureLockerLarge);
-		}*/
 		bindTexture(textures[cabinetTE.getType()]);
-		
+		//bindTexture(textures[0]);
 		
 		GL11.glPushMatrix();
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);

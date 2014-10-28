@@ -1,5 +1,7 @@
 package com.badday.ss.containers;
 
+import com.badday.ss.SSConfig;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -8,20 +10,17 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 public class SSContainerCabinet extends Container {
-    private int type;
     private EntityPlayer player;
     private IInventory chest;
-    private final int SIZE = 54;
-    private final int ROWLENGHT = 9;
-    private final int ROWCOUNT = SIZE/ROWLENGHT; 
+    private final int ROWLENGHT = 9;//9
+    private final int ROWCOUNT = SSConfig.ssCabinetSize/ROWLENGHT; 
 	
-    public SSContainerCabinet(IInventory playerInventory, IInventory chestInventory, int type, int xSize, int ySize)
+    public SSContainerCabinet(IInventory playerInventory, IInventory chestInventory, int xSize, int ySize)
     {
         chest = chestInventory;
         player = ((InventoryPlayer) playerInventory).player;
-        this.type = type;
         chestInventory.openInventory();
-        layoutContainer(playerInventory, chestInventory, type, xSize, ySize);
+        layoutContainer(playerInventory, chestInventory, xSize, ySize);
     }
 
     @Override
@@ -40,14 +39,14 @@ public class SSContainerCabinet extends Container {
         {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
-            if (i < 54)
+            if (i < SSConfig.ssCabinetSize) // TankeFix
             {
-                if (!mergeItemStack(itemstack1, SIZE, inventorySlots.size(), true))
+                if (!mergeItemStack(itemstack1, SSConfig.ssCabinetSize, inventorySlots.size(), true))
                 {
                     return null;
                 }
             }
-            else if (!mergeItemStack(itemstack1, 0, SIZE, false))
+            else if (!mergeItemStack(itemstack1, 0, SSConfig.ssCabinetSize, false))
             {
                 return null;
             }
@@ -70,7 +69,7 @@ public class SSContainerCabinet extends Container {
         chest.closeInventory();
     }
 
-    protected void layoutContainer(IInventory playerInventory, IInventory chestInventory, int type, int xSize, int ySize)
+    protected void layoutContainer(IInventory playerInventory, IInventory chestInventory, int xSize, int ySize)
     {
        
 		for (int chestRow = 0; chestRow < ROWCOUNT; chestRow++) {
