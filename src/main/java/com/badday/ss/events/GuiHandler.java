@@ -23,10 +23,11 @@ public class GuiHandler implements IGuiHandler {
 	@SideOnly(Side.CLIENT)
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		/*
+		
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
 			
 			if (!world.blockExists(x, y, z)) {
+				if (SS.Debug) System.out.println("["+SS.MODNAME+"] Block not exists");
 				return null;
 			}
 
@@ -40,13 +41,13 @@ public class GuiHandler implements IGuiHandler {
 	            }
 	        }
 		
-			if (ID == SSGuiIDs.GUI_ID_CABINET) {
+			/*if (ID == SSGuiIDs.GUI_ID_CABINET) {
 				return new SSGuiCabinet(player.inventory, (SSTileEntityCabinet) tile);
-			}
+			}*/
 			
 			
 		}
-		 */
+		
 		return null;
 	}
 
@@ -67,8 +68,7 @@ public class GuiHandler implements IGuiHandler {
         {
         	if (tile instanceof SSTileEntityCabinet)
             {
-        		return new SSContainerCabinet(player.inventory, ((SSTileEntityCabinet) tile), 2, 4);
-        		
+        		return new SSContainerCabinet(player.inventory, ((SSTileEntityCabinet) tile), 184, 184); 
             }
         }
                 

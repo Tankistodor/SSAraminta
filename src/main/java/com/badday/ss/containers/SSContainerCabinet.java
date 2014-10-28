@@ -71,10 +71,9 @@ public class SSContainerCabinet extends Container {
 
     protected void layoutContainer(IInventory playerInventory, IInventory chestInventory, int xSize, int ySize)
     {
-       
 		for (int chestRow = 0; chestRow < ROWCOUNT; chestRow++) {
 			for (int chestCol = 0; chestCol < ROWLENGHT; chestCol++) {
-				addSlotToContainer(makeSlot(chestInventory, chestCol + chestRow * ROWLENGHT, 12 + chestCol * 18, 8 + chestRow * 18));
+				addSlotToContainer(makeSlot(chestInventory, chestCol + chestRow * ROWLENGHT, 8 + chestCol * 18, 8 + chestRow * 18));
 			}
 		}
 
@@ -83,7 +82,7 @@ public class SSContainerCabinet extends Container {
         {
             for (int playerInvCol = 0; playerInvCol < 9; playerInvCol++)
             {
-                addSlotToContainer(new Slot(playerInventory, playerInvCol + playerInvRow * 9 + 9, leftCol + playerInvCol * 18, ySize - (4 - playerInvRow) * 18
+                addSlotToContainer(new Slot(playerInventory, playerInvCol + playerInvRow * 9 + 9, leftCol + playerInvCol * 18-4, ySize - (4 - playerInvRow) * 18
                         - 10));
             }
 
@@ -91,7 +90,7 @@ public class SSContainerCabinet extends Container {
 
         for (int hotbarSlot = 0; hotbarSlot < 9; hotbarSlot++)
         {
-            addSlotToContainer(new Slot(playerInventory, hotbarSlot, leftCol + hotbarSlot * 18, ySize - 24));
+            addSlotToContainer(new Slot(playerInventory, hotbarSlot, leftCol + hotbarSlot * 18 - 4, ySize - 24));
         }
     }
     

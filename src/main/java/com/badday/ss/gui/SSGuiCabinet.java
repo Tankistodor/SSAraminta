@@ -6,21 +6,24 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import com.badday.ss.SS;
 import com.badday.ss.blocks.SSTileEntityCabinet;
 import com.badday.ss.containers.SSContainerCabinet;
 
 
 public class SSGuiCabinet extends GuiContainer {
 	
-	private static final ResourceLocation guiTexture = new ResourceLocation("cabinet", "textures/gui/cabinet.png");
+	private static final ResourceLocation guiTexture = new ResourceLocation("ss", "textures/gui/cabinet.png");
 	private final SSTileEntityCabinet cabinet;
 	
-	private static final int xSize = 184;
-	private static final int ySize = 202;
+	private static int xSize = 184;//184
+	private static int ySize = 166;
 	
     public SSGuiCabinet(IInventory player, SSTileEntityCabinet chest)
     {
         super(new SSContainerCabinet(player,chest,xSize,ySize));
+        this.xSize = xSize;
+        this.ySize = ySize;
         cabinet = chest;
         this.allowUserInput = false;
     }
@@ -29,7 +32,7 @@ public class SSGuiCabinet extends GuiContainer {
     @Override
     public void initGui()
     {
-    
+    	super.initGui();
     }
 
     @Override
