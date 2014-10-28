@@ -15,6 +15,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
 import com.badday.ss.api.IMultiBlock;
 import com.badday.ss.containers.SSContainerCabinet;
@@ -45,6 +46,7 @@ public class SSTileEntityCabinet extends TileEntity implements IInventory,IMulti
 		super();
 		this.type = type;
 		this.chestContents = new ItemStack[getSizeInventory()];
+		System.out.println("["+SS.MODNAME+" create chestContents size is: " + chestContents.length);
 	}
 	
 	public ItemStack[] getContents() {
@@ -169,7 +171,7 @@ public class SSTileEntityCabinet extends TileEntity implements IInventory,IMulti
 
 	@Override
 	public int getInventoryStackLimit() {
-		return 1;
+		return 64;
 	}
 
 	@Override
@@ -311,7 +313,7 @@ public class SSTileEntityCabinet extends TileEntity implements IInventory,IMulti
 	
 	 public void handlePacketData(int typeData, int[] intData)
 	    {
-		 /*(
+		 /*
 	        SSTileEntityCabinet chest = this;
 	        if (this.type.ordinal() != typeData)
 	        {
@@ -341,7 +343,7 @@ public class SSTileEntityCabinet extends TileEntity implements IInventory,IMulti
 	        } */
 	    }
 
-	    public int[] buildIntDataList()
+	    public int[] buildIntDataList() // SEE HERE
 	    {
 	        return null;
 	    }
