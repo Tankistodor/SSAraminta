@@ -41,7 +41,6 @@ public class SSRenderHandlers implements ISimpleBlockRenderingHandler {
 		this.rotation = rotation;
 		this.scale = scale;
 		this.yOffset = yOffset;
-		
 		tileEntityRenderer.func_147497_a(TileEntityRendererDispatcher.instance);
 		renderId = RenderingRegistry.getNextAvailableRenderId();
 	}

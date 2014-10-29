@@ -24,7 +24,7 @@ public class SSCabinetRender extends TileEntitySpecialRenderer {
 
 	private SSCabinetModel cabinetModel = new SSCabinetModel();
 	public static ResourceLocation[] textures;//      = new ResourceLocation("ss:textures/model/cabinet.png");
-	public static final ResourceLocation textureCabinetGray      = new ResourceLocation("ss:textures/model/cabinetGray.png");
+	//public static final ResourceLocation textureCabinetGray      = new ResourceLocation("ss:textures/model/cabinetGray.png");
 		
 	public static void loadTextures() {
 		textures = new ResourceLocation[SSConfig.ssCabinet_unlocalizedName.length];
