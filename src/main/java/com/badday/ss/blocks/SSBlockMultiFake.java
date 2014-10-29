@@ -5,6 +5,7 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
@@ -141,4 +142,17 @@ public class SSBlockMultiFake extends BlockContainer {
 		((SSTileEntityMultiFake) worldObj.getTileEntity(position.x, position.y, position.z)).setMainBlock(mainBlock);
 	}
 
+	
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int i1, float f1, float f2, float f3) {
+		TileEntity te = world.getTileEntity(x, y, z);
+
+		if (te == null || (te instanceof SSTileEntityMultiFake)) {
+			((SSTileEntityMultiFake) te).onBlockActivated(world, x, y, z, player);
+			return true;
+		}
+		
+		return true;
+	}
+	
 }
