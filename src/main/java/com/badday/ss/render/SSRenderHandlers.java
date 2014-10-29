@@ -18,6 +18,9 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+/*
+ * Render Item block in inventory 
+ */
 @SideOnly(Side.CLIENT)
 public class SSRenderHandlers implements ISimpleBlockRenderingHandler {
 	
@@ -49,6 +52,9 @@ public class SSRenderHandlers implements ISimpleBlockRenderingHandler {
 	public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer) {
 		tileEntity.blockType = block;
 		tileEntity.blockMetadata = metadata;
+		if (tileEntity instanceof SSTileEntityCabinet) {
+			((SSTileEntityCabinet) tileEntity).setType(metadata);
+		}
 		//if (tileEntity instanceof SSTileEntityCabinet)
 		//	((SSTileEntityCabinet)tileEntity).ticksExisted =
 		//		Minecraft.getMinecraft().thePlayer.ticksExisted;

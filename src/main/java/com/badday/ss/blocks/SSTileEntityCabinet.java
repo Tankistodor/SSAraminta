@@ -46,7 +46,6 @@ public class SSTileEntityCabinet extends TileEntity implements IInventory,IMulti
 		super();
 		this.type = type;
 		this.chestContents = new ItemStack[getSizeInventory()];
-		System.out.println("["+SS.MODNAME+" create chestContents size is: " + chestContents.length);
 	}
 	
 	public ItemStack[] getContents() {
@@ -143,6 +142,10 @@ public class SSTileEntityCabinet extends TileEntity implements IInventory,IMulti
 	public int getType() {
 		return type;
 	}
+	
+	public void setType(int t) {
+		this.type = t;
+	}
 
 	@Override
 	public ItemStack decrStackSize(int i, int j) {
@@ -212,8 +215,8 @@ public class SSTileEntityCabinet extends TileEntity implements IInventory,IMulti
     }
 
 	@Override
-	public boolean isItemValidForSlot(int arg0, ItemStack arg1) {
-		// TODO Auto-generated method stub
+	public boolean isItemValidForSlot(int slot, ItemStack item) {
+		//System.out.println("Try to put in cabinet in slot "+slot+" Item "+item.toString());
 		return true;
 	}
 

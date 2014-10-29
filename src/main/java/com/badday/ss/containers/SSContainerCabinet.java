@@ -30,6 +30,12 @@ public class SSContainerCabinet extends Container {
     }
 
 
+    /**
+     * 
+     * 
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.Container#transferStackInSlot(net.minecraft.entity.player.EntityPlayer, int)
+     */
     @Override
     public ItemStack transferStackInSlot(EntityPlayer p, int i)
     {
@@ -39,6 +45,9 @@ public class SSContainerCabinet extends Container {
         {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
+            if (!slot.inventory.isItemValidForSlot(i, itemstack)) {
+            	return null;
+            }
             if (i < SSConfig.ssCabinetSize) // TankeFix
             {
                 if (!mergeItemStack(itemstack1, SSConfig.ssCabinetSize, inventorySlots.size(), true))
