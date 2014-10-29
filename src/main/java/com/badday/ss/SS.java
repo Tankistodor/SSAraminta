@@ -119,6 +119,8 @@ public class SS {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		//FMLCommonHandler.instance().bus().register(SSTickHandlerClient.class);
+		
+		/** Регистрируем рендеринг космоса */
 		if (FMLCommonHandler.instance().getSide().isClient()) {
 		 SSTickHandlerClient tickHandlerClient = new SSTickHandlerClient();
 	     FMLCommonHandler.instance().bus().register(tickHandlerClient);
