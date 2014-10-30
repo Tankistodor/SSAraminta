@@ -24,8 +24,8 @@ public final class PressureCalculator {
     //Get distance to all nearby airvents
     List distances = new ArrayList();
     Pathfinding finder;
-    long time1, time2;
-
+    long time1, time2, all_time;
+    all_time = System.nanoTime();
     for(Object airvent: airvents) {
       //TODO: Add check for enabled
 
@@ -40,9 +40,14 @@ public final class PressureCalculator {
         }
       }
 
+      if(SS.Debug) {
+        System.out.println("[" + SS.MODNAME + "] full time:" + (System.nanoTime() - all_time) / 1000000.0D);
+      }
+
       if(finder.isDone()) {
         distances.add(finder.getResult().size());
       }
+
 
     }
 
