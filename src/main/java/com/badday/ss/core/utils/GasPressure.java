@@ -38,7 +38,7 @@ public class GasPressure {
 	private HashSet<BlockVec3> checked = new HashSet<BlockVec3>();
 	private boolean sealed;
 	int checkCount = SSConfig.ssAirVentBlockArea;
-
+	
 	public GasPressure(World world1, BlockVec3 vec) {
 		this.world = world1;
 		this.head = vec;
@@ -72,7 +72,7 @@ public class GasPressure {
 	 * @param ssTileEntityAirVent
 	 */
 
-	public void fullcheck() {
+	public boolean fullcheck() {
 
 		long time1 = System.nanoTime();
 
@@ -90,36 +90,23 @@ public class GasPressure {
 		checked = new HashSet<BlockVec3>();
 		this.sealed = true; // Try to enable air vent
 		this.doLayer();
-
-		long time2 = System.nanoTime();
-
-		if (this.sealed && !this.blockToReplace.isEmpty()) {
-			// TODO механизм замены блоков если
+		
+		/*
+		 * long time2 = System.nanoTime();
+		 * 
+		 * if (this.sealed && !this.blockToReplace.isEmpty()) {
+		 * // TODO механизм замены блоков если
 			replace_block();
-		}
+		}*/
 		long time3 = System.nanoTime();
 
-		if (SS.Debug) {
+		if (SS.Debug && false) {
 			System.out.println("[" + SS.MODNAME + "] AirVent Check Completed at x: " + this.head.x + " y: " + this.head.y + " z: " + this.head.z);
 			System.out.println("   Sealed: " + this.sealed);
-			System.out.println("   Loop Time taken: " + (time2 - time1) / 1000000.0D + "ms");
-			System.out.println("   Place Time taken: " + (time3 - time2) / 1000000.0D + "ms");
 			System.out.println("   Total Time taken: " + (time3 - time1) / 1000000.0D + "ms");
-			System.out.println("   Block Replaced: " + this.blockToReplace.size() + " blocks");
-			System.out.println("   Looped through: " + this.checked.size() + " blocks");
+		    System.out.println("   Looped through: " + this.checked.size() + " blocks");
 		}
-
-	}
-
-	private void replace_block() {
-
-		for (BlockVec3 b : blockToReplace) {
-			world.setBlock(b.x, b.y, b.z, SSConfig.ssBlockGas, 0, 2);
-			TileEntity t = b.getTileEntity(world);
-			if (t instanceof SSTileEntityGasBlock) {
-				((SSTileEntityGasBlock) t).setHead(this.head);
-			}
-		}
+		return this.sealed;
 
 	}
 
@@ -168,7 +155,7 @@ public class GasPressure {
 									if (sideVec.getTileEntity(this.world) instanceof SSTileEntityGasBlock) {
 										SSTileEntityGasBlock t = (SSTileEntityGasBlock) sideVec.getTileEntity(this.world);
 										if (t.head.x != this.head.x || t.head.y != this.head.y || t.head.z != this.head.z) {
-											System.out.println("[" + SS.MODNAME + "] AirVent t " + t.head.toString());
+											//System.out.println("[" + SS.MODNAME + "] AirVent t " + t.head.toString());
 											this.blockToReplace.add(sideVec);
 										}
 									}
@@ -245,22 +232,25 @@ public class GasPressure {
 		// Not solid from this side, so this is not sealed
 		return true;
 	}
+	
+	public int getSize() {
+		return this.checked.size();
+	}
 
-	/**
-	 * Create new Gas block on x,y,z and head vent
-	 * 
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param vecHead
-	 */
-	public void createGasBlock(int x, int y, int z, BlockVec3 vecHead) {
-		this.world.setBlockMetadataWithNotify(x, y, z, 0, 2);
-		TileEntity t = this.world.getTileEntity(x, y, z);
-		if (t instanceof SSTileEntityGasBlock) {
-			((SSTileEntityGasBlock) t).setHead(this.head.clone());
+	
+	@Deprecated
+	private void replace_block() {
+
+		for (BlockVec3 b : blockToReplace) {
+			world.setBlock(b.x, b.y, b.z, SSConfig.ssBlockGas, 0, 2);
+			TileEntity t = b.getTileEntity(world);
+			if (t instanceof SSTileEntityGasBlock) {
+				((SSTileEntityGasBlock) t).setHead(this.head);
+			}
 		}
 
 	}
 
+
+	
 }

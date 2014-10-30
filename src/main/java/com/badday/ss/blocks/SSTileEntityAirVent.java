@@ -19,9 +19,13 @@ public class SSTileEntityAirVent extends TileEntity {
 	private final int COOLDOWN = 20;
 	public long ticks = 0;
 	public GasPressure gasPressure = null;
+	/** AirVent is emits gasmixture */
 	public boolean active = false;
-
-  public boolean added_to_airvent_net = false;
+	/** AirVent in sealed bay */
+	public boolean sealed = false;
+	/** AirVent is conneted to AirNet */
+	public boolean added_to_airvent_net = false;
+	public boolean normalGas = true;
 
 	@Override
 	public void updateEntity() {
@@ -34,14 +38,14 @@ public class SSTileEntityAirVent extends TileEntity {
 			return;
 		}
 
-    if(!added_to_airvent_net) {
-      MinecraftForge.EVENT_BUS.post(new AirNetAddEvent(new BlockVec3(this)));
-      added_to_airvent_net = true;
-    }
-
 		// Air vent works only in spaces
 		if (worldObj.provider.dimensionId != SS.instance.spaceDimID) {
 			return;
+		}
+		
+		if (!added_to_airvent_net) {
+			MinecraftForge.EVENT_BUS.post(new AirNetAddEvent(new BlockVec3(this)));
+			added_to_airvent_net = true;
 		}
 
 		if (!this.worldObj.isRemote && this.ticks % COOLDOWN == 0) {
@@ -65,7 +69,9 @@ public class SSTileEntityAirVent extends TileEntity {
 
 		if (!this.worldObj.isRemote && this.ticks % (COOLDOWN * 5) == 0) {
 			if (this.gasPressure != null) {
-				this.gasPressure.fullcheck();
+				this.sealed = this.gasPressure.fullcheck();
+				if (SS.Debug)
+					System.out.println("[" + SS.MODNAME + "] AirVent checked sealed bay. His size: " + this.gasPressure.getSize());
 			}
 		}
 
@@ -91,25 +97,25 @@ public class SSTileEntityAirVent extends TileEntity {
 	public void invalidate() {
 		super.invalidate();
 		this.gasPressure = null;
-    if(added_to_airvent_net) {
-      MinecraftForge.EVENT_BUS.post(new AirNetRemoveEvent(new BlockVec3(this)));
-      added_to_airvent_net = false;
-    }
+		if (added_to_airvent_net) {
+			MinecraftForge.EVENT_BUS.post(new AirNetRemoveEvent(new BlockVec3(this)));
+			added_to_airvent_net = false;
+		}
 	}
 
-  @Override
-  public void onChunkUnload() {
-    if(added_to_airvent_net) {
-      MinecraftForge.EVENT_BUS.post(new AirNetRemoveEvent(new BlockVec3(this)));
-      added_to_airvent_net = false;
-    }
-  }
+	@Override
+	public void onChunkUnload() {
+		if (added_to_airvent_net) {
+			MinecraftForge.EVENT_BUS.post(new AirNetRemoveEvent(new BlockVec3(this)));
+			added_to_airvent_net = false;
+		}
+	}
 
-    /**
-     * Gas suitable for breathing
-     *
-     * @return
-     */
+	/**
+	 * Gas suitable for breathing
+	 * 
+	 * @return
+	 */
 	public boolean isNormalAir() {
 		// TODO Добавить определение смеси газов и пригодность для дыхания
 		return true;
