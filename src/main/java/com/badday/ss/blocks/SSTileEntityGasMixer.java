@@ -1,5 +1,6 @@
 package com.badday.ss.blocks;
 
+import com.badday.ss.api.IGasNetwork;
 import com.badday.ss.api.IGasNetworkSource;
 
 import net.minecraft.tileentity.TileEntity;
@@ -26,6 +27,18 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 
 	@Override
 	public void setGasTemperature() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setNetwork(IGasNetwork network) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onNetworkChanged() {
 		// TODO Auto-generated method stub
 		
 	}

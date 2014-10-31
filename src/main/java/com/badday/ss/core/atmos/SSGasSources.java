@@ -1,8 +1,9 @@
 package com.badday.ss.core.atmos;
 
+import com.badday.ss.api.IGasNetwork;
 import com.badday.ss.api.IGasNetworkSource;
 
-public class SSGasProvider implements IGasNetworkSource {
+public class SSGasSources implements IGasNetworkSource {
 
 	@Override
 	public float getGasPressure() {
@@ -24,6 +25,18 @@ public class SSGasProvider implements IGasNetworkSource {
 
 	@Override
 	public void setGasTemperature() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setNetwork(IGasNetwork network) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onNetworkChanged() {
 		// TODO Auto-generated method stub
 		
 	}

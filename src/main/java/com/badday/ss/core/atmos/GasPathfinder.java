@@ -9,7 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import com.badday.ss.api.IGasNetworkConsumer;
+import com.badday.ss.api.IGasNetworkVent;
 import com.badday.ss.api.IGasNetworkPipe;
 import com.badday.ss.api.IGasNetworkSource;
 import com.badday.ss.core.utils.BlockVec3;
@@ -21,7 +21,7 @@ public class GasPathfinder {
 	}
 
 	public List<BlockVec3> sources = new LinkedList<BlockVec3>();
-	public List<BlockVec3> consumers = new LinkedList<BlockVec3>();
+	public List<BlockVec3> vents = new LinkedList<BlockVec3>();
 
 	public List<BlockVec3> iterated = new ArrayList<BlockVec3>();
 	public List<BlockVec3> toIgnore = new ArrayList<BlockVec3>();
@@ -47,6 +47,8 @@ public class GasPathfinder {
 			toIgnore.add(location);
 		}*/
 
+		iterated.add(location);
+		
 		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
 			//BlockVec3 obj = location.getFromSide(direction);
 			BlockVec3 obj = location.modifyPositionFromSide(direction);
@@ -60,14 +62,11 @@ public class GasPathfinder {
 					} else if (tileEntity instanceof IGasNetworkSource) {
 						if (!this.sources.contains(obj))
 							this.sources.add(obj);
-					} else if (tileEntity instanceof IGasNetworkConsumer) {
-						if (!this.consumers.contains(obj))
-							this.consumers.add(obj);
+					} else if (tileEntity instanceof IGasNetworkVent) {
+						if (!this.vents.contains(obj))
+							this.vents.add(obj);
 					}
-					
 				}
-				
-				
 			}
 		}
 	}
@@ -77,4 +76,41 @@ public class GasPathfinder {
 
 		return iterated;
 	}
+	
+	public List<BlockVec3> getSources() {
+		return this.sources;
+	}
+	
+	public List<BlockVec3> getVents() {
+		return this.vents;
+	}
+	
+	public List<BlockVec3> getPipes() {
+		return this.iterated;
+	}
+	
+	public List<IGasNetworkPipe> getPipesAsTile() {
+		List<IGasNetworkPipe> res = new ArrayList<IGasNetworkPipe>();
+		for (BlockVec3 p : this.iterated) {
+			res.add((IGasNetworkPipe) p.getTileEntity(worldObj));
+		}
+		return res;
+	}
+	
+	public List<IGasNetworkSource> getSourcesAsTile() {
+		List<IGasNetworkSource> res = new ArrayList<IGasNetworkSource>();
+		for (BlockVec3 p : this.sources) {
+			res.add((IGasNetworkSource) p.getTileEntity(worldObj));
+		}
+		return res;
+	}
+	
+	public List<IGasNetworkVent> getVentsAsTile() {
+		List<IGasNetworkVent> res = new ArrayList<IGasNetworkVent>();
+		for (BlockVec3 p : this.sources) {
+			res.add((IGasNetworkVent) p.getTileEntity(worldObj));
+		}
+		return res;
+	}
+	
 }
