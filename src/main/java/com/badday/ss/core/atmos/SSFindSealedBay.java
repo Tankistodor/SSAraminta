@@ -1,4 +1,4 @@
-package com.badday.ss.core.utils;
+package com.badday.ss.core.atmos;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,8 +27,9 @@ import com.badday.ss.SSConfig;
 import com.badday.ss.api.ISSSealedBlock;
 import com.badday.ss.blocks.SSTileEntityAirVent;
 import com.badday.ss.blocks.SSTileEntityGasBlock;
+import com.badday.ss.core.utils.BlockVec3;
 
-public class GasPressure {
+public class SSFindSealedBay {
 
 	private World world;
 	public BlockVec3 head;
@@ -39,7 +40,7 @@ public class GasPressure {
 	private boolean sealed;
 	int checkCount = SSConfig.ssAirVentBlockArea;
 	
-	public GasPressure(World world1, BlockVec3 vec) {
+	public SSFindSealedBay(World world1, BlockVec3 vec) {
 		this.world = world1;
 		this.head = vec;
 		this.checkCount = SSConfig.ssAirVentBlockArea;

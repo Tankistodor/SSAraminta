@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 
 import com.badday.ss.blocks.SSTileEntityAirVent;
 import com.badday.ss.blocks.SSTileEntityGasBlock;
+import com.badday.ss.core.atmos.SSFindSealedBay;
 import com.badday.ss.world.space.SpaceProvider;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -65,15 +66,15 @@ public class WorldUtils {
 		}
 	}
 	
-	public static GasPressure getGasPressure(World world, int x, int y, int z) {
+	public static SSFindSealedBay getGasPressure(World world, int x, int y, int z) {
 		TileEntity tt = world.getTileEntity(x, y, z);
 		if (tt instanceof SSTileEntityGasBlock) {
 			SSTileEntityGasBlock t = (SSTileEntityGasBlock) tt;
 			if (t != null) {
 				if (t.getTileEntityAirVent() != null) {
 					SSTileEntityAirVent vent = t.getTileEntityAirVent();
-					if (vent.gasPressure != null)
-						return vent.gasPressure;
+					if (vent.findSealedBay != null)
+						return vent.findSealedBay;
 				}
 			}
 		}

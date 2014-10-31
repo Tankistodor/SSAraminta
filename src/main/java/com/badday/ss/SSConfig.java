@@ -63,6 +63,11 @@ public class SSConfig {
 			"blockWallCasingPink", "blockWallCasingLime", "blockWallCasingYellow", "blockWallCasingLightBlue", "blockWallCasingMagenta",
 			"blockWallCasingOrange", "blockWallCasingWhite" };
 
+	public static final String[] ssGasPipe_unlocalizedName = { "blockGasPipeBlack", "blockGasPipeRed", "blockGasPipeGreen",
+		"blockGasPipeBrown", "blockGasPipeBlue", "blockGasPipePurple", "blockGasPipeCyan", "blockGasPipeLightGray", "blockGasPipeGray",
+		"blockGasPipePink", "blockGasPipeLime", "blockGasPipeYellow", "blockGasPipeLightBlue", "blockGasPipeMagenta",
+		"blockGasPipeOrange", "blockGasPipeWhite" };
+	
 	public static final String[] ssCabinet_unlocalizedName = { "cabinetGray", "cabinetSecure", "cabinetHydroponic", "cabinetElectric", "cabinetMining", "cabinetWhite",
 			"cabinetO2", "cabinetMedical", "cabinetFire", "cabinetHazard", "cabinetIndustry" };
 
@@ -85,6 +90,7 @@ public class SSConfig {
 	public static int ssCabinetSize =  36;
 	
 	public static int cabinetRenderId;
+	public static int gasPipeRenderId;
 
 	static Configuration config;
 

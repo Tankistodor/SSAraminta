@@ -3,7 +3,10 @@ package com.badday.ss.api;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public interface IGasNetworkConnector
+/*
+ * GasPipe
+ */
+public interface IGasNetworkPipe
 {
 
     /**
@@ -13,13 +16,26 @@ public interface IGasNetworkConnector
      * @return
      */
     public TileEntity[] getAdjacentConnections();
-
+    
     /**
      * Refreshes the conductor
      */
     public void refresh();
 
+    public void reset();
+    
     public void onNetworkChanged();
     
     public boolean canConnect(ForgeDirection direction);
+    
+    public IGasNetwork getNetwork();
+	    
+    public void setNetwork(IGasNetwork network);
+    
+    public void resetNetwork();
+    
+    public void validate();
+    
+    public void invalidate();
+    
 }

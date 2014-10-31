@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
 import com.badday.ss.api.ISSGasBlock;
-import com.badday.ss.core.utils.GasPressure;
+import com.badday.ss.core.atmos.SSFindSealedBay;
 import com.badday.ss.core.utils.WorldUtils;
 
 @Deprecated
@@ -114,7 +114,7 @@ public class SSBlockGas extends BlockContainer implements ISSGasBlock {
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block blockBroken) {
 		if (blockBroken != Blocks.air && !world.isRemote){
-			GasPressure gp = WorldUtils.getGasPressure(world,x,y,z);
+			SSFindSealedBay gp = WorldUtils.getGasPressure(world,x,y,z);
 			if (gp != null) {
 				gp.fullcheck();
 				if (SS.Debug) {

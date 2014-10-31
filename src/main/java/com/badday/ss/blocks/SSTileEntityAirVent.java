@@ -1,24 +1,22 @@
 package com.badday.ss.blocks;
 
-import com.badday.ss.events.AirNetAddEvent;
-import com.badday.ss.events.AirNetRemoveEvent;
-import ic2.api.energy.event.EnergyTileLoadEvent;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 
 import com.badday.ss.SS;
+import com.badday.ss.core.atmos.SSFindSealedBay;
 import com.badday.ss.core.utils.BlockVec3;
-import com.badday.ss.core.utils.GasPressure;
+import com.badday.ss.events.AirNetAddEvent;
+import com.badday.ss.events.AirNetRemoveEvent;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import net.minecraftforge.common.MinecraftForge;
 
 public class SSTileEntityAirVent extends TileEntity {
 
 	private final int COOLDOWN = 20;
 	public long ticks = 0;
-	public GasPressure gasPressure = null;
+	public SSFindSealedBay findSealedBay = null;
 	/** AirVent is emits gasmixture */
 	public boolean active = false;
 	/** AirVent in sealed bay */
@@ -50,7 +48,7 @@ public class SSTileEntityAirVent extends TileEntity {
 
 		if (!this.worldObj.isRemote && this.ticks % COOLDOWN == 0) {
 
-			if (this.gasPressure != null) {
+			if (this.findSealedBay != null) {
 				/*
 				 * this.active && this.threadSeal.sealedFinal.get();
 				 * this.calculatingSealed = this.active &&
@@ -59,7 +57,7 @@ public class SSTileEntityAirVent extends TileEntity {
 				 */
 
 			} else {
-				this.gasPressure = new GasPressure(worldObj, new BlockVec3(this));
+				this.findSealedBay = new SSFindSealedBay(worldObj, new BlockVec3(this));
 				if (SS.Debug)
 					System.out.println("[" + SS.MODNAME + "] create gasPressure class");
 				// this.gasPressure.fullcheck();
@@ -68,10 +66,10 @@ public class SSTileEntityAirVent extends TileEntity {
 		}
 
 		if (!this.worldObj.isRemote && this.ticks % (COOLDOWN * 5) == 0) {
-			if (this.gasPressure != null) {
-				this.sealed = this.gasPressure.fullcheck();
+			if (this.findSealedBay != null) {
+				this.sealed = this.findSealedBay.fullcheck();
 				if (SS.Debug)
-					System.out.println("[" + SS.MODNAME + "] AirVent checked sealed bay. His size: " + this.gasPressure.getSize());
+					System.out.println("[" + SS.MODNAME + "] AirVent checked sealed bay. His size: " + this.findSealedBay.getSize());
 			}
 		}
 
@@ -96,7 +94,7 @@ public class SSTileEntityAirVent extends TileEntity {
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		this.gasPressure = null;
+		this.findSealedBay = null;
 		if (added_to_airvent_net) {
 			MinecraftForge.EVENT_BUS.post(new AirNetRemoveEvent(new BlockVec3(this)));
 			added_to_airvent_net = false;
