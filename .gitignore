@@ -3,3 +3,7 @@ SSAraminta.ipr
 SSAraminta.iws
 eclipse/
 .gradle/
+/bin/
+.classpath
+.project
+.settings/

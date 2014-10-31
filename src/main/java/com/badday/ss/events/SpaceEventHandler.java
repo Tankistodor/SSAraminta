@@ -3,6 +3,7 @@ package com.badday.ss.events;
 import java.util.HashMap;
 
 import com.badday.ss.core.utils.AirVentNet;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -17,6 +18,7 @@ import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
 import com.badday.ss.core.utils.BlockVec3;
 import com.badday.ss.core.utils.Pathfinding;
+import com.badday.ss.core.utils.PressureCalculator;
 import com.badday.ss.core.utils.SpaceTeleporter;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -74,6 +76,16 @@ public class SpaceEventHandler
 			updatePlayerCloakState(entity);
 		}*/
 		
+		//Ok. get pressure
+		if (entity.worldObj.provider.dimensionId == SS.instance.spaceDimID) {
+			this.lastTimer++;
+			if (this.lastTimer > 20 * 2) {
+				double pressure = PressureCalculator.getPressureAt(entity.worldObj, new BlockVec3(entity));
+				if(SS.Debug) {
+					System.out.println("[" + SS.MODNAME + "] Pressure is: " + pressure);
+				}
+			}
+		}
 		
 		/*if (entity.worldObj.provider.dimensionId == SS.instance.spaceDimID) {
 			this.lastTimer++;
@@ -91,6 +103,7 @@ public class SpaceEventHandler
 		}*/
 
 		// If player in vaccum, check and start consuming air cells
+		/*
 		if (entity.worldObj.provider.dimensionId == SS.instance.spaceDimID)
 		{
 			boolean inVacuum = isEntityInVacuum(entity);
@@ -146,7 +159,9 @@ public class SpaceEventHandler
 					entity.attackEntityFrom(DamageSource.drown, 1);
 				}
 			}
-		}
+		}*/
+		
+		
 	}
 
 	/*private void updatePlayerCloakState(EntityLivingBase entity) {
