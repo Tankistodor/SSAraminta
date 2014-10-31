@@ -4,12 +4,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.badday.ss.api.IGasNetwork;
 import com.badday.ss.api.IGasNetworkConnector;
 import com.badday.ss.api.IGasNetworkPipe;
+import com.badday.ss.api.IGasNetworkSource;
 import com.badday.ss.core.utils.BlockVec3;
 
 /**
@@ -20,14 +22,14 @@ import com.badday.ss.core.utils.BlockVec3;
 public class SSGasNetwork implements IGasNetwork {
 
 	// *private final Set<ITransmitter> pipes = new HashSet<ITransmitter>();
-	public List<IGasNetworkConnector> pipes = new LinkedList<IGasNetworkConnector>(); // Pipes
-	public List<IGasNetworkConnector> source = new LinkedList<IGasNetworkConnector>(); // Pipes
+	public List<IGasNetworkPipe> pipes = new LinkedList<IGasNetworkPipe>(); // Pipes
+	public List<IGasNetworkSource> source = new LinkedList<IGasNetworkSource>(); // Pipes
 
 	public void rebuildNetwork(SSGasNetwork node) {
 		try {
-			Iterator<IGasNetworkConnector> it = node.pipes.iterator();
+			Iterator<IGasNetworkPipe> it = node.pipes.iterator();
 			while (it.hasNext()) {
-				SSTileEntityGasPipe pipe = (SSTileEntityGasPipe) it.next();
+				IGasNetworkPipe pipe = (IGasNetworkPipe) it.next();
 			}
 		} finally {
 
@@ -44,8 +46,8 @@ public class SSGasNetwork implements IGasNetwork {
 		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
 			TileEntity tileEntity = thisVec.getTileEntityOnSide(tile.getWorldObj(), direction);
 
-			if (tileEntity instanceof IGasNetworkConnector) {
-				if (((IGasNetworkConnector) tileEntity).canConnect(direction.getOpposite())) {
+			if (tileEntity instanceof IGasNetworkPipe) {
+				if (((IGasNetworkPipe) tileEntity).canConnect(direction.getOpposite())) {
 					adjacentConnections[direction.ordinal()] = tileEntity;
 				}
 			}
@@ -81,7 +83,7 @@ public class SSGasNetwork implements IGasNetwork {
 	}
 
 	@Override
-	public List<IGasNetworkConnector> getTransmitters() {
+	public List<IGasNetworkPipe> getTransmitters() {
 		return this.pipes;
 	}
 
@@ -114,7 +116,7 @@ public class SSGasNetwork implements IGasNetwork {
 					for (final TileEntity connectedBlockB : connectedBlocks) {
 						if (connectedBlockA != connectedBlockB && connectedBlockB instanceof IGasNetworkPipe) {
 							GasPathfinder finder = new GasPathfinder(((TileEntity) splitPoint).getWorldObj(), new BlockVec3(connectedBlockB),
-									new BlockVec3(splitPoint);
+									new BlockVec3((TileEntity) splitPoint));
 							finder.init(new BlockVec3(connectedBlockA));
 
 							if (finder.results.size() > 0) {
