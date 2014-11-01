@@ -82,7 +82,7 @@ public class SpaceEventHandler
 			if (this.lastTimer > 20 * 2) {
 				double pressure = PressureCalculator.getPressureAt(entity.worldObj, new BlockVec3(entity));
 				if(SS.Debug) {
-					System.out.println("[" + SS.MODNAME + "] Pressure is: " + pressure);
+					// TEMP System.out.println("[" + SS.MODNAME + "] Pressure is: " + pressure);
 				}
 			}
 		}

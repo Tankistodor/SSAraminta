@@ -45,7 +45,7 @@ public class SSBlockGasPipe  extends BlockContainer {
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		return new SSTileEntityGasPipe(meta);
+		return new SSTileEntityGasPipe((byte) meta);
 	}
 
 	@Override
@@ -253,4 +253,21 @@ public class SSBlockGasPipe  extends BlockContainer {
         this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
     }
 	
+    @Override
+    public boolean shouldSideBeRendered(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
+    {
+        return true;
+    }
+
+    @Override
+    public boolean isOpaqueCube()
+    {
+        return false;
+    }
+
+    @Override
+    public boolean renderAsNormalBlock()
+    {
+        return false;
+    }
 }

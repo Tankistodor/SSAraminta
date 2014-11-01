@@ -13,6 +13,7 @@ import com.badday.ss.api.SSAPI;
 import com.badday.ss.blocks.SSBlockAirVent;
 import com.badday.ss.blocks.SSBlockCabinet;
 import com.badday.ss.blocks.SSBlockGas;
+import com.badday.ss.blocks.SSBlockGasPipe;
 import com.badday.ss.blocks.SSBlockGlassCasing;
 import com.badday.ss.blocks.SSBlockMultiFake;
 import com.badday.ss.blocks.SSBlockWallCasing;
@@ -21,10 +22,12 @@ import com.badday.ss.blocks.SSFuidTextrures;
 import com.badday.ss.blocks.SSTileEntityAirVent;
 import com.badday.ss.blocks.SSTileEntityCabinet;
 import com.badday.ss.blocks.SSTileEntityGasBlock;
+import com.badday.ss.blocks.SSTileEntityGasPipe;
 import com.badday.ss.blocks.SSTileEntityMultiFake;
 import com.badday.ss.core.utils.SSSettings;
 import com.badday.ss.items.SSItemBlock;
 import com.badday.ss.items.SSItemBlockCabinet;
+import com.badday.ss.items.SSItemBlockGasPipe;
 import com.badday.ss.items.SSItemHidden;
 import com.badday.ss.items.SSItemMetaBlockWallCasing;
 import com.badday.ss.items.SSItemMetaBlockWallCasingRaw;
@@ -43,6 +46,7 @@ public class SSConfig {
 	public static Block ssBlockGas;
 	public static Block ssBlockAirVent;
 	public static Block ssBlockCabinet;
+	public static Block ssBlockGasPipe;
 	public static Block fakeBlock;
 	//public static Block ssBlockAirGenerator;
 	
@@ -54,6 +58,7 @@ public class SSConfig {
 	public static Fluid fluidLiquidNitrogen;
 	public static Fluid fluidLiquidArgon;
 	public static Fluid fluidAtmosphericGases;
+	
 
 	public static final String[] ssWallCasingRaw_unlocalizedName = { "blockWallCasing1", "blockWallCasing2", "blockWallCasing3", "blockWallCasing4",
 			"blockWallCasing5", "blockWallCasing6" };
@@ -168,6 +173,10 @@ public class SSConfig {
 		GameRegistry.registerBlock(ssBlockCabinet, SSItemBlockCabinet.class, "grayCabinet");
 		GameRegistry.registerTileEntity(SSTileEntityCabinet.class, "grayCabinet");
 		
+		ssBlockGasPipe = new SSBlockGasPipe("blockGasPipeBlack");
+		GameRegistry.registerBlock(ssBlockGasPipe, SSItemBlockGasPipe.class, "blockGasPipeBlack");
+		GameRegistry.registerTileEntity(SSTileEntityGasPipe.class, "blockGasPipeBlack");
+		
 		/*
 		// AIR GENERATOR
 		ssBlockAirGenerator = (new BlockAirGenerator(0, Material.rock)).setHardness(0.5F).setStepSound(Block.soundTypeMetal);
@@ -186,7 +195,7 @@ public class SSConfig {
 		GameRegistry.registerBlock(ssBlockGas, SSItemBlock.class, ssBlockGas.getUnlocalizedName());
 		GameRegistry.registerTileEntity(SSTileEntityGasBlock.class, "ssBlockGas");
 
-    SSAPI.softBlocks.add(ssBlockGas);
+        SSAPI.softBlocks.add(ssBlockGas);
 
 		ssBlockAirVent = new SSBlockAirVent("ssBlockAirVent");
 		GameRegistry.registerBlock(ssBlockAirVent, "ssBlockAirVent");

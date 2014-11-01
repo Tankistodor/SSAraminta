@@ -12,6 +12,7 @@ import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
 import com.badday.ss.blocks.SSTileEntityCabinet;
 import com.badday.ss.render.SSCabinetRender;
+import com.badday.ss.render.SSGasPipeRender;
 import com.badday.ss.render.SSRenderHandlers;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -34,15 +35,12 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void init(FMLInitializationEvent event) {
-		/*
-		 * int renderIdBreathableAir = RenderingRegistry
-		 * .getNextAvailableRenderId();
-		 * RenderingRegistry.registerBlockHandler(new SSBlockAirNormalRender(
-		 * renderIdBreathableAir));
-		 */
-		//SSCabinetRender.loadTextures();
+
 		SSConfig.cabinetRenderId = registerTileEntityRenderer(SSTileEntityCabinet.class, new SSCabinetRender());
 		if (SS.Debug) System.out.println("[" + SS.MODNAME + "] render handler " + SSConfig.cabinetRenderId);
+		
+		SSConfig.gasPipeRenderId = RenderingRegistry.getNextAvailableRenderId();
+		RenderingRegistry.registerBlockHandler(new SSGasPipeRender());
 
 	}
 
@@ -64,5 +62,4 @@ public class ClientProxy extends CommonProxy {
 	public static int registerTileEntityRenderer(Class<? extends TileEntity> tileEntityClass, TileEntitySpecialRenderer renderer) {
 		return registerTileEntityRenderer(tileEntityClass, renderer, true, 90, 1, 0);
 	}
-
 }
