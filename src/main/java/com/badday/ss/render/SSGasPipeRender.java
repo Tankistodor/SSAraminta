@@ -35,7 +35,7 @@ public class SSGasPipeRender  implements ISimpleBlockRenderingHandler
 
         if (tileEntity != null)
         {
-            final TileEntity[] connections = SSGasNetwork.getAdjacentOxygenConnections(tileEntity);
+            final TileEntity[] connections = SSGasNetwork.getAdjacentOxygenConnections2(tileEntity);
 
             for (TileEntity connection : connections)
             {
@@ -129,7 +129,6 @@ public class SSGasPipeRender  implements ISimpleBlockRenderingHandler
 
 	@Override
 	public int getRenderId() {
-		// TODO Auto-generated method stub
 		return SSConfig.gasPipeRenderId;
 	}
 }

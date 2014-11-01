@@ -1,5 +1,7 @@
 package com.badday.ss.blocks;
 
+import ic2.api.network.INetworkClientTileEntityEventListener;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -9,23 +11,22 @@ import com.badday.ss.api.IGasNetworkPipe;
 import com.badday.ss.core.atmos.SSGasNetwork;
 import com.badday.ss.core.utils.BlockVec3;
 
-public class SSTileEntityGasPipe extends TileEntity implements IGasNetworkPipe {
+public class SSTileEntityGasPipe extends TileEntity implements IGasNetworkPipe,INetworkClientTileEntityEventListener {
 
 	public long ticks = 0;
-	private byte lastPipeColor = -1;
 	private SSGasNetwork network;
 
 	public TileEntity[] adjacentConnections = null;
 
-	public SSTileEntityGasPipe(byte meta) {
+	public SSTileEntityGasPipe() {
 		super();
 	}
-
+	
 	public boolean canConnect(ForgeDirection direction) {
 		TileEntity adjacentTile = new BlockVec3(this).getTileEntityOnSide(this.worldObj, direction);
 
 		if (adjacentTile instanceof SSTileEntityGasPipe) {
-			return this.getColor() == ((SSTileEntityGasPipe) adjacentTile).getColor();
+			return true;
 		} else if (adjacentTile instanceof SSTileEntityAirVent || adjacentTile instanceof SSTileEntityGasMixer) {
 			return true;
 		}
@@ -42,16 +43,27 @@ public class SSTileEntityGasPipe extends TileEntity implements IGasNetworkPipe {
 	    public void updateEntity()
 	    {
 	        super.updateEntity();
-
-	        if (!this.worldObj.isRemote && this.ticks % 60 == 0 && this.lastPipeColor != this.getColor())
+	        
+	        if (this.ticks == 0)
 	        {
-	            //GalacticraftCore.packetPipeline.sendToDimension(new PacketDynamic(this), this.worldObj.provider.dimensionId);
-	            this.lastPipeColor = this.getColor();
+	            //this.initiate();
 	        }
+
+	        if (this.ticks >= Long.MAX_VALUE)
+	        {
+	            this.ticks = 1;
+	        }
+
+	        this.ticks++;
 	    }
 	@Override
 	public void validate() {
 		super.validate();
+		
+		if (!this.worldObj.isRemote)
+    	{
+    		this.refresh();
+    	}
 
 		if (this.worldObj != null && this.worldObj.isRemote) {
 			final BlockVec3 thisVec = new BlockVec3(this);
@@ -59,32 +71,25 @@ public class SSTileEntityGasPipe extends TileEntity implements IGasNetworkPipe {
 		}
 	}
 
-	public byte getColor() {
-		return (byte) this.blockMetadata;
-	}
+	@Override
+    public void invalidate()
+    {
+        if (!this.worldObj.isRemote)
+        {
+            this.getNetwork().split(this);
+        }
 
-	@SuppressWarnings("unchecked")
-	public void setColor(byte col) {
-		this.blockMetadata = col;
+        super.invalidate();
+    }
+	
 
-		if (this.worldObj != null) {
-			if (this.worldObj.isRemote) {
-				final BlockVec3 thisVec = new BlockVec3(this);
-				this.worldObj.func_147479_m(thisVec.x, thisVec.y, thisVec.z);
-			} else {
-				this.getNetwork().split(this);
-				this.resetNetwork();
-			}
-		}
-	}
-
-	public void onAdjacentColorChanged(ForgeDirection direction) {
+	/*public void onAdjacentColorChanged(ForgeDirection direction) {
 		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 
 		if (!this.worldObj.isRemote) {
 			this.refresh();
 		}
-	}
+	}*/
 
 	@Override
 	public TileEntity[] getAdjacentConnections() {
@@ -98,17 +103,45 @@ public class SSTileEntityGasPipe extends TileEntity implements IGasNetworkPipe {
 
         return this.adjacentConnections;
 	}
+	
+	public TileEntity[] getAdjacentConnections2() {
+	    /**
+         * Cache the adjacentConnections.
+         */
+        if (this.adjacentConnections == null)
+        {
+            this.adjacentConnections = SSGasNetwork.getAdjacentOxygenConnections2(this);
+        }
+
+        return this.adjacentConnections;
+	}
 
 	@Override
 	public void refresh() {
-		// TODO Auto-generated method stub
+		if (!this.worldObj.isRemote)
+        {
+            this.adjacentConnections = null;
 
+            for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+            {
+                TileEntity tileEntity = new BlockVec3(this).getTileEntityOnSide(this.worldObj, side);
+
+                if (tileEntity != null)
+                {
+                    if (tileEntity.getClass() == this.getClass() && tileEntity instanceof SSTileEntityGasPipe && !this.getNetwork().equals(((SSTileEntityGasPipe) tileEntity).getNetwork()))
+                    {
+                        this.setNetwork((IGasNetwork) this.getNetwork().merge(((SSTileEntityGasPipe) tileEntity).getNetwork()));
+                    }
+                }
+            }
+
+            this.getNetwork().refresh();
+        }
 	}
 
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
-
+		// TODO aa 
 	}
 
 	@Override
@@ -134,23 +167,25 @@ public class SSTileEntityGasPipe extends TileEntity implements IGasNetworkPipe {
 
 	@Override
 	public void resetNetwork() {
-		// TODO Auto-generated method stub
-
+		SSGasNetwork net = new SSGasNetwork(this.worldObj);
+		net.pipes.add(this);
+		this.network=net;
 	}
 
+	
 	@Override
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
 		super.readFromNBT(par1NBTTagCompound);
-
-		final byte by = par1NBTTagCompound.getByte("pipeColor");
-		this.setColor(by);
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
 		super.writeToNBT(par1NBTTagCompound);
+	}
 
-		par1NBTTagCompound.setByte("pipeColor", this.getColor());
+	@Override
+	public void onNetworkEvent(EntityPlayer player, int event) {
+		System.out.println("This net event: "+event);		
 	}
 
 }

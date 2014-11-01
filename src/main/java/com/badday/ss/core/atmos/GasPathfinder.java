@@ -3,15 +3,15 @@ package com.badday.ss.core.atmos;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import com.badday.ss.api.IGasNetworkVent;
 import com.badday.ss.api.IGasNetworkPipe;
 import com.badday.ss.api.IGasNetworkSource;
+import com.badday.ss.api.IGasNetworkVent;
+import com.badday.ss.blocks.SSTileEntityGasPipe;
 import com.badday.ss.core.utils.BlockVec3;
 
 public class GasPathfinder {
@@ -28,7 +28,7 @@ public class GasPathfinder {
 	
 	private World worldObj;
 	private BlockVec3 start;
-
+	
 	public GasPathfinder(World world, BlockVec3 location, BlockVec3... ignore) {
 		this.worldObj = world;
 		this.start = location;

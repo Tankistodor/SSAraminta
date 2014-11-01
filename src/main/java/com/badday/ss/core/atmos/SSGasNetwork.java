@@ -9,10 +9,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.badday.ss.SS;
 import com.badday.ss.api.IGasNetwork;
 import com.badday.ss.api.IGasNetworkPipe;
 import com.badday.ss.api.IGasNetworkSource;
 import com.badday.ss.api.IGasNetworkVent;
+import com.badday.ss.blocks.SSTileEntityGasPipe;
 import com.badday.ss.core.utils.BlockVec3;
 
 import cpw.mods.fml.common.FMLLog;
@@ -52,10 +54,12 @@ public class SSGasNetwork implements IGasNetwork {
 		// boolean isMekLoaded = EnergyConfigHandler.isMekanismLoaded();
 
 		BlockVec3 thisVec = new BlockVec3(tile);
+		
 		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
 			TileEntity tileEntity = thisVec.getTileEntityOnSide(tile.getWorldObj(), direction);
 
 			if (tileEntity instanceof IGasNetworkPipe) {
+				//if (SS.Debug) System.out.println(" getAdjacentOxygenConnections:  " + thisVec + " " + direction);
 				if (((IGasNetworkPipe) tileEntity).canConnect(direction.getOpposite())) {
 					adjacentConnections[direction.ordinal()] = tileEntity;
 				}
@@ -215,7 +219,7 @@ public class SSGasNetwork implements IGasNetwork {
 			 * Loop through the connected blocks and attempt to see if there are
 			 * connections between the two points elsewhere.
 			 */
-			TileEntity[] connectedBlocks = splitPoint.getAdjacentConnections();
+			TileEntity[] connectedBlocks = ((SSTileEntityGasPipe) splitPoint).getAdjacentConnections2();
 
 			for (int a = 0; a < connectedBlocks.length; a++) {
 				if (connectedBlocks[a] instanceof IGasNetworkPipe) {
@@ -331,6 +335,34 @@ public class SSGasNetwork implements IGasNetwork {
 	@Override
 	public List<? extends IGasNetworkVent> getVents() {
 		return this.vents;
+	}
+
+	public static TileEntity[] getAdjacentOxygenConnections2(TileEntity tile) {
+		TileEntity[] adjacentConnections = new TileEntity[ForgeDirection.VALID_DIRECTIONS.length];
+
+		// boolean isMekLoaded = EnergyConfigHandler.isMekanismLoaded();
+
+		BlockVec3 thisVec = new BlockVec3(tile);
+		
+		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
+			TileEntity tileEntity = thisVec.getTileEntityOnSide(tile.getWorldObj(), direction);
+			if (SS.Debug) System.out.println(" getAdjacentOxygenConnections:  " + thisVec + " " + direction + " " + tileEntity + " ] ");
+			if (tileEntity instanceof IGasNetworkPipe) {
+				if (((IGasNetworkPipe) tileEntity).canConnect(direction.getOpposite())) {
+					adjacentConnections[direction.ordinal()] = tileEntity;
+				}
+			}
+			/*
+			 * else if (isMekLoaded) { if (tileEntity instanceof ITubeConnection
+			 * && (!(tileEntity instanceof IGasTransmitter) ||
+			 * TransmissionType.checkTransmissionType(tileEntity,
+			 * TransmissionType.GAS, tileEntity))) { if (((ITubeConnection)
+			 * tileEntity).canTubeConnect(direction)) {
+			 * adjacentConnections[direction.ordinal()] = tileEntity; } } }
+			 */
+		}
+
+		return adjacentConnections;
 	}
 
 }

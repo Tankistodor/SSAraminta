@@ -8,20 +8,19 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
 import com.badday.ss.core.atmos.SSGasNetwork;
+import com.badday.ss.core.utils.BlockVec3;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -45,7 +44,7 @@ public class SSBlockGasPipe  extends BlockContainer {
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		return new SSTileEntityGasPipe((byte) meta);
+		return new SSTileEntityGasPipe();
 	}
 
 	@Override
@@ -77,8 +76,11 @@ public class SSBlockGasPipe  extends BlockContainer {
 			icons[i] = icon.registerIcon(SS.ASSET_PREFIX
 					+ SSConfig.ssGasPipe_unlocalizedName[i]);
 		}
+		this.blockIcon = this.icons[SSConfig.ssGasPipe_unlocalizedName.length-1];
 	}
 	
+	
+	/*
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta) {
@@ -95,14 +97,21 @@ public class SSBlockGasPipe  extends BlockContainer {
 
 		}
 		return null;
-	}
+	}*/
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
-		return this.getIcon(side, world.getBlockMetadata(x, y, z));
+	public IIcon getIcon(IBlockAccess par1IBlockAccess, int x, int y, int z, int side) {
+		//return this.getIcon(side, world.getBlockMetadata(x, y, z));
+		BlockVec3 thisVec = new BlockVec3(x, y, z).modifyPositionFromSide(ForgeDirection.getOrientation(side));
+        final Block blockAt = thisVec.getBlock(par1IBlockAccess);
+
+        final SSTileEntityGasPipe tileEntity = (SSTileEntityGasPipe) par1IBlockAccess.getTileEntity(x, y, z);
+
+        return this.icons[1];
 	}	
 	
+	/*
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@SideOnly(Side.CLIENT)
 	@Override
@@ -110,6 +119,13 @@ public class SSBlockGasPipe  extends BlockContainer {
 		for (int i = 0; i < SSConfig.ssGasPipe_unlocalizedName.length; i++) {
 			list.add(new ItemStack(this, 1, i));
 		}
+	}*/
+	
+	@Override
+	public void breakBlock(World par1World, int par2, int par3, int par4, Block par5, int par6) {
+		final SSTileEntityGasPipe tile = (SSTileEntityGasPipe) par1World.getTileEntity(par2, par3, par4);
+
+		super.breakBlock(par1World, par2, par3, par4, par5, par6);
 	}
 	
     @Override
@@ -119,12 +135,78 @@ public class SSBlockGasPipe  extends BlockContainer {
         world.func_147479_m(x, y, z);
     }
     
-    @Override
-    public boolean onBlockActivated(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
-    {
-		return true;
-    	//TODO: Make color fill
-    }
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float a, float b, float c) {
+		if (world.isRemote)
+			return true;
+
+		if (entityplayer.getCurrentEquippedItem() != null) {
+
+		
+			final SSTileEntityGasPipe tileEntity = (SSTileEntityGasPipe) world.getTileEntity(x, y, z);
+			
+			String itemName = entityplayer.getCurrentEquippedItem().getUnlocalizedName();
+			
+			if (itemName.equals("ic2.itemToolPainterOrange")) {
+				SSGasNetwork net = (SSGasNetwork) tileEntity.getNetwork();
+				if (SS.Debug) { 
+					System.out.println("NET : " + net);
+					System.out.println("    pipes: " + net.pipes.size());
+					System.out.println("    sources: " + net.sources.size());
+					System.out.println("    vents: " + net.vents.size());
+				}
+			}
+			
+		}
+			/*if (itemName.equals("ic2.itemToolPainterBlack")) {
+				tileEntity.setColor((byte) 0);
+			} else if (itemName.equals("ic2.itemToolPainterRed")) {
+				tileEntity.setColor((byte) 1);
+			} else if (itemName.equals("ic2.itemToolPainterGreen")) {
+				tileEntity.setColor((byte) 2);
+			} else if (itemName.equals("ic2.itemToolPainterBrown")) {
+				tileEntity.setColor((byte) 3);
+			} else if (itemName.equals("ic2.itemToolPainterBlue")) {
+				tileEntity.setColor((byte) 4);
+			} else if (itemName.equals("ic2.itemToolPainterPurple")) {
+				tileEntity.setColor((byte) 5);
+			} else if (itemName.equals("ic2.itemToolPainterCyan")) {
+				tileEntity.setColor((byte) 6);
+			} else if (itemName.equals("ic2.itemToolPainterLightGrey")) {
+				tileEntity.setColor((byte) 7);
+			} else if (itemName.equals("ic2.itemToolPainterDarkGrey")) {
+				tileEntity.setColor((byte) 8);
+			} else if (itemName.equals("ic2.itemToolPainterPink")) {
+				tileEntity.setColor((byte) 9);
+			} else if (itemName.equals("ic2.itemToolPainterLime")) {
+				tileEntity.setColor((byte) 10);
+			} else if (itemName.equals("ic2.itemToolPainterYellow")) {
+				tileEntity.setColor((byte) 11);
+			} else if (itemName.equals("ic2.itemToolPainterCloud")) {
+				tileEntity.setColor((byte) 12);
+			} else if (itemName.equals("ic2.itemToolPainterMagenta")) {
+				tileEntity.setColor((byte) 13);
+			} else if (itemName.equals("ic2.itemToolPainterOrange")) {
+				tileEntity.setColor((byte) 14);
+			} else if (itemName.equals("ic2.itemToolPainterWhite")) {
+				tileEntity.setColor((byte) 15);
+			}
+			
+			BlockVec3 tileVec = new BlockVec3(tileEntity);
+            for (final ForgeDirection dir : ForgeDirection.values())
+            {
+                final TileEntity tileAt = tileVec.getTileEntityOnSide(tileEntity.getWorldObj(), dir);
+
+                if (tileAt != null && tileAt instanceof SSTileEntityGasPipe)
+                {
+                    ((SSTileEntityGasPipe) tileAt).onAdjacentColorChanged(dir);
+                }
+            }
+			
+		}*/
+
+		return false;
+	}
     
     /**
      * Returns a bounding box from the pool of bounding boxes (this means this
