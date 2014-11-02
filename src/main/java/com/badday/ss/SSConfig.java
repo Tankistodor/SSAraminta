@@ -27,6 +27,7 @@ import com.badday.ss.items.SSItemBlockGasPipe;
 import com.badday.ss.items.SSItemHidden;
 import com.badday.ss.items.SSItemMetaBlockWallCasing;
 import com.badday.ss.items.SSItemMetaBlockWallCasingRaw;
+import com.badday.ss.items.SSItemMultitool;
 import com.badday.ss.items.SSItemScrewdriver;
 import com.badday.ss.items.SSItemWelder;
 
@@ -81,6 +82,7 @@ public class SSConfig {
 	// Items
 	public static Item ssScrewDriver;
 	public static Item ssWelder;
+	public static Item ssMultitool;
 	
 	public static int ssAirVentBlockArea = 2048;
 	/**
@@ -137,6 +139,7 @@ public class SSConfig {
 	public static void RegisterItems() {
 		ssScrewDriver = new SSItemScrewdriver();
 		ssWelder = new SSItemWelder();
+		ssMultitool = new SSItemMultitool();
 	}
 
 	public static void RegisterBlocks() {

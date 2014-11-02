@@ -2,5 +2,6 @@
 "screwdriver1w": {"category": "master","sounds": [{"name": "screwdriver1w","stream": false}]},
 "screwdriver2w": {"category": "master","sounds": [{"name": "screwdriver2w","stream": false}]},
 "welder1w": {"category": "master","sounds": [{"name": "welder1w","stream": false}]},
-"welder2w": {"category": "master","sounds": [{"name": "welder2w","stream": false}]}
+"welder2w": {"category": "master","sounds": [{"name": "welder2w","stream": false}]},
+"screech": {"category": "master","sounds": [{"name": "screech","stream": false}]}
 }

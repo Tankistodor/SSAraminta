@@ -94,33 +94,8 @@ public class SSBlockGasPipe  extends Block {
 		return null;
 	}
 	
-	/*
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(IBlockAccess par1IBlockAccess, int x, int y, int z, int side) {
-		//return this.getIcon(side, world.getBlockMetadata(x, y, z));
-		BlockVec3 thisVec = new BlockVec3(x, y, z).modifyPositionFromSide(ForgeDirection.getOrientation(side));
-        final Block blockAt = thisVec.getBlock(par1IBlockAccess);
-
-        final SSTileEntityGasPipe tileEntity = (SSTileEntityGasPipe) par1IBlockAccess.getTileEntity(x, y, z);
-
-        return this.icons[1];
-	}*/	
-	
-	/*
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void getSubBlocks(Item par1, CreativeTabs tab, List list) {
-		for (int i = 0; i < SSConfig.ssGasPipe_unlocalizedName.length; i++) {
-			list.add(new ItemStack(this, 1, i));
-		}
-	}*/
-	
 	@Override
 	public void breakBlock(World par1World, int par2, int par3, int par4, Block par5, int par6) {
-		//final SSTileEntityGasPipe tile = (SSTileEntityGasPipe) par1World.getTileEntity(par2, par3, par4);
-
 		super.breakBlock(par1World, par2, par3, par4, par5, par6);
 	}
 	
@@ -137,13 +112,8 @@ public class SSBlockGasPipe  extends Block {
 			return true;
 
 		if (entityplayer.getCurrentEquippedItem() != null) {
-
-		
-			//final SSTileEntityGasPipe tileEntity = (SSTileEntityGasPipe) world.getTileEntity(x, y, z);
-			
 			String itemName = entityplayer.getCurrentEquippedItem().getUnlocalizedName();
-			
-			if (itemName.equals("ic2.itemToolPainterOrange")) {
+			if (itemName.equals("item.ss.multitool")) {
 				SSGasNetwork net = new SSGasNetwork(world);
 				net.rebuildNetwork(world, new BlockVec3(x,y,z));
 				if (SS.Debug) { 
