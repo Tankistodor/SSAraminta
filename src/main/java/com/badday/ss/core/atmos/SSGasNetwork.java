@@ -1,5 +1,6 @@
 package com.badday.ss.core.atmos;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -184,6 +185,46 @@ public class SSGasNetwork implements IGasNetwork {
 			
 		}
 		return adjacentConnections;
+	}
+
+	@Override
+	public float getPressure() {
+		Float pressure = 0.0f;
+		int V = 0;
+		for (IGasNetworkVent vent : this.getVents()) {
+			//if (vent.getActive())
+				if (vent.getSealed() || true) { 
+					V += vent.getBaySize();
+				} else {
+					V += 64*64; // If desealed bat - more rate usages gases
+				}
+		}
+		
+		List<GasMixture> sumMix = new ArrayList<GasMixture>();
+		sumMix.add(new GasMixture(SSConfig.fluidOxygenGas,20));
+		sumMix.add(new GasMixture(SSConfig.fluidNitrogenGas,75));
+		sumMix.add(new GasMixture(SSConfig.fluidHydrogen,1));
+		sumMix.add(new GasMixture(SSConfig.fluidMethaneGas,1));
+		sumMix.add(new GasMixture(SSConfig.fluidHelium,1));
+		sumMix.add(new GasMixture(SSConfig.fluidCarbonDioxide,2));
+
+		pressure = GasUtils.getGasPressure(sumMix,V,SSConfig.ssDefaultTemperature);
+		
+		if (V > 0) {
+			for (IGasNetworkSource src : this.getSources()) {
+				//TODO: pressure =+ GasUtils.getGasPressure(src.getGasMix, V, SSConfig.ssDefaultTemperature);
+			}
+		}
+		return pressure;
+	}
+	
+	
+	public void printDebugInfo() {
+		System.out.println("NET : " + this);
+		System.out.println("    pipes: " + this.getPipes().size());
+		System.out.println("    sources: " + this.getSources().size());
+		System.out.println("    vents: " + this.getVents().size());
+		System.out.println("    pressure: " + this.getPressure());
 	}
 	
 }

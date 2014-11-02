@@ -44,4 +44,9 @@ public interface IGasNetwork {
 	public List<? extends IGasNetworkSource> getSources();
 	public List<? extends IGasNetworkVent> getVents();
 
+	
+	public float getPressure();
+	
+	public void printDebugInfo();
+	
 }

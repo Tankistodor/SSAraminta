@@ -8,13 +8,14 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 import com.badday.ss.SS;
+import com.badday.ss.api.IGasNetwork;
+import com.badday.ss.core.atmos.SSGasNetwork;
+import com.badday.ss.core.utils.BlockVec3;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -90,13 +91,31 @@ public class SSBlockAirVent extends BlockContainer {
     }
     
     @Override
-    public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
-    {
-        if (FMLCommonHandler.instance().getEffectiveSide().isClient())
-        {
-            return false;
-        }
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float a, float b, float c) {
+		if (world.isRemote)
+			return true;
+        
+		
+		if (entityplayer.getCurrentEquippedItem() != null) {
+			String itemName = entityplayer.getCurrentEquippedItem().getUnlocalizedName();
+			if (itemName.equals("item.ss.multitool")) {
+				
+				TileEntity tileEntity = world.getTileEntity(x, y, z);
+				
+				if (tileEntity instanceof SSTileEntityAirVent) {
+					IGasNetwork net = ((SSTileEntityAirVent) tileEntity).getGasNetwork();
+					
+					if (SS.Debug) { 
+						net.printDebugInfo();
+					}
+					
+				} 
 
+			}
+			
+		}
+		
+        
         /*
         SSTileEntityAirGenerator gen = (SSTileEntityAirGenerator)par1World.getTileEntity(par2, par3, par4);
 

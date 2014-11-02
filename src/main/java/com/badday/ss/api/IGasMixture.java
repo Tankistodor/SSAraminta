@@ -1,5 +1,9 @@
 package com.badday.ss.api;
 
+import java.util.List;
+
+import com.badday.ss.core.atmos.GasMixture;
+
 /**
  * 
  * @author xlatm
@@ -8,7 +12,12 @@ package com.badday.ss.api;
 public interface IGasMixture {
 	
 	public float getPressure();
-	public void setPressure();
+	public void setPressure(float newPressure);
 	
+	public List<GasMixture> getGasMixture();
+	public void setGasMixture(List<GasMixture> newMixture);
+	
+	public float getTemperature();
+	public void setTemperature(float newTemperature);
 
 }

@@ -117,10 +117,7 @@ public class SSBlockGasPipe  extends Block {
 				SSGasNetwork net = new SSGasNetwork(world);
 				net.rebuildNetwork(world, new BlockVec3(x,y,z));
 				if (SS.Debug) { 
-					System.out.println("NET : " + net);
-					System.out.println("    pipes: " + net.pipes.size());
-					System.out.println("    sources: " + net.sources.size());
-					System.out.println("    vents: " + net.vents.size());
+					net.printDebugInfo();
 				}
 			}
 			

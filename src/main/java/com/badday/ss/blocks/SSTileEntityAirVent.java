@@ -8,6 +8,7 @@ import com.badday.ss.SS;
 import com.badday.ss.api.IGasNetwork;
 import com.badday.ss.api.IGasNetworkVent;
 import com.badday.ss.core.atmos.SSFindSealedBay;
+import com.badday.ss.core.atmos.SSGasNetwork;
 import com.badday.ss.core.utils.BlockVec3;
 import com.badday.ss.events.AirNetAddEvent;
 import com.badday.ss.events.AirNetRemoveEvent;
@@ -25,7 +26,10 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 	public boolean sealed = false;
 	/** AirVent is conneted to AirNet */
 	public boolean added_to_airvent_net = false;
+	/** BaySize */
+	public int baySize = 0;
 	public boolean normalGas = true;
+	public IGasNetwork gasNetwork;
 
 	@Override
 	public void updateEntity() {
@@ -51,6 +55,7 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 		if (!this.worldObj.isRemote && this.ticks % COOLDOWN == 0) {
 
 			if (this.findSealedBay != null) {
+				this.findSealedBay.getSize();
 				/*
 				 * this.active && this.threadSeal.sealedFinal.get();
 				 * this.calculatingSealed = this.active &&
@@ -69,7 +74,10 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 
 		if (!this.worldObj.isRemote && this.ticks % (COOLDOWN * 5) == 0) {
 			if (this.findSealedBay != null) {
-				this.sealed = this.findSealedBay.fullcheck();
+				//this.sealed = this.findSealedBay.fullcheck();
+				this.baySize = this.findSealedBay.getSize();
+				if (this.baySize > 0)
+					this.sealed = true;
 				if (SS.Debug)
 					System.out.println("[" + SS.MODNAME + "] AirVent checked sealed bay. His size: " + this.findSealedBay.getSize());
 			}
@@ -132,15 +140,39 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 	}
 
 	@Override
-	public void setNetwork(IGasNetwork network) {
+	public void onNetworkChanged() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void onNetworkChanged() {
-		// TODO Auto-generated method stub
-		
+	public IGasNetwork getGasNetwork() {
+		if (gasNetwork == null) {
+			this.gasNetwork = new SSGasNetwork(worldObj);
+			this.gasNetwork.rebuildNetwork(worldObj, new BlockVec3(this.xCoord,this.yCoord,this.zCoord));
+		}
+		return this.gasNetwork;
+	}
+	
+	@Override
+	public void setNetwork(IGasNetwork network) {
+		this.gasNetwork = (IGasNetwork) network;
+	}
+
+	@Override
+	public int getBaySize() {
+		//TODO may be test add reinit findSeal
+		return this.baySize;
+	}
+
+	@Override
+	public boolean getActive() {
+		return this.active;
+	}
+
+	@Override
+	public boolean getSealed() {
+		return this.sealed;
 	}
 
 }

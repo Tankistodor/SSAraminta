@@ -55,6 +55,9 @@ public class SSConfig {
 	public static Fluid fluidLiquidNitrogen;
 	public static Fluid fluidLiquidArgon;
 	public static Fluid fluidAtmosphericGases;
+	public static Fluid fluidHelium;
+	public static Fluid fluidHydrogen;
+	public static Fluid fluidCarbonDioxide;
 	
 
 	public static final String[] ssWallCasingRaw_unlocalizedName = { "blockWallCasing1", "blockWallCasing2", "blockWallCasing3", "blockWallCasing4",
@@ -92,6 +95,11 @@ public class SSConfig {
 	
 	public static int ssCabinetSize =  36;
 	
+	/**
+	 * Default station temperature in C
+	 */
+	public static int ssDefaultTemperature = 24; 
+	
 	public static int cabinetRenderId;
 	public static int gasPipeRenderId;
 
@@ -122,6 +130,7 @@ public class SSConfig {
 		SS.Debug = SSSettings.getBooleanFor(config, "global", "debug", SS.Debug, "Debug mode");
 		ssAirVentBlockArea = SSSettings.getIntFor(config, "global", "airVentMaxAreaSize",ssAirVentBlockArea,"Max area in bloks for Air Vent");
 		ssPathfinderMaxDistance = SSSettings.getIntFor(config, "global", "PathfinderMaxDistance",ssPathfinderMaxDistance,"Max distance for pathfinder check");
+		ssDefaultTemperature = SSSettings.getIntFor(config, "global", "DefaultTemperature",ssDefaultTemperature,"Default station temperature");
 		
 	}
 
@@ -188,20 +197,22 @@ public class SSConfig {
 	 */
 	public static void RegisterGases() {
 		SSFuidTextrures.init();
-		FluidRegistry.registerFluid(new Fluid("methane").setDensity(1).setViscosity(11).setGaseous(true));
-		FluidRegistry.registerFluid(new Fluid("atmosphericgases").setDensity(1).setViscosity(13).setGaseous(true));
 		FluidRegistry.registerFluid(new Fluid("liquidmethane").setDensity(450).setViscosity(120).setTemperature(109));
 		// Data source for liquid methane:
 		// http://science.nasa.gov/science-news/science-at-nasa/2005/25feb_titan2/
 		FluidRegistry.registerFluid(new Fluid("liquidoxygen").setDensity(1141).setViscosity(140).setTemperature(90));
-		FluidRegistry.registerFluid(new Fluid("oxygen").setDensity(1).setViscosity(13).setGaseous(true));
 		FluidRegistry.registerFluid(new Fluid("liquidnitrogen").setDensity(808).setViscosity(130).setTemperature(90));
+		FluidRegistry.registerFluid(new Fluid("liquidargon").setDensity(900).setViscosity(100).setTemperature(87));
+
+		FluidRegistry.registerFluid(new Fluid("methane").setDensity(1).setViscosity(11).setGaseous(true));
+		FluidRegistry.registerFluid(new Fluid("atmosphericgases").setDensity(1).setViscosity(13).setGaseous(true));
+		FluidRegistry.registerFluid(new Fluid("oxygen").setDensity(1).setViscosity(13).setGaseous(true));
 		FluidRegistry.registerFluid(new Fluid("nitrogen").setDensity(1).setViscosity(12).setGaseous(true));
 		FluidRegistry.registerFluid(new Fluid("carbondioxide").setDensity(2).setViscosity(20).setGaseous(true));
 		FluidRegistry.registerFluid(new Fluid("hydrogen").setDensity(1).setViscosity(1).setGaseous(true));
 		FluidRegistry.registerFluid(new Fluid("argon").setDensity(1).setViscosity(4).setGaseous(true));
-		FluidRegistry.registerFluid(new Fluid("liquidargon").setDensity(900).setViscosity(100).setTemperature(87));
 		FluidRegistry.registerFluid(new Fluid("helium").setDensity(1).setViscosity(1).setGaseous(true));
+		
 		fluidMethaneGas = FluidRegistry.getFluid("methane");
 		fluidAtmosphericGases = FluidRegistry.getFluid("atmosphericgases");
 		fluidLiquidMethane = FluidRegistry.getFluid("liquidmethane");
@@ -210,6 +221,9 @@ public class SSConfig {
 		fluidLiquidNitrogen = FluidRegistry.getFluid("liquidnitrogen");
 		fluidLiquidArgon = FluidRegistry.getFluid("liquidargon");
 		fluidNitrogenGas = FluidRegistry.getFluid("nitrogen");
+		fluidHelium = FluidRegistry.getFluid("helium");
+		fluidHydrogen = FluidRegistry.getFluid("hydrogen");
+		fluidCarbonDioxide = FluidRegistry.getFluid("carbondioxide");
 	}
 
 }
