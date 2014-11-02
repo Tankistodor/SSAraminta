@@ -12,7 +12,6 @@ import net.minecraftforge.fluids.FluidRegistry;
 import com.badday.ss.api.SSAPI;
 import com.badday.ss.blocks.SSBlockAirVent;
 import com.badday.ss.blocks.SSBlockCabinet;
-import com.badday.ss.blocks.SSBlockGas;
 import com.badday.ss.blocks.SSBlockGasPipe;
 import com.badday.ss.blocks.SSBlockGlassCasing;
 import com.badday.ss.blocks.SSBlockMultiFake;
@@ -21,11 +20,8 @@ import com.badday.ss.blocks.SSBlockWallCasingRaw;
 import com.badday.ss.blocks.SSFuidTextrures;
 import com.badday.ss.blocks.SSTileEntityAirVent;
 import com.badday.ss.blocks.SSTileEntityCabinet;
-import com.badday.ss.blocks.SSTileEntityGasBlock;
-import com.badday.ss.blocks.SSTileEntityGasPipe;
 import com.badday.ss.blocks.SSTileEntityMultiFake;
 import com.badday.ss.core.utils.SSSettings;
-import com.badday.ss.items.SSItemBlock;
 import com.badday.ss.items.SSItemBlockCabinet;
 import com.badday.ss.items.SSItemBlockGasPipe;
 import com.badday.ss.items.SSItemHidden;
@@ -175,25 +171,7 @@ public class SSConfig {
 		
 		ssBlockGasPipe = new SSBlockGasPipe("blockGasPipeBlack");
 		GameRegistry.registerBlock(ssBlockGasPipe, SSItemBlockGasPipe.class, "blockGasPipeBlack");
-		GameRegistry.registerTileEntity(SSTileEntityGasPipe.class, "blockGasPipeBlack");
-		
-		/*
-		// AIR GENERATOR
-		ssBlockAirGenerator = (new BlockAirGenerator(0, Material.rock)).setHardness(0.5F).setStepSound(Block.soundTypeMetal);
-		GameRegistry.registerBlock(ssBlockAirGenerator, "ssBlockAirGenerator");
-		GameRegistry.registerTileEntity(SSTileEntityAirGenerator.class, "ssBlockAirGenerator");
-
-		// AIR BLOCK
-		ssBlockAir = new SSBlockAirNormal("airBlock"); // normalAir
-		ssBlockGas = new SSBlockAirNormal("gasBlock"); // normalAir
-
-		GameRegistry.registerBlock(ssBlockAir, SSItemBlock.class, ssBlockAir.getUnlocalizedName());
-		GameRegistry.registerBlock(ssBlockGas, SSItemBlock.class, ssBlockGas.getUnlocalizedName());*/
-		
-		
-		ssBlockGas = new SSBlockGas("ssBlockGas"); // gasBlock
-		GameRegistry.registerBlock(ssBlockGas, SSItemBlock.class, ssBlockGas.getUnlocalizedName());
-		GameRegistry.registerTileEntity(SSTileEntityGasBlock.class, "ssBlockGas");
+		//GameRegistry.registerTileEntity(SSTileEntityGasPipe.class, "blockGasPipeBlack");
 
         SSAPI.softBlocks.add(ssBlockGas);
 

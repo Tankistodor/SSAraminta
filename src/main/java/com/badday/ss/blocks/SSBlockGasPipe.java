@@ -5,8 +5,8 @@ import ic2.core.util.Vector3;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,7 +15,6 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
@@ -25,7 +24,7 @@ import com.badday.ss.core.utils.BlockVec3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SSBlockGasPipe  extends BlockContainer {
+public class SSBlockGasPipe  extends Block {
 	
 	private IIcon[] icons = new IIcon[16];
 	
@@ -43,13 +42,9 @@ public class SSBlockGasPipe  extends BlockContainer {
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
-		return new SSTileEntityGasPipe();
-	}
-
-	@Override
-	public boolean hasTileEntity(int metadata) {
-		return true;
+	public void onBlockAdded(World world, int i, int j, int k) {
+		super.onBlockAdded(world, i, j, k);
+		world.markBlockForUpdate(i, j, k);
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -80,7 +75,7 @@ public class SSBlockGasPipe  extends BlockContainer {
 	}
 	
 	
-	/*
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta) {
@@ -97,8 +92,9 @@ public class SSBlockGasPipe  extends BlockContainer {
 
 		}
 		return null;
-	}*/
+	}
 	
+	/*
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(IBlockAccess par1IBlockAccess, int x, int y, int z, int side) {
@@ -109,7 +105,7 @@ public class SSBlockGasPipe  extends BlockContainer {
         final SSTileEntityGasPipe tileEntity = (SSTileEntityGasPipe) par1IBlockAccess.getTileEntity(x, y, z);
 
         return this.icons[1];
-	}	
+	}*/	
 	
 	/*
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -123,7 +119,7 @@ public class SSBlockGasPipe  extends BlockContainer {
 	
 	@Override
 	public void breakBlock(World par1World, int par2, int par3, int par4, Block par5, int par6) {
-		final SSTileEntityGasPipe tile = (SSTileEntityGasPipe) par1World.getTileEntity(par2, par3, par4);
+		//final SSTileEntityGasPipe tile = (SSTileEntityGasPipe) par1World.getTileEntity(par2, par3, par4);
 
 		super.breakBlock(par1World, par2, par3, par4, par5, par6);
 	}
@@ -143,12 +139,13 @@ public class SSBlockGasPipe  extends BlockContainer {
 		if (entityplayer.getCurrentEquippedItem() != null) {
 
 		
-			final SSTileEntityGasPipe tileEntity = (SSTileEntityGasPipe) world.getTileEntity(x, y, z);
+			//final SSTileEntityGasPipe tileEntity = (SSTileEntityGasPipe) world.getTileEntity(x, y, z);
 			
 			String itemName = entityplayer.getCurrentEquippedItem().getUnlocalizedName();
 			
 			if (itemName.equals("ic2.itemToolPainterOrange")) {
-				SSGasNetwork net = (SSGasNetwork) tileEntity.getNetwork();
+				SSGasNetwork net = new SSGasNetwork(world);
+				net.rebuildNetwork(world, new BlockVec3(x,y,z));
 				if (SS.Debug) { 
 					System.out.println("NET : " + net);
 					System.out.println("    pipes: " + net.pipes.size());
@@ -230,16 +227,13 @@ public class SSBlockGasPipe  extends BlockContainer {
     /**
      * Returns the bounding box of the wired rectangular prism to render.
      */
+    @SideOnly(Side.CLIENT)
     @Override
-    public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
+    public void setBlockBoundsBasedOnState(IBlockAccess iblockaccess, int x, int y, int z)
     {
-        TileEntity tileEntity = world.getTileEntity(x, y, z);
-        TileEntity[] connectable = new TileEntity[6];
+        BlockVec3[] connectable = new BlockVec3[6];
 
-        if (tileEntity != null)
-        {
- 
-            connectable = SSGasNetwork.getAdjacentOxygenConnections(tileEntity);
+            connectable = SSGasNetwork.getAdjacentAll(Minecraft.getMinecraft().theWorld, new BlockVec3(x,y,z));
  
             float minX = (float) this.minVector.x;
             float minY = (float) this.minVector.y;
@@ -279,7 +273,6 @@ public class SSBlockGasPipe  extends BlockContainer {
             }
 
             this.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
-        }
     }
     
     @SuppressWarnings("rawtypes")
@@ -289,10 +282,7 @@ public class SSBlockGasPipe  extends BlockContainer {
         this.setBlockBounds((float) this.minVector.x, (float) this.minVector.y, (float) this.minVector.z, (float) this.maxVector.x, (float) this.maxVector.y, (float) this.maxVector.z);
         super.addCollisionBoxesToList(world, x, y, z, axisalignedbb, list, entity);
 
-        TileEntity tileEntity = world.getTileEntity(x, y, z);
-        if (tileEntity != null)
-        {
-            TileEntity[] connectable = SSGasNetwork.getAdjacentOxygenConnections(tileEntity);
+            BlockVec3[] connectable = SSGasNetwork.getAdjacentAll(world,new BlockVec3(x,y,z));
 
 
             if (connectable[4] != null)
@@ -329,7 +319,6 @@ public class SSBlockGasPipe  extends BlockContainer {
             {
                 this.setBlockBounds((float) this.minVector.x, (float) this.minVector.y, (float) this.minVector.z, (float) this.maxVector.x, (float) this.maxVector.y, 1);
                 super.addCollisionBoxesToList(world, x, y, z, axisalignedbb, list, entity);
-            }
         }
 
         this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);

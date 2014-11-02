@@ -1,10 +1,12 @@
-package com.badday.ss.blocks;
+ package com.badday.ss.blocks;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 
 import com.badday.ss.SS;
+import com.badday.ss.api.IGasNetwork;
+import com.badday.ss.api.IGasNetworkVent;
 import com.badday.ss.core.atmos.SSFindSealedBay;
 import com.badday.ss.core.utils.BlockVec3;
 import com.badday.ss.events.AirNetAddEvent;
@@ -12,7 +14,7 @@ import com.badday.ss.events.AirNetRemoveEvent;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 
-public class SSTileEntityAirVent extends TileEntity {
+public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 
 	private final int COOLDOWN = 20;
 	public long ticks = 0;
@@ -127,6 +129,18 @@ public class SSTileEntityAirVent extends TileEntity {
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
+	}
+
+	@Override
+	public void setNetwork(IGasNetwork network) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onNetworkChanged() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -3,15 +3,18 @@ package com.badday.ss.render;
 import java.util.Arrays;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
 import com.badday.ss.SSConfig;
 import com.badday.ss.core.atmos.SSGasNetwork;
+import com.badday.ss.core.utils.BlockVec3;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 
@@ -24,7 +27,6 @@ public class SSGasPipeRender  implements ISimpleBlockRenderingHandler
 
     public void renderPipe(RenderBlocks renderblocks, IBlockAccess iblockaccess, Block block, int x, int y, int z)
     {
-        final TileEntity tileEntity = iblockaccess.getTileEntity(x, y, z);
 
         final float minX = 0.40F;
         final float minY = 0.40F;
@@ -33,11 +35,10 @@ public class SSGasPipeRender  implements ISimpleBlockRenderingHandler
         final float maxY = 0.60F;
         final float maxZ = 0.60F;
 
-        if (tileEntity != null)
-        {
-            final TileEntity[] connections = SSGasNetwork.getAdjacentOxygenConnections2(tileEntity);
+   
+            final BlockVec3[] connections = SSGasNetwork.getAdjacentAll(Minecraft.getMinecraft().theWorld, new BlockVec3(x,y,z));
 
-            for (TileEntity connection : connections)
+            for (BlockVec3 connection : connections)
             {
                 if (connection != null)
                 {
@@ -75,7 +76,7 @@ public class SSGasPipeRender  implements ISimpleBlockRenderingHandler
 
             renderblocks.setRenderBounds(minX, minY, minZ, maxX, maxY, maxZ);
             renderblocks.renderStandardBlock(block, x, y, z);
-        }
+        
     }
 
     @Override

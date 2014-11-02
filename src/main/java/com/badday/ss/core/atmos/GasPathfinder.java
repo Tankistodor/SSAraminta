@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.badday.ss.SSConfig;
 import com.badday.ss.api.IGasNetworkPipe;
 import com.badday.ss.api.IGasNetworkSource;
 import com.badday.ss.api.IGasNetworkVent;
-import com.badday.ss.blocks.SSTileEntityGasPipe;
 import com.badday.ss.core.utils.BlockVec3;
 
 public class GasPathfinder {
@@ -51,10 +52,16 @@ public class GasPathfinder {
 		
 		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
 			//BlockVec3 obj = location.getFromSide(direction);
-			BlockVec3 obj = location.modifyPositionFromSide(direction);
+			BlockVec3 obj = location.clone().newVecSide(direction.ordinal());
 
 			if (!iterated.contains(obj) && !toIgnore.contains(obj)) {
 				TileEntity tileEntity = obj.getTileEntity(worldObj);
+				Block block = obj.getBlockID(worldObj);
+				
+				if (block != null && block.equals(SSConfig.ssBlockGasPipe))
+				{
+					loopAll(obj);
+				}
 				
 				if (tileEntity != null) {
 					if (tileEntity instanceof IGasNetworkPipe) {
