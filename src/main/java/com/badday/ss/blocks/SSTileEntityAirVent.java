@@ -78,8 +78,9 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 				this.baySize = this.findSealedBay.getSize();
 				if (this.baySize > 0)
 					this.sealed = true;
-				if (SS.Debug)
-					System.out.println("[" + SS.MODNAME + "] AirVent checked sealed bay. His size: " + this.findSealedBay.getSize());
+				//FIXME: Perfomance impact. more 20fps
+				//if (SS.Debug)
+				//	System.out.println("[" + SS.MODNAME + "] AirVent checked sealed bay. His size: " + this.findSealedBay.getSize());
 			}
 		}
 
