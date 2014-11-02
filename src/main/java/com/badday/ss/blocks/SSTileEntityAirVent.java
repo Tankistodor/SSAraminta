@@ -65,8 +65,8 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 
 			} else {
 				this.findSealedBay = new SSFindSealedBay(worldObj, new BlockVec3(this));
-				if (SS.Debug)
-					System.out.println("[" + SS.MODNAME + "] create gasPressure class");
+				/*if (SS.Debug)
+					System.out.println("[" + SS.MODNAME + "] create gasPressure class");*/
 				// this.gasPressure.fullcheck();
 			}
 
@@ -74,12 +74,13 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 
 		if (!this.worldObj.isRemote && this.ticks % (COOLDOWN * 5) == 0) {
 			if (this.findSealedBay != null) {
-				//this.sealed = this.findSealedBay.fullcheck();
+				this.sealed = this.findSealedBay.fullcheck();
+				this.active = this.findSealedBay.getActive();
 				this.baySize = this.findSealedBay.getSize();
-				if (this.baySize > 0)
-					this.sealed = true;
-				if (SS.Debug)
-					System.out.println("[" + SS.MODNAME + "] AirVent checked sealed bay. His size: " + this.findSealedBay.getSize());
+				/*if (this.baySize > 0)
+					this.sealed = true;*/
+				/*if (SS.Debug)
+					System.out.println("[" + SS.MODNAME + "] AirVent checked sealed bay. His size: " + this.findSealedBay.getSize());*/
 			}
 		}
 
@@ -173,6 +174,12 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 	@Override
 	public boolean getSealed() {
 		return this.sealed;
+	}
+
+	public void printDebugInfo() {
+		System.out.println("Vent: "+this.toString());
+		System.out.println("    Size: "+this.getBaySize());
+		System.out.println("    Sealed: "+this.getSealed() + " active: "+ this.getActive());
 	}
 
 }

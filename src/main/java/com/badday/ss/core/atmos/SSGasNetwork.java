@@ -193,12 +193,14 @@ public class SSGasNetwork implements IGasNetwork {
 		int V = 0;
 		for (IGasNetworkVent vent : this.getVents()) {
 			//if (vent.getActive())
-				if (vent.getSealed() || true) { 
+				if (vent.getSealed() && vent.getActive()) { 
 					V += vent.getBaySize();
-				} else {
+				} else if (!vent.getSealed() && !vent.getActive())  {
 					V += 64*64; // If desealed bat - more rate usages gases
 				}
 		}
+		
+		if (SS.Debug) System.out.println("    Sealed Bay capacity: " + V);
 		
 		List<GasMixture> sumMix = new ArrayList<GasMixture>();
 		sumMix.add(new GasMixture(SSConfig.fluidOxygenGas,20));
@@ -215,7 +217,7 @@ public class SSGasNetwork implements IGasNetwork {
 				//TODO: pressure =+ GasUtils.getGasPressure(src.getGasMix, V, SSConfig.ssDefaultTemperature);
 			}
 		}
-		return pressure;
+		return pressure*SSConfig.ssGasPressureConst;
 	}
 	
 	
@@ -224,7 +226,7 @@ public class SSGasNetwork implements IGasNetwork {
 		System.out.println("    pipes: " + this.getPipes().size());
 		System.out.println("    sources: " + this.getSources().size());
 		System.out.println("    vents: " + this.getVents().size());
-		System.out.println("    pressure: " + this.getPressure());
+		System.out.println("    pressure: " + this.getPressure() + " hPa");
 	}
 	
 }

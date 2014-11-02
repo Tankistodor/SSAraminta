@@ -99,6 +99,7 @@ public class SSConfig {
 	 * Default station temperature in C
 	 */
 	public static int ssDefaultTemperature = 24; 
+	public static float ssGasPressureConst = 10.0f;
 	
 	public static int cabinetRenderId;
 	public static int gasPipeRenderId;

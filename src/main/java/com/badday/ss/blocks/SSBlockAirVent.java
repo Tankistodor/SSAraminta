@@ -103,12 +103,12 @@ public class SSBlockAirVent extends BlockContainer {
 				TileEntity tileEntity = world.getTileEntity(x, y, z);
 				
 				if (tileEntity instanceof SSTileEntityAirVent) {
-					IGasNetwork net = ((SSTileEntityAirVent) tileEntity).getGasNetwork();
+					IGasNetwork vent = ((SSTileEntityAirVent) tileEntity).getGasNetwork();
 					
 					if (SS.Debug) { 
-						net.printDebugInfo();
+						vent.printDebugInfo();
+						((SSTileEntityAirVent) tileEntity).printDebugInfo();
 					}
-					
 				} 
 
 			}

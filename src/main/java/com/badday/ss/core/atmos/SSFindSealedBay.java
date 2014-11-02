@@ -24,6 +24,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
+import com.badday.ss.api.IGasNetworkVent;
 import com.badday.ss.api.ISSSealedBlock;
 import com.badday.ss.blocks.SSTileEntityAirVent;
 import com.badday.ss.blocks.SSTileEntityGasBlock;
@@ -33,12 +34,13 @@ public class SSFindSealedBay {
 
 	private World world;
 	public BlockVec3 head;
-	private List<BlockVec3> blockToReplace = new LinkedList<BlockVec3>();
+	private int bayBlocks = 0;
 	private List<BlockVec3> nextLayer = new LinkedList<BlockVec3>();
 	private List<BlockVec3> currentLayer = new LinkedList<BlockVec3>();
 	private HashSet<BlockVec3> checked = new HashSet<BlockVec3>();
 	private boolean sealed;
-	int checkCount = SSConfig.ssAirVentBlockArea;
+	private boolean active;
+	private int checkCount = SSConfig.ssAirVentBlockArea;
 	
 	public SSFindSealedBay(World world1, BlockVec3 vec) {
 		this.world = world1;
@@ -84,12 +86,11 @@ public class SSFindSealedBay {
 
 		currentLayer.add(this.head);
 		Block headblock = this.head.getBlockIDsafe_noChunkLoad(this.world);
-		if (Blocks.air == headblock) {
-			this.blockToReplace.add(this.head.clone());
-		}
-
+		
 		checked = new HashSet<BlockVec3>();
 		this.sealed = true; // Try to enable air vent
+		this.active = true;
+		this.bayBlocks = 0;
 		this.doLayer();
 		
 		/*
@@ -101,11 +102,11 @@ public class SSFindSealedBay {
 		}*/
 		long time3 = System.nanoTime();
 
-		if (SS.Debug && false) {
+		if (SS.Debug && false ) {
 			System.out.println("[" + SS.MODNAME + "] AirVent Check Completed at x: " + this.head.x + " y: " + this.head.y + " z: " + this.head.z);
-			System.out.println("   Sealed: " + this.sealed);
+			System.out.println("   Sealed: " + this.sealed + " active: " + this.getActive());
 			System.out.println("   Total Time taken: " + (time3 - time1) / 1000000.0D + "ms");
-		    System.out.println("   Looped through: " + this.checked.size() + " blocks");
+		    System.out.println("   Looped through: " + this.getSize() + " blocks");
 		}
 		return this.sealed;
 
@@ -118,7 +119,7 @@ public class SSFindSealedBay {
 		Block AirVentID = SSConfig.ssBlockAirVent;
 		HashSet<BlockVec3> checkedLocal = new HashSet<BlockVec3>();
 		LinkedList nextLayer = new LinkedList<BlockVec3>();
-		this.blockToReplace = new LinkedList<BlockVec3>();
+		this.bayBlocks = 0;
 		List<BlockVec3> blockToUnset = new LinkedList<BlockVec3>();
 
 		while (this.sealed && this.currentLayer.size() > 0) {
@@ -145,22 +146,8 @@ public class SSFindSealedBay {
 								Block id = sideVec.getBlockIDsafe_noChunkLoad(this.world);
 								if (id == airID) {
 									// Если вакуум
+									this.bayBlocks++;
 									nextLayer.add(sideVec);
-									this.blockToReplace.add(sideVec);
-								} else if (id == gasID) {
-									// TODO: if () // Проверить, является ли
-									// атмосфера из другогой вентиляции
-									nextLayer.add(sideVec); // Ставим новые
-															// параметры
-															// атмосферы
-									if (sideVec.getTileEntity(this.world) instanceof SSTileEntityGasBlock) {
-										SSTileEntityGasBlock t = (SSTileEntityGasBlock) sideVec.getTileEntity(this.world);
-										if (t.head.x != this.head.x || t.head.y != this.head.y || t.head.z != this.head.z) {
-											//System.out.println("[" + SS.MODNAME + "] AirVent t " + t.head.toString());
-											this.blockToReplace.add(sideVec);
-										}
-									}
-									blockToUnset.add(sideVec);
 								} else if (id == null) {
 									// Broken through to the void or the
 									// stratosphere (above y==255) - set
@@ -168,18 +155,24 @@ public class SSFindSealedBay {
 									this.checkCount = 0;
 									this.sealed = false;
 									return;
-								} else if (this.canBlockPassAirCheck(id, sideVec, side)) {
-									nextLayer.add(sideVec);
 								} else if (id == AirVentID) {
 									// TODO: Проверить, является ли вентиляция
-									// той же что и мы проверям
-									if ((this.head.x == sideVec.x) && (this.head.y == sideVec.y) && (this.head.z == sideVec.z)) {
-
-									} else {
-										this.checkCount = 0;
-										this.sealed = false;
-										return;
+									// той же что и мы проверям. Если нет
+									if (!((this.head.x == sideVec.x) && (this.head.y == sideVec.y) && (this.head.z == sideVec.z))) {
+										TileEntity te = sideVec.getTileEntity(world);
+										if (te instanceof IGasNetworkVent) {
+											if (((IGasNetworkVent) te).getActive() == true) {
+												this.bayBlocks = 0;
+												this.checkCount = 0;
+												this.sealed = true;
+												this.active = false;
+												return;
+											}
+										}
 									}
+								} else if (this.canBlockPassAirCheck(id, sideVec, side)) {
+									this.bayBlocks++;
+									nextLayer.add(sideVec);
 								}
 								// If the chunk was unloaded,
 								// BlockVec3.getBlockID returns Blocks.bedrock
@@ -196,6 +189,7 @@ public class SSFindSealedBay {
 								// of which are unsealed obviously
 								if (id == null || id == airID || id == gasID || this.canBlockPassAirCheck(id, sideVec, side)) {
 									this.sealed = false;
+									this.active = false;
 									return;
 								}
 							}
@@ -235,23 +229,10 @@ public class SSFindSealedBay {
 	}
 	
 	public int getSize() {
-		return this.checked.size();
+		return this.bayBlocks;
 	}
-
 	
-	@Deprecated
-	private void replace_block() {
-
-		for (BlockVec3 b : blockToReplace) {
-			world.setBlock(b.x, b.y, b.z, SSConfig.ssBlockGas, 0, 2);
-			TileEntity t = b.getTileEntity(world);
-			if (t instanceof SSTileEntityGasBlock) {
-				((SSTileEntityGasBlock) t).setHead(this.head);
-			}
-		}
-
+	public boolean getActive() {
+		return this.active;
 	}
-
-
-	
 }
