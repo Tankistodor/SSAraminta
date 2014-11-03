@@ -106,7 +106,7 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
     {
 		int side = from.ordinal()-2;
-		if (side >= 0 && side < 3) {
+		if (side >= 0 && side < 4) {
 			int amount = tank[side].fill(resource, doFill);
 	        if (amount > 0 && doFill)
 	        {
@@ -124,11 +124,11 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
         FluidStack fluid = null;
         
         int side = from.ordinal()-2;
-		if (side >= 0 && side < 3) {
+		if (side >= 0 && side < 4) {
 			if (tank[side].getFluid() != null)
 				fluid = tank[side].getFluid().copy();
 		} else { side = 0; }
-        
+		
         return new FluidTankInfo[] { new FluidTankInfo(fluid, tank[side].getCapacity()) };
     }
 

@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
@@ -57,11 +58,13 @@ public class SSBlockGasMixer extends BlockContainer {
 		iconBuffer[ICON_ACTIVE_SIDE] = par1IconRegister.registerIcon("ss:blockGasMixerSideOn");
 	}
 
+	/*
 	@SideOnly(Side.CLIENT)
 	@Override
 	public IIcon getIcon(int side, int metadata) {
 
 		if (side > 1 && side < 5) {
+			SSTileEntityGasMixer tile = this.get
 			if (metadata == 0) // Inactive state
 			{
 				return iconBuffer[ICON_INACTIVE_SIDE];
@@ -73,6 +76,40 @@ public class SSBlockGasMixer extends BlockContainer {
 			return iconBuffer[ICON_TOP];
 		}
 
+		return iconBuffer[ICON_BOTTOM];
+	}*/
+	
+	@SideOnly(Side.CLIENT)
+	@Override
+	@SuppressWarnings({ "all" })
+	// @Override (client only)
+	public IIcon getIcon(IBlockAccess iblockaccess, int x, int y, int z, int side) {
+		SSTileEntityGasMixer tile = (SSTileEntityGasMixer) iblockaccess.getTileEntity(x, y, z);
+
+		if (side > 1 && side < 6) {
+			SSTileEntityGasMixer thistile = (SSTileEntityGasMixer) iblockaccess.getTileEntity(x, y, z);
+			if (thistile.getTankInfo(ForgeDirection.getOrientation(side-2))[0] != null) // Inactive state
+			{
+				if (thistile.getTankInfo(ForgeDirection.getOrientation(side-2))[0].fluid != null &&
+						thistile.getTankInfo(ForgeDirection.getOrientation(side-2))[0].fluid.amount>0) {
+					return iconBuffer[ICON_ACTIVE_SIDE];	
+				} else {
+					return iconBuffer[ICON_INACTIVE_SIDE];
+				}
+				
+			} else  {
+				return iconBuffer[ICON_INACTIVE_SIDE];
+			}
+		}
+		if (side == 1) {
+			return iconBuffer[ICON_TOP];
+		}
+			
+		/*	if (l == 1 || (marker != null && marker.tryingToConnect)) {
+			return activeMarker;
+		} else {
+			return super.getIcon(iblockaccess, x, y, z, side);
+		}*/
 		return iconBuffer[ICON_BOTTOM];
 	}
 
