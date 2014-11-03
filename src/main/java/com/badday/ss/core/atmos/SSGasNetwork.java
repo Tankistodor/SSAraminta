@@ -191,6 +191,8 @@ public class SSGasNetwork implements IGasNetwork {
 	public float getPressure() {
 		Float pressure = 0.0f;
 		int V = 0;
+		
+		//FIXME: Calculate pressure on GasMixer
 		for (IGasNetworkVent vent : this.getVents()) {
 			//if (vent.getActive())
 				if (vent.getSealed() && vent.getActive()) { 
@@ -202,6 +204,7 @@ public class SSGasNetwork implements IGasNetwork {
 		
 		if (SS.Debug) System.out.println("    Sealed Bay capacity: " + V);
 		
+		/** This is test mixture */
 		List<GasMixture> sumMix = new ArrayList<GasMixture>();
 		sumMix.add(new GasMixture(SSConfig.fluidOxygenGas,20));
 		sumMix.add(new GasMixture(SSConfig.fluidNitrogenGas,75));

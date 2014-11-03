@@ -12,6 +12,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import com.badday.ss.api.SSAPI;
 import com.badday.ss.blocks.SSBlockAirVent;
 import com.badday.ss.blocks.SSBlockCabinet;
+import com.badday.ss.blocks.SSBlockGasMixer;
 import com.badday.ss.blocks.SSBlockGasPipe;
 import com.badday.ss.blocks.SSBlockGlassCasing;
 import com.badday.ss.blocks.SSBlockMultiFake;
@@ -20,6 +21,7 @@ import com.badday.ss.blocks.SSBlockWallCasingRaw;
 import com.badday.ss.blocks.SSFuidTextrures;
 import com.badday.ss.blocks.SSTileEntityAirVent;
 import com.badday.ss.blocks.SSTileEntityCabinet;
+import com.badday.ss.blocks.SSTileEntityGasMixer;
 import com.badday.ss.blocks.SSTileEntityMultiFake;
 import com.badday.ss.core.utils.SSSettings;
 import com.badday.ss.items.SSItemBlockCabinet;
@@ -44,9 +46,9 @@ public class SSConfig {
 	public static Block ssBlockAirVent;
 	public static Block ssBlockCabinet;
 	public static Block ssBlockGasPipe;
+	public static Block ssBlockGasMixer;
 	public static Block fakeBlock;
-	//public static Block ssBlockAirGenerator;
-	
+	//	
 	public static Fluid fluidMethaneGas;
 	public static Fluid fluidOxygenGas;
 	public static Fluid fluidNitrogenGas;
@@ -170,7 +172,7 @@ public class SSConfig {
 		for (int i = 0; i < ssWallCasingC_unlocalizedName.length; i++) {
 			ItemStack multiBlockStack = new ItemStack(ssBlockWallCasingC, 1, i);
 		}
-
+		
 		ssBlockGlassCasing = new SSBlockGlassCasing("blockGlassCasing");
 		GameRegistry.registerBlock(ssBlockGlassCasing, "blockGlassCasing");
 		
@@ -186,11 +188,16 @@ public class SSConfig {
 		GameRegistry.registerBlock(ssBlockGasPipe, SSItemBlockGasPipe.class, "blockGasPipeBlack");
 		//GameRegistry.registerTileEntity(SSTileEntityGasPipe.class, "blockGasPipeBlack");
 
-        SSAPI.softBlocks.add(ssBlockGas);
-
 		ssBlockAirVent = new SSBlockAirVent("ssBlockAirVent");
 		GameRegistry.registerBlock(ssBlockAirVent, "ssBlockAirVent");
 		GameRegistry.registerTileEntity(SSTileEntityAirVent.class, "ssBlockAirVent");
+		
+		ssBlockGasMixer = new SSBlockGasMixer("ssBlockGasMixer");
+		GameRegistry.registerBlock(ssBlockGasMixer, "ssBlockGasMixer");
+		GameRegistry.registerTileEntity(SSTileEntityGasMixer.class, "ssBlockGasMixer");
+		
+		SSAPI.softBlocks.add(ssBlockGas);
+		
 	}
 
 	/**
