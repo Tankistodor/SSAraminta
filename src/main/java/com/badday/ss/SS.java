@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.badday.ss.agriculture.Agriculture;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -174,5 +175,7 @@ public class SS {
 		//IC2_Air = new int[] {Items.getItem("airCell").itemID, Items.getItem("airCell").getItemDamage()};
 		ss = GameRegistry.findItem("IC2", "itemArmorHazmatHelmet");
 		IC2_Air = new Item[] {GameRegistry.findItem("IC2", "itemCellAir")};
+
+    Agriculture.init();
 	}
 }
