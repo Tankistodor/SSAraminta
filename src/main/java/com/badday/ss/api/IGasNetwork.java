@@ -44,11 +44,12 @@ public interface IGasNetwork {
 	public List<? extends IGasNetworkSource> getSources();
 	public List<? extends IGasNetworkVent> getVents();
 
-	
-	public float getPressure();
-	
 	public int getVetnSize();
 	
 	public void printDebugInfo();
+
+	public void rebuildNetworkFromVent(World worldObj, BlockVec3 blockVec3);
+
+	public float nipPressure();
 	
 }

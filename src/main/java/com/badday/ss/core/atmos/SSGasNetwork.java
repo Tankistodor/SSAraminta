@@ -27,27 +27,55 @@ public class SSGasNetwork implements IGasNetwork {
 	public List<BlockVec3> pipes = new LinkedList<BlockVec3>(); // Pipes
 	public List<IGasNetworkSource> sources = new LinkedList<IGasNetworkSource>(); // Pipes
 	public List<IGasNetworkVent> vents = new LinkedList<IGasNetworkVent>(); // Pipes
+	
+	public float totalPressure = 0;
 
 	public SSGasNetwork(World world) {
 		super();
 		this.world = world;
 	}
 
+	@Deprecated
 	@Override
 	public synchronized void rebuildNetwork(World w, BlockVec3 node) {
 
 		GasPathfinder finder = new GasPathfinder(w, node);
 		List<BlockVec3> results = finder.exploreNetwork();
 		
-		
-						//SSGasNetwork newNetwork = new SSGasNetwork(w);
-						this.setPipes(finder.getPipes());
-						this.setVents(finder.getVents());
-						this.setSources(finder.getSources());
-						this.recalculate();
+		this.setPipes(finder.getPipes());
+		this.setVents(finder.getVents());
+		this.setSources(finder.getSources());
+		this.recalculate();
 
 	}
+	
+	public synchronized void rebuildNetworkFromVent(World w, BlockVec3 node) {
 
+		for (int i = 0; i<2; i++) {
+			Block block = node.getBlockOnSide(w, i);
+			
+			if (block != null && block.equals(SSConfig.ssBlockGasPipe)) {
+				
+				GasPathfinder finder = new GasPathfinder(w, node.modifyPositionFromSide(ForgeDirection.getOrientation(i)));
+				List<BlockVec3> results = finder.exploreNetwork();
+				
+				this.setPipes(finder.getPipes());
+				this.setVents(finder.getVents());
+				this.setSources(finder.getSources());
+				
+			}
+		}
+		
+		GasPathfinder finder = new GasPathfinder(w, node);
+		List<BlockVec3> results = finder.exploreNetwork();
+		
+		this.setPipes(finder.getPipes());
+		this.setVents(finder.getVents());
+		this.setSources(finder.getSources());
+		this.recalculate();
+	}
+
+	/*
 	public synchronized void rebuildNetwork2(World w, BlockVec3 node) {
 
 		boolean linked = false;
@@ -74,7 +102,7 @@ public class SSGasNetwork implements IGasNetwork {
 						 * The connections A and B are still intact elsewhere.
 						 * Set all references of wire connection into one
 						 * network.
-						 */
+						 /
 						if (results.contains(connectedBlockB)) {
 							dealtWith[b] = true;
 							linked = true;
@@ -93,10 +121,12 @@ public class SSGasNetwork implements IGasNetwork {
 			}
 		}
 
-	}
+	}*/
 	
 	@Override
 	public void recalculate() {
+		this.totalPressure = this.totalPressure + this.nipPressure();
+		this.totalPressure = this.totalPressure * 0.9f; //
 
 	}
 
@@ -188,7 +218,16 @@ public class SSGasNetwork implements IGasNetwork {
 	}
 
 	@Override
-	public float getPressure() {
+	public float nipPressure() {
+		
+		float returnPressure = 0;
+		for (IGasNetworkSource g : this.sources) {
+			returnPressure =+ g.nipGas();
+		}
+		
+		return returnPressure;
+		/*
+		
 		Float pressure = 0.0f;
 		int V = 0;
 		
@@ -204,7 +243,7 @@ public class SSGasNetwork implements IGasNetwork {
 		
 		if (SS.Debug) System.out.println("    Sealed Bay capacity: " + V);
 		
-		/** This is test mixture */
+		// This is test mixture 
 		List<GasMixture> sumMix = new ArrayList<GasMixture>();
 		sumMix.add(new GasMixture(SSConfig.fluidOxygenGas,20));
 		sumMix.add(new GasMixture(SSConfig.fluidNitrogenGas,75));
@@ -220,7 +259,7 @@ public class SSGasNetwork implements IGasNetwork {
 				//TODO: pressure =+ GasUtils.getGasPressure(src.getGasMix, V, SSConfig.ssDefaultTemperature);
 			}
 		}
-		return pressure*SSConfig.ssGasPressureConst;
+		return pressure*SSConfig.ssGasPressureConst;*/
 	}
 	
 	
@@ -229,14 +268,20 @@ public class SSGasNetwork implements IGasNetwork {
 		System.out.println("    pipes: " + this.getPipes().size());
 		System.out.println("    sources: " + this.getSources().size());
 		System.out.println("    vents: " + this.getVents().size());
-		System.out.println("    pressure: " + this.getPressure() + " hPa");
+		System.out.println("    baySize: " + this.getVetnSize());
+		//System.out.println("    pressure: " + this.getPressure() + " hPa");
+		System.out.println("    total pressure: " + this.totalPressure + " hPa");
 	}
 
 	@Override
 	public int getVetnSize() {
 		int sum = 0;
 		for (IGasNetworkVent v : this.getVents()) {
-			sum =+ v.getBaySize();
+			if (v.getSealed() && v.getActive()) {
+				sum =+ v.getBaySize();
+			} else if (v.getActive()) {
+				sum =+ 64*64;
+			}
 		}
 		return sum;
 	}

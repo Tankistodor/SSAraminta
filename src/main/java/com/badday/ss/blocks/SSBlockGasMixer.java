@@ -132,7 +132,6 @@ public class SSBlockGasMixer extends BlockContainer {
 							}
 
 						}
-						System.out.printf("Output pressure: %.2f ", tile.getGasPressure());
 					}
 				}
 

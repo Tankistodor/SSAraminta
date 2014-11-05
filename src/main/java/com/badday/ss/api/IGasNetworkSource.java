@@ -10,8 +10,6 @@ package com.badday.ss.api;
 @SuppressWarnings("rawtypes")
 public interface IGasNetworkSource
 {
-	public float getGasPressure();
-	public void setGasPressure();
 	
 	public int getGasTemperature();
 	public void setGasTemperature();
@@ -20,5 +18,5 @@ public interface IGasNetworkSource
 	public void setNetwork(IGasNetwork network);
 	public void onNetworkChanged();
 	
-	public float calculateGasPressure();
+	public float nipGas();
 }

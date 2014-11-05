@@ -12,6 +12,7 @@ import com.badday.ss.core.atmos.SSGasNetwork;
 import com.badday.ss.core.utils.BlockVec3;
 import com.badday.ss.events.AirNetAddEvent;
 import com.badday.ss.events.AirNetRemoveEvent;
+import com.badday.ss.events.GasNetworkRecalculateEvents;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 
@@ -47,49 +48,33 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 			return;
 		}
 		
+		
 		if (!added_to_airvent_net) {
-			MinecraftForge.EVENT_BUS.post(new AirNetAddEvent(new BlockVec3(this)));
+			MinecraftForge.EVENT_BUS.post(new AirNetAddEvent(new BlockVec3(this),this));
 			added_to_airvent_net = true;
 		}
 
 		if (!this.worldObj.isRemote && this.ticks % COOLDOWN == 0) {
 
-			if (this.findSealedBay != null) {
-				this.findSealedBay.getSize();
-				/*
-				 * this.active && this.threadSeal.sealedFinal.get();
-				 * this.calculatingSealed = this.active &&
-				 * this.threadSeal.looping.get();
-				 * this.gasPressure.recheck(this);
-				 */
-
-			} else {
+			if (this.findSealedBay == null) {
 				this.findSealedBay = new SSFindSealedBay(worldObj, new BlockVec3(this));
-				/*if (SS.Debug)
-					System.out.println("[" + SS.MODNAME + "] create gasPressure class");*/
-				// this.gasPressure.fullcheck();
 			}
 
 		}
 
 		if (!this.worldObj.isRemote && this.ticks % (COOLDOWN * 5) == 0) {
+
 			if (this.findSealedBay != null) {
 				this.sealed = this.findSealedBay.fullcheck();
 				this.active = this.findSealedBay.getActive();
 				this.baySize = this.findSealedBay.getSize();
-
-				/*if (this.baySize > 0)
-					this.sealed = true;*/
-				/*if (SS.Debug)
-					System.out.println("[" + SS.MODNAME + "] AirVent checked sealed bay. His size: " + this.findSealedBay.getSize());*/
-
+				
 				if (this.baySize > 0)
 					this.sealed = true;
-				//FIXME: Perfomance impact. more 20fps
-				//if (SS.Debug)
-				//	System.out.println("[" + SS.MODNAME + "] AirVent checked sealed bay. His size: " + this.findSealedBay.getSize());
-
 			}
+			
+			if (this.getActive())
+				MinecraftForge.EVENT_BUS.post(new GasNetworkRecalculateEvents(this.getGasNetwork())); //demind
 		}
 
 	}
@@ -158,7 +143,7 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 	public IGasNetwork getGasNetwork() {
 		if (gasNetwork == null) {
 			this.gasNetwork = new SSGasNetwork(worldObj);
-			this.gasNetwork.rebuildNetwork(worldObj, new BlockVec3(this.xCoord,this.yCoord,this.zCoord));
+			this.gasNetwork.rebuildNetworkFromVent(worldObj, new BlockVec3(this.xCoord,this.yCoord,this.zCoord));
 		}
 		return this.gasNetwork;
 	}
