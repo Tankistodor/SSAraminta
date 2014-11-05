@@ -102,6 +102,7 @@ public class SSConfig {
 	 */
 	public static int ssDefaultTemperature = 24; 
 	public static float ssGasPressureConst = 10.0f;
+	public static float ssGasUsagesInMM = 1.0f; // 1.0f = 1000 miliBuckets per 100 block; 
 	
 	public static int cabinetRenderId;
 	public static int gasPipeRenderId;

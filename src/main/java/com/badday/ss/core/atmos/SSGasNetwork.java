@@ -231,5 +231,14 @@ public class SSGasNetwork implements IGasNetwork {
 		System.out.println("    vents: " + this.getVents().size());
 		System.out.println("    pressure: " + this.getPressure() + " hPa");
 	}
+
+	@Override
+	public int getVetnSize() {
+		int sum = 0;
+		for (IGasNetworkVent v : this.getVents()) {
+			sum =+ v.getBaySize();
+		}
+		return sum;
+	}
 	
 }

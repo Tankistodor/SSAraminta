@@ -1,11 +1,10 @@
 package com.badday.ss.agriculture;
 
-import com.badday.ss.agriculture.crops.Amanita;
-import ic2.api.crops.CropCard;
 import ic2.api.crops.Crops;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import sun.jvm.hotspot.opto.Block;
+
+import com.badday.ss.agriculture.crops.Amanita;
 
 /**
  * Created by userad on 04/11/14.

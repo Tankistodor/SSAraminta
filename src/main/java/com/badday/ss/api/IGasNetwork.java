@@ -47,6 +47,8 @@ public interface IGasNetwork {
 	
 	public float getPressure();
 	
+	public int getVetnSize();
+	
 	public void printDebugInfo();
 	
 }

@@ -16,6 +16,9 @@ public interface IGasNetworkSource
 	public int getGasTemperature();
 	public void setGasTemperature();
 
+	public IGasNetwork getNetwork();
 	public void setNetwork(IGasNetwork network);
 	public void onNetworkChanged();
+	
+	public float calculateGasPressure();
 }
