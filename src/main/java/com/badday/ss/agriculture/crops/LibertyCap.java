@@ -1,42 +1,42 @@
 package com.badday.ss.agriculture.crops;
 
-import ic2.api.crops.CropCard;
 import ic2.api.crops.ICropTile;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
 /**
  * Created by userad on 04/11/14.
  */
-public class Amanita extends BaseCrop {
+public class LibertyCap extends BaseCrop {
   @Override
   public String name() {
-    return "Fly Amanita";
+    return "Liberty Cap";
   }
 
   @Override
   public int tier() {
-    return 0;
+    return 4;
   }
 
   @Override
   public int stat(int n) {
+    switch (n) {
+      case 0:
+        return 0;
+      case 1:
+        return 4;
+      case 2:
+        return 0;
+      case 3:
+        return 0;
+      case 4:
+        return 0;
+    }
     return 0;
   }
 
   @Override
   public String[] attributes() {
-    return new String[] { "Mushroom", "Poison"};
-  }
-
-  @Override
-  public int maxSize() {
-    return 4;
-  }
-
-  @Override
-  public boolean canGrow(ICropTile crop) {
-    return crop.getSize() < 4;
+    return new String[] { "Mushroom", "Yellow", "Food", "Psychedelic"};
   }
 
   @Override
@@ -46,11 +46,11 @@ public class Amanita extends BaseCrop {
 
   @Override
   public boolean canBeHarvested(ICropTile crop) {
-    return crop.getSize() == 4;
+    return false;
   }
 
   @Override
   public ItemStack getGain(ICropTile crop) {
-    return new ItemStack(Blocks.red_mushroom);
+    return null;
   }
 }
