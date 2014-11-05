@@ -1,9 +1,11 @@
 package com.badday.ss.blocks;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -15,6 +17,8 @@ import com.badday.ss.api.IGasNetworkSource;
 public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSource, IFluidHandler {
 	
 	public FluidTank[] tank = new FluidTank[4];
+	public int pressure[] = new int[4]; // Регуряторы напора
+	
 	public int renderOffset[] = new int[4];
 	
 	public SSTileEntityGasMixer() {
@@ -131,5 +135,32 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 		
         return new FluidTankInfo[] { new FluidTankInfo(fluid, tank[side].getCapacity()) };
     }
+	
+	@Override
+	public void readFromNBT(NBTTagCompound tags) {
+		super.readFromNBT(tags);
+		for (int i = 0; i < 4; i++) {
+		 if (tags.getBoolean("hasFluid"+i))
+	        {
+                tank[i].setFluid(FluidRegistry.getFluidStack(tags.getString("fluidName"+i), tags.getInteger("amount"+i)));
+	        }
+	        else
+	            tank[i].setFluid(null);
+		}
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound tags) {
+		super.writeToNBT(tags);
+		for (int i = 0; i < 4; i++) {
+			FluidStack liquid = tank[i].getFluid();
+			tags.setBoolean("hasFluid"+i, liquid != null);
+		    if (liquid != null)
+		        {
+		            tags.setString("fluidName"+i, liquid.getFluid().getName());
+		            tags.setInteger("amount"+i, liquid.amount);
+		        }
+		}
+	}
 
 }

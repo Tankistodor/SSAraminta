@@ -58,13 +58,12 @@ public class SSBlockGasMixer extends BlockContainer {
 		iconBuffer[ICON_ACTIVE_SIDE] = par1IconRegister.registerIcon("ss:blockGasMixerSideOn");
 	}
 
-	/*
+	
 	@SideOnly(Side.CLIENT)
 	@Override
 	public IIcon getIcon(int side, int metadata) {
 
 		if (side > 1 && side < 5) {
-			SSTileEntityGasMixer tile = this.get
 			if (metadata == 0) // Inactive state
 			{
 				return iconBuffer[ICON_INACTIVE_SIDE];
@@ -77,7 +76,7 @@ public class SSBlockGasMixer extends BlockContainer {
 		}
 
 		return iconBuffer[ICON_BOTTOM];
-	}*/
+	}
 	
 	@SideOnly(Side.CLIENT)
 	@Override
@@ -104,12 +103,6 @@ public class SSBlockGasMixer extends BlockContainer {
 		if (side == 1) {
 			return iconBuffer[ICON_TOP];
 		}
-			
-		/*	if (l == 1 || (marker != null && marker.tryingToConnect)) {
-			return activeMarker;
-		} else {
-			return super.getIcon(iblockaccess, x, y, z, side);
-		}*/
 		return iconBuffer[ICON_BOTTOM];
 	}
 
