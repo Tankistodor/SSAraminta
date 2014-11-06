@@ -1,20 +1,19 @@
 package com.badday.ss.events;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.badday.ss.core.utils.BlockVec3;
+import com.badday.ss.core.atmos.GasUtils;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Type;
 import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
+import cpw.mods.fml.relauncher.Side;
 
 public class SSTickHandlerServer {
 
-	private static Map<Integer, List<BlockVec3>> edgeChecks = new HashMap<Integer, List<BlockVec3>>();
+	public final static SSTickHandlerServer instance = new SSTickHandlerServer();
+	
+	/*private static Map<Integer, List<BlockVec3>> edgeChecks = new HashMap<Integer, List<BlockVec3>>();
 
 	public static void restart() {
 		SSTickHandlerServer.edgeChecks.clear();
@@ -30,18 +29,29 @@ public class SSTickHandlerServer {
 		updateList.add(edgeBlock);
 		SSTickHandlerServer.edgeChecks.put(dimID, updateList);
 	}
-
+	*/
+	
 	@SubscribeEvent
-	public void onServerTick(ServerTickEvent event) {
+	public void onServerTick(TickEvent.ServerTickEvent event) {
 		if (event.phase == Phase.START) {
 		}
 
 		else if (event.phase == Phase.END) {
+			GasUtils.rebuildGasNetworkEvent();	
 		}
+	}
+	
+	@SubscribeEvent
+	public void onTick(TickEvent.ServerTickEvent event) {
+		/*if (event.type == Type.SERVER && event.side == Side.SERVER
+				&& event.phase == Phase.END) {
+			System.out.println("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");	
+		}*/
 	}
 
 	@SubscribeEvent
 	public void onWorldTick(WorldTickEvent event) {
+		
 		/*if (event.phase == Phase.START) {
 			final WorldServer world = (WorldServer) event.world;
 

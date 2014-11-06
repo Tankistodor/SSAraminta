@@ -50,7 +50,6 @@ public class GasPathfinder {
 		iterated.add(location);
 		
 		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
-			//BlockVec3 obj = location.getFromSide(direction);
 			BlockVec3 obj = location.clone().newVecSide(direction.ordinal());
 
 			if (!iterated.contains(obj) && !toIgnore.contains(obj)) {
@@ -69,10 +68,14 @@ public class GasPathfinder {
 				if (tileEntity != null) {
 					if (tileEntity instanceof IGasNetworkSource) {
 						if (!this.sources.contains(obj))
-							this.sources.add(obj);
+							if (ForgeDirection.DOWN.equals(direction)) { 
+									 this.sources.add(obj); 
+									}
+							
 					} else if (tileEntity instanceof IGasNetworkVent) {
 						if (!this.vents.contains(obj))
-							this.vents.add(obj);
+							if (((IGasNetworkVent)tileEntity).canConnectFrom(direction))
+									this.vents.add(obj); 
 					}
 				}
 			}

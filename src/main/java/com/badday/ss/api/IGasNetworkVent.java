@@ -1,5 +1,7 @@
 package com.badday.ss.api;
 
+import net.minecraftforge.common.util.ForgeDirection;
+
 /*
  * AirVent
  */
@@ -15,5 +17,7 @@ public interface IGasNetworkVent {
 	
 	public boolean getActive();
 	public boolean getSealed();
+	
+	public boolean canConnectFrom(ForgeDirection direction);
 
 }

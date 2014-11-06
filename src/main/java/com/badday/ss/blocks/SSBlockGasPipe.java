@@ -24,6 +24,7 @@ import com.badday.ss.api.IGasNetworkVent;
 import com.badday.ss.core.atmos.GasUtils;
 import com.badday.ss.core.atmos.SSGasNetwork;
 import com.badday.ss.core.utils.BlockVec3;
+import com.badday.ss.events.RebuildNetworkEvent;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -97,8 +98,9 @@ public class SSBlockGasPipe  extends Block implements IGasNetworkElement{
 		super.onBlockAdded(world, x, y, z);
 		if (!world.isRemote && GasUtils.getAdjacentAllCount(world, new BlockVec3(x,y,z))>1) { //FIXME - Called 2 times ? Why?
 			// Rebild network
-			SSGasNetwork net = new SSGasNetwork(world);
-			net.rebuildNetwork(world, new BlockVec3(x,y,z));
+			GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(world,new BlockVec3(x,y,z)));
+			//SSGasNetwork net = new SSGasNetwork(world);
+			//net.rebuildNetwork(world, new BlockVec3(x,y,z) );
 		}
 		world.markBlockForUpdate(x, y, z);
 	}
@@ -109,8 +111,9 @@ public class SSBlockGasPipe  extends Block implements IGasNetworkElement{
 			// Rebild network
 			for (BlockVec3 node : GasUtils.getAdjacentAll(world, new BlockVec3(x,y,z))) {
 				if (node != null) {
-					SSGasNetwork net = new SSGasNetwork(world);
-					net.rebuildNetwork(world, node,new BlockVec3(x,y,z));
+					GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(world,new BlockVec3(x,y,z)));
+					//SSGasNetwork net = new SSGasNetwork(world);
+					//net.rebuildNetwork(world, node,new BlockVec3(x,y,z));
 				}
 			}
 		}
@@ -140,11 +143,12 @@ public class SSBlockGasPipe  extends Block implements IGasNetworkElement{
 		if (entityplayer.getCurrentEquippedItem() != null) {
 			String itemName = entityplayer.getCurrentEquippedItem().getUnlocalizedName();
 			if (itemName.equals("item.ss.multitool")) {
-				SSGasNetwork net = new SSGasNetwork(world);
-				net.rebuildNetwork(world, new BlockVec3(x,y,z));
-				if (SS.Debug) { 
-					net.printDebugInfo();
-				}
+				GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(world,new BlockVec3(x,y,z)));
+				//SSGasNetwork net = new SSGasNetwork(world);
+				//net.rebuildNetwork(world, new BlockVec3(x,y,z));
+				//if (SS.Debug) { 
+				//	net.printDebugInfo();
+				//}
 			}
  		}
 		return false;

@@ -1,11 +1,7 @@
 package com.badday.ss.core.atmos;
 
 import java.util.List;
-
-import com.badday.ss.SSConfig;
-import com.badday.ss.api.IGasNetworkSource;
-import com.badday.ss.api.IGasNetworkVent;
-import com.badday.ss.core.utils.BlockVec3;
+import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
@@ -13,9 +9,52 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 
+import com.badday.ss.SS;
+import com.badday.ss.SSConfig;
+import com.badday.ss.api.IGasNetworkSource;
+import com.badday.ss.api.IGasNetworkVent;
+import com.badday.ss.core.utils.BlockVec3;
+import com.badday.ss.events.RebuildNetworkEvent;
+
 
 public class GasUtils {
 
+	public static ConcurrentHashMap<String,RebuildNetworkEvent> pointToRebuild = new ConcurrentHashMap<String,RebuildNetworkEvent>();
+	
+	public static void registeredEventRebuildGasNetwork(RebuildNetworkEvent point) {
+		String index = point.coords.x + ":" + point.coords.y + ":" + point.coords.z;
+		System.out.println("Added event to rebuld net on "+index);
+		pointToRebuild.put(index, point);
+	}
+	
+	public static void removeAirVent(RebuildNetworkEvent point) {
+	    String index = point.coords.x + ":" + point.coords.y + ":" + point.coords.z;
+	    pointToRebuild.remove(index);
+	}
+	
+	
+	public static void rebuildGasNetworkEvent() {
+		for (RebuildNetworkEvent point : pointToRebuild.values()) {
+			System.out.println("Start to rebuld net on "+point.coords.toString());
+			
+			SSGasNetwork network = new SSGasNetwork(point.world);
+			
+			GasPathfinder finder = new GasPathfinder(point.world, point.coords);
+			List<BlockVec3> results = finder.exploreNetwork();
+			
+			network.setPipes(finder.getPipes());
+			network.setVents(finder.getVents());
+			network.setSources(finder.getSources());
+			
+			if (SS.Debug) {
+				System.out.println("Network "+network.toString() + " reBuilded at " + point.coords.toString());
+				network.printDebugInfo();
+			}
+			removeAirVent(point);
+		}
+		
+	}
+	
 	/**
 	 * https://ru.wikipedia.org/wiki/%D0%9C%D0%BE%D0%BB%D1%8F%D1%80%D0%BD%D0%B0%D1%8F_%D0%BC%D0%B0%D1%81%D1%81%D0%B0
 	 * @param fl
@@ -143,3 +182,5 @@ public class GasUtils {
 	}
 	
 }
+
+

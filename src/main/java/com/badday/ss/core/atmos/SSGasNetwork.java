@@ -14,6 +14,7 @@ import com.badday.ss.api.IGasNetwork;
 import com.badday.ss.api.IGasNetworkSource;
 import com.badday.ss.api.IGasNetworkVent;
 import com.badday.ss.core.utils.BlockVec3;
+import com.badday.ss.events.RebuildNetworkEvent;
 
 /**
  * 
@@ -34,12 +35,17 @@ public class SSGasNetwork implements IGasNetwork {
 		this.world = world;
 	}
 
+	
 	@Override
 	/**
 	 * rebuild network called when pipe is changed 
 	 */
-	public synchronized void rebuildNetwork(World w, BlockVec3 node,BlockVec3... ignore) {
+	public synchronized void r1ebuildNetwork(World w, BlockVec3 node,BlockVec3... ignore) {
 
+		//MinecraftForge.EVENT_BUS.post(new RebuildGasNetworkEvent(w, node.clone()));
+		GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(world,node));
+		
+		/*
 		GasPathfinder finder = new GasPathfinder(w, node);
 		List<BlockVec3> results = finder.exploreNetwork();
 		
@@ -48,17 +54,18 @@ public class SSGasNetwork implements IGasNetwork {
 		this.setSources(finder.getSources());
 		if (SS.Debug)
 			System.out.println("Network "+this.toString() + " rebuided at " + node.toString());
+			*/
 	}
 	
 	/**
 	 * Calles where airVent try to connect to GasNetwork
 	 */
-	public synchronized void rebuildNetworkFromVent(World w, BlockVec3 node, int side) {
+	public synchronized void r1ebuildNetworkFromVent(World w, BlockVec3 node, int side) {
 
 		Block block = node.getBlockOnSide(w, side);
 
 		if (block != null && block.equals(SSConfig.ssBlockGasPipe)) {
-			this.rebuildNetwork(w, node);
+			this.r1ebuildNetwork(w, node);
 		}
 
 	}

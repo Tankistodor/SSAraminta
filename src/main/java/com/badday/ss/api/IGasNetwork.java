@@ -17,8 +17,8 @@ public interface IGasNetwork {
 	
 	
 
-	public void rebuildNetwork(World w, BlockVec3 node,BlockVec3... ignore);
-	public void rebuildNetworkFromVent(World worldObj, BlockVec3 blockVec3,int side);
+	public void r1ebuildNetwork(World w, BlockVec3 node,BlockVec3... ignore);
+	public void r1ebuildNetworkFromVent(World worldObj, BlockVec3 blockVec3,int side);
 
 	/**
 	 * Calculate new values of gas pressure and mixture

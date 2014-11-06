@@ -5,7 +5,6 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.badday.ss.agriculture.Agriculture;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -13,6 +12,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 
+import com.badday.ss.agriculture.Agriculture;
 import com.badday.ss.api.SSAPI;
 import com.badday.ss.core.utils.SSCommandPathfinder;
 import com.badday.ss.core.utils.SpaceTpCommand;
@@ -20,6 +20,7 @@ import com.badday.ss.events.AntiFallDamage;
 import com.badday.ss.events.GuiHandler;
 import com.badday.ss.events.SSPacketHandler;
 import com.badday.ss.events.SSTickHandlerClient;
+import com.badday.ss.events.SSTickHandlerServer;
 import com.badday.ss.events.SoundHandler;
 import com.badday.ss.events.SpaceEventHandler;
 import com.badday.ss.world.space.BiomeSpace;
@@ -119,16 +120,22 @@ public class SS {
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		//FMLCommonHandler.instance().bus().register(SSTickHandlerClient.class);
+
+		
+			/*SSTickHandlerServer tickHandlerServer = new SSTickHandlerServer();
+			FMLCommonHandler.instance().bus().register(tickHandlerServer);
+			MinecraftForge.EVENT_BUS.register(tickHandlerServer);*/
+			MinecraftForge.EVENT_BUS.register(SSTickHandlerServer.instance);
+			FMLCommonHandler.instance().bus().register(SSTickHandlerServer.instance);
 		
 		/** Регистрируем рендеринг космоса */
 		if (FMLCommonHandler.instance().getSide().isClient()) {
-		 SSTickHandlerClient tickHandlerClient = new SSTickHandlerClient();
-	     FMLCommonHandler.instance().bus().register(tickHandlerClient);
-	     MinecraftForge.EVENT_BUS.register(tickHandlerClient);
+			SSTickHandlerClient tickHandlerClient = new SSTickHandlerClient();
+			FMLCommonHandler.instance().bus().register(tickHandlerClient);
+			MinecraftForge.EVENT_BUS.register(tickHandlerClient);
 		}
-		
-		NetworkRegistry.INSTANCE.registerGuiHandler(this.instance,new GuiHandler());
+
+		NetworkRegistry.INSTANCE.registerGuiHandler(this.instance, new GuiHandler());
 	}
 	
 	@EventHandler

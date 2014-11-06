@@ -16,8 +16,10 @@ import com.badday.ss.SSConfig;
 import com.badday.ss.api.IGasNetwork;
 import com.badday.ss.api.IGasNetworkElement;
 import com.badday.ss.api.IGasNetworkVent;
+import com.badday.ss.core.atmos.GasUtils;
 import com.badday.ss.core.atmos.SSGasNetwork;
 import com.badday.ss.core.utils.BlockVec3;
+import com.badday.ss.events.RebuildNetworkEvent;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -127,7 +129,7 @@ public class SSBlockAirVent extends BlockContainer implements IGasNetworkElement
 					}
 				} 
 
-			} else if (itemName.equals("ic2.itemToolWrenchElectric")) {
+			} else if (itemName.equals("ic2.itemToolWrenchElectric") || itemName.equals("item.thermalexpansion.tool.wrench")) {
 				// Rotate AirVent
 				int oldMeta = world.getBlockMetadata(x, y, z);
 				if (side != oldMeta && side >= 0 && side < 2) {
@@ -137,10 +139,12 @@ public class SSBlockAirVent extends BlockContainer implements IGasNetworkElement
 						
 						TileEntity tileEntity = world.getTileEntity(x, y, z);
 						((IGasNetworkVent) tileEntity).getGasNetwork().removeVent((IGasNetworkVent) tileEntity);
-						// Rebuild new network on DOWN from Vent
-						if (world.getBlock(x, y-1, z) == SSConfig.ssBlockAirVent) {
-							SSGasNetwork net = new SSGasNetwork(world);
-							net.rebuildNetwork(world, new BlockVec3(x,y+1,z));
+						// Rebuild new network on UP from Vent
+						if (SS.Debug) System.out.println("Try to rebild on UP");
+						if (world.getBlock(x, y+1, z) == SSConfig.ssBlockGasPipe) {
+							GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(world,new BlockVec3(x,y+1,z)));
+							//SSGasNetwork net = new SSGasNetwork(world);
+							//net.rebuildNetwork(world, new BlockVec3(x,y+1,z));
 						}
 						
 					} else if (side == 1 && side != oldMeta) {
@@ -148,10 +152,12 @@ public class SSBlockAirVent extends BlockContainer implements IGasNetworkElement
 						entityplayer.getCurrentEquippedItem().damageItem(1, entityplayer);
 						TileEntity tileEntity = world.getTileEntity(x, y, z);
 						((IGasNetworkVent) tileEntity).getGasNetwork().removeVent((IGasNetworkVent) tileEntity);
-						// Rebuild new network on UP from Vent						
-						if (world.getBlock(x, y+1, z) == SSConfig.ssBlockGasPipe) {
-							SSGasNetwork net = new SSGasNetwork(world);
-							net.rebuildNetwork(world, new BlockVec3(x,y+1,z));
+						// Rebuild new network on DOWN from Vent
+						if (SS.Debug) System.out.println("Try to rebild on DOWN");
+						if (world.getBlock(x, y-1, z) == SSConfig.ssBlockGasPipe) {
+							GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(world,new BlockVec3(x,y-1,z)));
+							//SSGasNetwork net = new SSGasNetwork(world);
+							//net.rebuildNetwork(world, new BlockVec3(x,y-1,z));
 						}
 					}
 				}

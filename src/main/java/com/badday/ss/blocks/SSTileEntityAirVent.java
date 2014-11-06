@@ -3,16 +3,19 @@
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import com.badday.ss.SS;
 import com.badday.ss.api.IGasNetwork;
 import com.badday.ss.api.IGasNetworkVent;
+import com.badday.ss.core.atmos.GasUtils;
 import com.badday.ss.core.atmos.SSFindSealedBay;
 import com.badday.ss.core.atmos.SSGasNetwork;
 import com.badday.ss.core.utils.BlockVec3;
 import com.badday.ss.events.AirNetAddEvent;
 import com.badday.ss.events.AirNetRemoveEvent;
 import com.badday.ss.events.GasNetworkRecalculateEvents;
+import com.badday.ss.events.RebuildNetworkEvent;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 
@@ -68,7 +71,7 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 				this.sealed = this.findSealedBay.fullcheck();
 				this.active = this.findSealedBay.getActive();
 				this.baySize = this.findSealedBay.getSize();
-				System.out.println("BaySize: " + this.baySize);
+				
 				if (this.baySize > 0)
 					this.sealed = true;
 			}
@@ -144,8 +147,10 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 		if (gasNetwork == null) {
 			this.gasNetwork = new SSGasNetwork(worldObj);
 			if (this.getBlockMetadata() == 0)
-				this.gasNetwork.rebuildNetworkFromVent(worldObj, new BlockVec3(this.xCoord,this.yCoord,this.zCoord),1); else
-				this.gasNetwork.rebuildNetworkFromVent(worldObj, new BlockVec3(this.xCoord,this.yCoord,this.zCoord),0);
+				GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(worldObj,new BlockVec3(this.xCoord,this.yCoord+1,this.zCoord))); else
+					GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(worldObj,new BlockVec3(this.xCoord,this.yCoord-1,this.zCoord)));
+				//this.gasNetwork.rebuildNetworkFromVent(worldObj, new BlockVec3(this.xCoord,this.yCoord,this.zCoord),1); else
+				//this.gasNetwork.rebuildNetworkFromVent(worldObj, new BlockVec3(this.xCoord,this.yCoord,this.zCoord),0);
 		}
 		return this.gasNetwork;
 	}
@@ -176,6 +181,17 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 		System.out.println("    Network: "+this.gasNetwork);
 		System.out.println("    Size: "+this.getBaySize());
 		System.out.println("    Sealed: "+this.getSealed() + " active: "+ this.getActive());
+	}
+
+	@Override
+	public boolean canConnectFrom(ForgeDirection direction) {
+		if (this.blockMetadata == 0 && direction.equals(ForgeDirection.DOWN)) {
+			return true;
+		}
+		if (this.blockMetadata == 1 && direction.equals(ForgeDirection.UP)) {
+			return true;
+		}
+		return false;
 	}
 
 }
