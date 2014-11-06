@@ -42,7 +42,6 @@ public class SSConfig {
 	public static Block ssBlockWallCasingC; // metal rods
 	public static Block ssBlockGlassCasing;
 	public static Block ssBlockAir;
-	public static Block ssBlockGas;
 	public static Block ssBlockAirVent;
 	public static Block ssBlockCabinet;
 	public static Block ssBlockGasPipe;
@@ -197,7 +196,7 @@ public class SSConfig {
 		GameRegistry.registerBlock(ssBlockGasMixer, "ssBlockGasMixer");
 		GameRegistry.registerTileEntity(SSTileEntityGasMixer.class, "ssBlockGasMixer");
 		
-		SSAPI.softBlocks.add(ssBlockGas);
+		//SSAPI.softBlocks.add(ssBlockGas);
 		
 	}
 

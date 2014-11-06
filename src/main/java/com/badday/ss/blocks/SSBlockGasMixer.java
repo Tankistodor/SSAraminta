@@ -13,11 +13,12 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 
 import com.badday.ss.SS;
+import com.badday.ss.api.IGasNetworkElement;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SSBlockGasMixer extends BlockContainer {
+public class SSBlockGasMixer extends BlockContainer implements IGasNetworkElement {
 
 	private IIcon[] iconBuffer;
 	private int ICON_BOTTOM = 0, ICON_TOP = 1, ICON_INACTIVE_SIDE = 2, ICON_ACTIVE_SIDE = 3;

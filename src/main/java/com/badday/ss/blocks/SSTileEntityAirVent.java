@@ -68,7 +68,7 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 				this.sealed = this.findSealedBay.fullcheck();
 				this.active = this.findSealedBay.getActive();
 				this.baySize = this.findSealedBay.getSize();
-				
+				System.out.println("BaySize: " + this.baySize);
 				if (this.baySize > 0)
 					this.sealed = true;
 			}
@@ -171,6 +171,7 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 
 	public void printDebugInfo() {
 		System.out.println("Vent: "+this.toString());
+		System.out.println("    Network: "+this.gasNetwork);
 		System.out.println("    Size: "+this.getBaySize());
 		System.out.println("    Sealed: "+this.getSealed() + " active: "+ this.getActive());
 	}

@@ -164,7 +164,7 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 
 
 	/**
-	 * nip needer gasEs from source
+	 * Collect some gases from SourceVent for added in vent
 	 */
 	@Override
 	public float nipGas() {
@@ -179,6 +179,12 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 		
 		return resultMixerPressure*this.totalTrust/20;
 		
+	}
+	
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		this.getNetwork().removeSource(this);
 	}
 
 }

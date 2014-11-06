@@ -10,7 +10,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.badday.ss.SSConfig;
-import com.badday.ss.api.IGasNetworkPipe;
 import com.badday.ss.api.IGasNetworkSource;
 import com.badday.ss.api.IGasNetworkVent;
 import com.badday.ss.core.utils.BlockVec3;
@@ -64,9 +63,7 @@ public class GasPathfinder {
 				}
 				
 				if (tileEntity != null) {
-					if (tileEntity instanceof IGasNetworkPipe) {
-						loopAll(obj);
-					} else if (tileEntity instanceof IGasNetworkSource) {
+					if (tileEntity instanceof IGasNetworkSource) {
 						if (!this.sources.contains(obj))
 							this.sources.add(obj);
 					} else if (tileEntity instanceof IGasNetworkVent) {
@@ -95,15 +92,7 @@ public class GasPathfinder {
 	public List<BlockVec3> getPipes() {
 		return this.iterated;
 	}
-	
-	public List<IGasNetworkPipe> getPipesAsTile() {
-		List<IGasNetworkPipe> res = new ArrayList<IGasNetworkPipe>();
-		for (BlockVec3 p : this.iterated) {
-			res.add((IGasNetworkPipe) p.getTileEntity(worldObj));
-		}
-		return res;
-	}
-	
+
 	public List<IGasNetworkSource> getSourcesAsTile() {
 		List<IGasNetworkSource> res = new ArrayList<IGasNetworkSource>();
 		for (BlockVec3 p : this.sources) {

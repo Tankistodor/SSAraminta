@@ -17,7 +17,8 @@ public interface IGasNetwork {
 	
 	
 
-	public void rebuildNetwork(World w, BlockVec3 node);
+	public void rebuildNetwork(World w, BlockVec3 node,BlockVec3... ignore);
+	public void rebuildNetworkFromVent(World worldObj, BlockVec3 blockVec3,BlockVec3... ignore);
 
 	/**
 	 * Calculate new values of gas pressure and mixture
@@ -44,11 +45,13 @@ public interface IGasNetwork {
 	public List<? extends IGasNetworkSource> getSources();
 	public List<? extends IGasNetworkVent> getVents();
 
+	public void removeSource(IGasNetworkSource node);
+	public void removeVent(IGasNetworkVent node);
+	public void removePipe(BlockVec3 node);
+	
 	public int getVetnSize();
 	
 	public void printDebugInfo();
-
-	public void rebuildNetworkFromVent(World worldObj, BlockVec3 blockVec3);
 
 	public float nipPressure();
 	

@@ -1,6 +1,5 @@
 package com.badday.ss.core.utils;
 
-import java.lang.reflect.Method;
 import java.util.Iterator;
 
 import net.minecraft.client.entity.EntityClientPlayerMP;
@@ -13,8 +12,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import com.badday.ss.blocks.SSTileEntityAirVent;
-import com.badday.ss.blocks.SSTileEntityGasBlock;
 import com.badday.ss.core.atmos.SSFindSealedBay;
 import com.badday.ss.world.space.SpaceProvider;
 
@@ -66,8 +63,9 @@ public class WorldUtils {
 		}
 	}
 	
+	@Deprecated
 	public static SSFindSealedBay getGasPressure(World world, int x, int y, int z) {
-		TileEntity tt = world.getTileEntity(x, y, z);
+		/*TileEntity tt = world.getTileEntity(x, y, z);
 		if (tt instanceof SSTileEntityGasBlock) {
 			SSTileEntityGasBlock t = (SSTileEntityGasBlock) tt;
 			if (t != null) {
@@ -77,7 +75,7 @@ public class WorldUtils {
 						return vent.findSealedBay;
 				}
 			}
-		}
+		}*/
 		return null;
 	}
 	

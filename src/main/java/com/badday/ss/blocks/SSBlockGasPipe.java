@@ -10,7 +10,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
@@ -18,13 +17,15 @@ import net.minecraft.world.World;
 
 import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
+import com.badday.ss.api.IGasNetworkElement;
+import com.badday.ss.core.atmos.GasUtils;
 import com.badday.ss.core.atmos.SSGasNetwork;
 import com.badday.ss.core.utils.BlockVec3;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SSBlockGasPipe  extends Block {
+public class SSBlockGasPipe  extends Block implements IGasNetworkElement{
 	
 	private IIcon[] icons = new IIcon[16];
 	
@@ -42,9 +43,14 @@ public class SSBlockGasPipe  extends Block {
 	}
 
 	@Override
-	public void onBlockAdded(World world, int i, int j, int k) {
-		super.onBlockAdded(world, i, j, k);
-		world.markBlockForUpdate(i, j, k);
+	public void onBlockAdded(World world, int x, int y, int z) {
+		super.onBlockAdded(world, x, y, z);
+		if (GasUtils.getAdjacentAll(world, new BlockVec3(x,y,z)).length>1) {
+			// Rebild network
+			SSGasNetwork net = new SSGasNetwork(world);
+			net.rebuildNetwork(world, new BlockVec3(x,y,z),new BlockVec3(x,y,z));
+		}
+		world.markBlockForUpdate(x, y, z);
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -95,8 +101,14 @@ public class SSBlockGasPipe  extends Block {
 	}
 	
 	@Override
-	public void breakBlock(World par1World, int par2, int par3, int par4, Block par5, int par6) {
-		super.breakBlock(par1World, par2, par3, par4, par5, par6);
+	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
+		if (GasUtils.getAdjacentAll(world, new BlockVec3(x,y,z)).length>1) {
+			// Rebild network
+			SSGasNetwork net = new SSGasNetwork(world);
+			net.rebuildNetwork(world, new BlockVec3(x,y,z),new BlockVec3(x,y,z));
+		}
+			
+		super.breakBlock(world, x, y, z, block, meta);
 	}
 	
     @Override
@@ -120,55 +132,7 @@ public class SSBlockGasPipe  extends Block {
 					net.printDebugInfo();
 				}
 			}
-			
-		}
-			/*if (itemName.equals("ic2.itemToolPainterBlack")) {
-				tileEntity.setColor((byte) 0);
-			} else if (itemName.equals("ic2.itemToolPainterRed")) {
-				tileEntity.setColor((byte) 1);
-			} else if (itemName.equals("ic2.itemToolPainterGreen")) {
-				tileEntity.setColor((byte) 2);
-			} else if (itemName.equals("ic2.itemToolPainterBrown")) {
-				tileEntity.setColor((byte) 3);
-			} else if (itemName.equals("ic2.itemToolPainterBlue")) {
-				tileEntity.setColor((byte) 4);
-			} else if (itemName.equals("ic2.itemToolPainterPurple")) {
-				tileEntity.setColor((byte) 5);
-			} else if (itemName.equals("ic2.itemToolPainterCyan")) {
-				tileEntity.setColor((byte) 6);
-			} else if (itemName.equals("ic2.itemToolPainterLightGrey")) {
-				tileEntity.setColor((byte) 7);
-			} else if (itemName.equals("ic2.itemToolPainterDarkGrey")) {
-				tileEntity.setColor((byte) 8);
-			} else if (itemName.equals("ic2.itemToolPainterPink")) {
-				tileEntity.setColor((byte) 9);
-			} else if (itemName.equals("ic2.itemToolPainterLime")) {
-				tileEntity.setColor((byte) 10);
-			} else if (itemName.equals("ic2.itemToolPainterYellow")) {
-				tileEntity.setColor((byte) 11);
-			} else if (itemName.equals("ic2.itemToolPainterCloud")) {
-				tileEntity.setColor((byte) 12);
-			} else if (itemName.equals("ic2.itemToolPainterMagenta")) {
-				tileEntity.setColor((byte) 13);
-			} else if (itemName.equals("ic2.itemToolPainterOrange")) {
-				tileEntity.setColor((byte) 14);
-			} else if (itemName.equals("ic2.itemToolPainterWhite")) {
-				tileEntity.setColor((byte) 15);
-			}
-			
-			BlockVec3 tileVec = new BlockVec3(tileEntity);
-            for (final ForgeDirection dir : ForgeDirection.values())
-            {
-                final TileEntity tileAt = tileVec.getTileEntityOnSide(tileEntity.getWorldObj(), dir);
-
-                if (tileAt != null && tileAt instanceof SSTileEntityGasPipe)
-                {
-                    ((SSTileEntityGasPipe) tileAt).onAdjacentColorChanged(dir);
-                }
-            }
-			
-		}*/
-
+ 		}
 		return false;
 	}
     
@@ -200,7 +164,7 @@ public class SSBlockGasPipe  extends Block {
     {
         BlockVec3[] connectable = new BlockVec3[6];
 
-            connectable = SSGasNetwork.getAdjacentAll(Minecraft.getMinecraft().theWorld, new BlockVec3(x,y,z));
+            connectable = GasUtils.getAdjacentAll(Minecraft.getMinecraft().theWorld, new BlockVec3(x,y,z));
  
             float minX = (float) this.minVector.x;
             float minY = (float) this.minVector.y;
@@ -249,7 +213,7 @@ public class SSBlockGasPipe  extends Block {
         this.setBlockBounds((float) this.minVector.x, (float) this.minVector.y, (float) this.minVector.z, (float) this.maxVector.x, (float) this.maxVector.y, (float) this.maxVector.z);
         super.addCollisionBoxesToList(world, x, y, z, axisalignedbb, list, entity);
 
-            BlockVec3[] connectable = SSGasNetwork.getAdjacentAll(world,new BlockVec3(x,y,z));
+            BlockVec3[] connectable = GasUtils.getAdjacentAll(world,new BlockVec3(x,y,z));
 
 
             if (connectable[4] != null)

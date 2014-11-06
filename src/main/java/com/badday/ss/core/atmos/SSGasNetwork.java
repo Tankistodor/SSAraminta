@@ -1,6 +1,5 @@
 package com.badday.ss.core.atmos;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,9 +34,11 @@ public class SSGasNetwork implements IGasNetwork {
 		this.world = world;
 	}
 
-	@Deprecated
 	@Override
-	public synchronized void rebuildNetwork(World w, BlockVec3 node) {
+	/**
+	 * rebuild network called when pipe is changed 
+	 */
+	public synchronized void rebuildNetwork(World w, BlockVec3 node,BlockVec3... ignore) {
 
 		GasPathfinder finder = new GasPathfinder(w, node);
 		List<BlockVec3> results = finder.exploreNetwork();
@@ -45,83 +46,24 @@ public class SSGasNetwork implements IGasNetwork {
 		this.setPipes(finder.getPipes());
 		this.setVents(finder.getVents());
 		this.setSources(finder.getSources());
-		this.recalculate();
-
+		if (SS.Debug)
+			System.out.println("Network "+this.toString() + " rebuided");
 	}
 	
-	public synchronized void rebuildNetworkFromVent(World w, BlockVec3 node) {
+	/**
+	 * Calles where airVent try to connect to GasNetwork
+	 */
+	public synchronized void rebuildNetworkFromVent(World w, BlockVec3 node,BlockVec3... ignore) {
 
 		for (int i = 0; i<2; i++) {
 			Block block = node.getBlockOnSide(w, i);
 			
-			if (block != null && block.equals(SSConfig.ssBlockGasPipe)) {
-				
-				GasPathfinder finder = new GasPathfinder(w, node.modifyPositionFromSide(ForgeDirection.getOrientation(i)));
-				List<BlockVec3> results = finder.exploreNetwork();
-				
-				this.setPipes(finder.getPipes());
-				this.setVents(finder.getVents());
-				this.setSources(finder.getSources());
-				
+			if (block != null && block.equals(SSConfig.ssBlockGasPipe) && node.getBlockMetadata(w) == i) {
+				this.rebuildNetwork(w, node.modifyPositionFromSide(ForgeDirection.getOrientation(i)));
+
 			}
 		}
-		
-		GasPathfinder finder = new GasPathfinder(w, node);
-		List<BlockVec3> results = finder.exploreNetwork();
-		
-		this.setPipes(finder.getPipes());
-		this.setVents(finder.getVents());
-		this.setSources(finder.getSources());
-		this.recalculate();
 	}
-
-	/*
-	public synchronized void rebuildNetwork2(World w, BlockVec3 node) {
-
-		boolean linked = false;
-		boolean[] dealtWith = { false, false, false, false, false, false };
-		BlockVec3[] connectedBlocks = getAdjacent(w, node);
-		if (SS.Debug) System.out.println("connecedBlocks " + connectedBlocks);
-		for (int i = 0; i < connectedBlocks.length; i++) {
-			if (connectedBlocks[i] != null) {
-				BlockVec3 connectedBlockA = connectedBlocks[i];
-				if (!dealtWith[i]) {
-					GasPathfinder finder = new GasPathfinder(w, connectedBlocks[i], node);
-					List<BlockVec3> results = finder.exploreNetwork();
-
-					linked = false;
-
-					for (int b = i; b < connectedBlocks.length; b++) {
-						if (b == i) {
-							continue;
-						}
-
-						BlockVec3 connectedBlockB = connectedBlocks[b];
-
-						/**
-						 * The connections A and B are still intact elsewhere.
-						 * Set all references of wire connection into one
-						 * network.
-						 /
-						if (results.contains(connectedBlockB)) {
-							dealtWith[b] = true;
-							linked = true;
-						}
-					}
-
-					if (!linked) {
-						// Create new net
-						SSGasNetwork newNetwork = new SSGasNetwork(w);
-						newNetwork.setPipes(finder.getPipes());
-						newNetwork.setVents(finder.getVents());
-						newNetwork.setSources(finder.getSources());
-						newNetwork.recalculate();
-					}
-				}
-			}
-		}
-
-	}*/
 	
 	@Override
 	public void recalculate() {
@@ -186,6 +128,8 @@ public class SSGasNetwork implements IGasNetwork {
 		return this.vents;
 	}
 
+	/** User for pipes */
+	@Deprecated
 	public static BlockVec3[] getAdjacent(World w, BlockVec3 position) {
 
 		BlockVec3[] adjacentConnections = new BlockVec3[ForgeDirection.VALID_DIRECTIONS.length];
@@ -198,6 +142,15 @@ public class SSGasNetwork implements IGasNetwork {
 		return adjacentConnections;
 	}
 
+	
+	//@Deprecated
+	/** 
+	 * Moved to GasUtils
+	 * @param w
+	 * @param position
+	 * @return
+	 */
+	/*
 	public static BlockVec3[] getAdjacentAll(World w, BlockVec3 position) {
 
 		BlockVec3[] adjacentConnections = new BlockVec3[ForgeDirection.VALID_DIRECTIONS.length];
@@ -206,9 +159,11 @@ public class SSGasNetwork implements IGasNetwork {
 			Block block = position.getBlockOnSide(w, direction.ordinal());
 			
 			TileEntity src = position.getTileEntityOnSide(w, direction.ordinal());
-			
-			if (src instanceof IGasNetworkSource || src instanceof IGasNetworkVent)
+			if (direction.equals(ForgeDirection.DOWN) && src instanceof IGasNetworkSource ) {
 				adjacentConnections[direction.ordinal()] = position.clone().modifyPositionFromSide(direction);
+			}
+			if (direction.equals(ForgeDirection.DOWN) && src instanceof IGasNetworkVent)
+						adjacentConnections[direction.ordinal()] = position.clone().modifyPositionFromSide(direction);
 			
 			if (block.equals(SSConfig.ssBlockGasPipe))
 				adjacentConnections[direction.ordinal()] = position.clone().modifyPositionFromSide(direction);
@@ -216,6 +171,7 @@ public class SSGasNetwork implements IGasNetwork {
 		}
 		return adjacentConnections;
 	}
+	*/
 
 	@Override
 	public float nipPressure() {
@@ -284,6 +240,21 @@ public class SSGasNetwork implements IGasNetwork {
 			}
 		}
 		return sum;
+	}
+
+	@Override
+	public void removeSource(IGasNetworkSource node) {
+		this.sources.remove(node);
+	}
+
+	@Override
+	public void removeVent(IGasNetworkVent node) {
+		this.vents.remove(node);
+	}
+
+	@Override
+	public void removePipe(BlockVec3 node) {
+		this.pipes.remove(node);
 	}
 	
 }

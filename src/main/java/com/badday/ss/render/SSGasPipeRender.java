@@ -6,14 +6,12 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
 import com.badday.ss.SSConfig;
-import com.badday.ss.core.atmos.SSGasNetwork;
+import com.badday.ss.core.atmos.GasUtils;
 import com.badday.ss.core.utils.BlockVec3;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
@@ -36,7 +34,7 @@ public class SSGasPipeRender  implements ISimpleBlockRenderingHandler
         final float maxZ = 0.60F;
 
    
-            final BlockVec3[] connections = SSGasNetwork.getAdjacentAll(Minecraft.getMinecraft().theWorld, new BlockVec3(x,y,z));
+            final BlockVec3[] connections = GasUtils.getAdjacentAll(Minecraft.getMinecraft().theWorld, new BlockVec3(x,y,z));
 
             for (BlockVec3 connection : connections)
             {

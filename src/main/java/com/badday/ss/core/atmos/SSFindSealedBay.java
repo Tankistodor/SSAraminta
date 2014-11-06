@@ -1,33 +1,20 @@
 package com.badday.ss.core.atmos;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockEnchantmentTable;
-import net.minecraft.block.BlockFarmland;
-import net.minecraft.block.BlockGlass;
-import net.minecraft.block.BlockGravel;
 import net.minecraft.block.BlockLeavesBase;
-import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.BlockPistonBase;
-import net.minecraft.block.BlockSlab;
-import net.minecraft.block.BlockSponge;
-import net.minecraft.block.BlockStainedGlass;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
 import com.badday.ss.api.IGasNetworkVent;
 import com.badday.ss.api.ISSSealedBlock;
-import com.badday.ss.blocks.SSTileEntityAirVent;
-import com.badday.ss.blocks.SSTileEntityGasBlock;
 import com.badday.ss.core.utils.BlockVec3;
 
 public class SSFindSealedBay {
@@ -115,7 +102,6 @@ public class SSFindSealedBay {
 	private void doLayer() {
 		// Local variables are fractionally faster than statics
 		Block airID = Blocks.air;
-		Block gasID = SSConfig.ssBlockGas; // Air
 		Block AirVentID = SSConfig.ssBlockAirVent;
 		HashSet<BlockVec3> checkedLocal = new HashSet<BlockVec3>();
 		LinkedList nextLayer = new LinkedList<BlockVec3>();
@@ -152,8 +138,10 @@ public class SSFindSealedBay {
 									// Broken through to the void or the
 									// stratosphere (above y==255) - set
 									// unsealed and abort
+									this.bayBlocks = 0;
 									this.checkCount = 0;
 									this.sealed = false;
+									this.active = false;
 									return;
 								} else if (id == AirVentID) {
 									// TODO: Проверить, является ли вентиляция
@@ -187,9 +175,10 @@ public class SSFindSealedBay {
 								// id == null means the void or height y>255,
 								// both
 								// of which are unsealed obviously
-								if (id == null || id == airID || id == gasID || this.canBlockPassAirCheck(id, sideVec, side)) {
+								if (id == null || id == airID || this.canBlockPassAirCheck(id, sideVec, side)) {
 									this.sealed = false;
 									this.active = false;
+									this.bayBlocks = 0;
 									return;
 								}
 							}

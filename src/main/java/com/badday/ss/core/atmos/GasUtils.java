@@ -2,6 +2,15 @@ package com.badday.ss.core.atmos;
 
 import java.util.List;
 
+import com.badday.ss.SSConfig;
+import com.badday.ss.api.IGasNetworkSource;
+import com.badday.ss.api.IGasNetworkVent;
+import com.badday.ss.core.utils.BlockVec3;
+
+import net.minecraft.block.Block;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 
 
@@ -57,6 +66,43 @@ public class GasUtils {
 		}
 		
 		return 0;
+	}
+	
+	/**
+	 * Return all block, who can connect to GasNetwork. MOVE TO GasUtils
+	 * @param w
+	 * @param position
+	 * @return
+	 */
+	public static BlockVec3[] getAdjacentAll(World w, BlockVec3 position) {
+
+		BlockVec3[] adjacentConnections = new BlockVec3[ForgeDirection.VALID_DIRECTIONS.length];
+
+		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
+			Block block = position.getBlockOnSide(w, direction.ordinal());
+			TileEntity src = position.getTileEntityOnSide(w, direction.ordinal());
+			
+			//GasMixer
+			if (direction.equals(ForgeDirection.DOWN) && src instanceof IGasNetworkSource ) {
+				adjacentConnections[direction.ordinal()] = position.clone().modifyPositionFromSide(direction);
+			}
+			
+			//Vent
+			if (src instanceof IGasNetworkVent) {
+				int meta = position.clone().modifyPositionFromSide(direction).getBlockMetadata(w);				
+				if (meta == 0 && direction.equals(ForgeDirection.DOWN)) {
+					adjacentConnections[direction.ordinal()] = position.clone().modifyPositionFromSide(direction);
+				} else if (meta == 1 && direction.equals(ForgeDirection.UP)) {
+					adjacentConnections[direction.ordinal()] = position.clone().modifyPositionFromSide(direction);
+				}
+			}
+						
+			//Pipe
+			if (block.equals(SSConfig.ssBlockGasPipe))
+				adjacentConnections[direction.ordinal()] = position.clone().modifyPositionFromSide(direction);
+			
+		}
+		return adjacentConnections;
 	}
 	
 }
