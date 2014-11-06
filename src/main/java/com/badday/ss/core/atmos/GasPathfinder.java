@@ -59,7 +59,11 @@ public class GasPathfinder {
 				
 				if (block != null && block.equals(SSConfig.ssBlockGasPipe))
 				{
-					loopAll(obj);
+					//int meta = obj.getBlockMetadata(worldObj);
+					//if (meta == 1 && direction == ForgeDirection.UP)
+					//	loopAll(obj);
+					//else if (meta == 0 && direction == ForgeDirection.DOWN)
+						loopAll(obj);
 				}
 				
 				if (tileEntity != null) {

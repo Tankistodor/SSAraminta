@@ -47,22 +47,20 @@ public class SSGasNetwork implements IGasNetwork {
 		this.setVents(finder.getVents());
 		this.setSources(finder.getSources());
 		if (SS.Debug)
-			System.out.println("Network "+this.toString() + " rebuided");
+			System.out.println("Network "+this.toString() + " rebuided at " + node.toString());
 	}
 	
 	/**
 	 * Calles where airVent try to connect to GasNetwork
 	 */
-	public synchronized void rebuildNetworkFromVent(World w, BlockVec3 node,BlockVec3... ignore) {
+	public synchronized void rebuildNetworkFromVent(World w, BlockVec3 node, int side) {
 
-		for (int i = 0; i<2; i++) {
-			Block block = node.getBlockOnSide(w, i);
-			
-			if (block != null && block.equals(SSConfig.ssBlockGasPipe) && node.getBlockMetadata(w) == i) {
-				this.rebuildNetwork(w, node.modifyPositionFromSide(ForgeDirection.getOrientation(i)));
+		Block block = node.getBlockOnSide(w, side);
 
-			}
+		if (block != null && block.equals(SSConfig.ssBlockGasPipe)) {
+			this.rebuildNetwork(w, node);
 		}
+
 	}
 	
 	@Override

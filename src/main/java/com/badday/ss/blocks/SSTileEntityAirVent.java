@@ -143,7 +143,9 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 	public IGasNetwork getGasNetwork() {
 		if (gasNetwork == null) {
 			this.gasNetwork = new SSGasNetwork(worldObj);
-			this.gasNetwork.rebuildNetworkFromVent(worldObj, new BlockVec3(this.xCoord,this.yCoord,this.zCoord));
+			if (this.getBlockMetadata() == 0)
+				this.gasNetwork.rebuildNetworkFromVent(worldObj, new BlockVec3(this.xCoord,this.yCoord,this.zCoord),1); else
+				this.gasNetwork.rebuildNetworkFromVent(worldObj, new BlockVec3(this.xCoord,this.yCoord,this.zCoord),0);
 		}
 		return this.gasNetwork;
 	}

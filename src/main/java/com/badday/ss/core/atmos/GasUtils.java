@@ -105,4 +105,41 @@ public class GasUtils {
 		return adjacentConnections;
 	}
 	
+	/**
+	 * Return count valid connections
+	 * @param w
+	 * @param position
+	 * @return
+	 */
+	public static int getAdjacentAllCount(World w, BlockVec3 position) {
+
+		int validConnections = 0;
+
+		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
+			Block block = position.getBlockOnSide(w, direction.ordinal());
+			TileEntity src = position.getTileEntityOnSide(w, direction.ordinal());
+			
+			//GasMixer
+			if (direction.equals(ForgeDirection.DOWN) && src instanceof IGasNetworkSource ) {
+				validConnections++;
+			}
+			
+			//Vent
+			if (src instanceof IGasNetworkVent) {
+				int meta = position.clone().modifyPositionFromSide(direction).getBlockMetadata(w);				
+				if (meta == 0 && direction.equals(ForgeDirection.DOWN)) {
+					validConnections++;
+				} else if (meta == 1 && direction.equals(ForgeDirection.UP)) {
+					validConnections++;
+				}
+			}
+						
+			//Pipe
+			if (block.equals(SSConfig.ssBlockGasPipe))
+				validConnections++;
+			
+		}
+		return validConnections;
+	}
+	
 }

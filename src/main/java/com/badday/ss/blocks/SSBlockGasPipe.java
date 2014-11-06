@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
@@ -18,6 +19,8 @@ import net.minecraft.world.World;
 import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
 import com.badday.ss.api.IGasNetworkElement;
+import com.badday.ss.api.IGasNetworkSource;
+import com.badday.ss.api.IGasNetworkVent;
 import com.badday.ss.core.atmos.GasUtils;
 import com.badday.ss.core.atmos.SSGasNetwork;
 import com.badday.ss.core.utils.BlockVec3;
@@ -42,17 +45,6 @@ public class SSBlockGasPipe  extends Block implements IGasNetworkElement{
 		this.isBlockContainer = true;
 	}
 
-	@Override
-	public void onBlockAdded(World world, int x, int y, int z) {
-		super.onBlockAdded(world, x, y, z);
-		if (GasUtils.getAdjacentAll(world, new BlockVec3(x,y,z)).length>1) {
-			// Rebild network
-			SSGasNetwork net = new SSGasNetwork(world);
-			net.rebuildNetwork(world, new BlockVec3(x,y,z),new BlockVec3(x,y,z));
-		}
-		world.markBlockForUpdate(x, y, z);
-	}
-	
 	@SideOnly(Side.CLIENT)
 	@Override
 	public int getRenderType() {
@@ -101,13 +93,27 @@ public class SSBlockGasPipe  extends Block implements IGasNetworkElement{
 	}
 	
 	@Override
-	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-		if (GasUtils.getAdjacentAll(world, new BlockVec3(x,y,z)).length>1) {
+	public void onBlockAdded(World world, int x, int y, int z) {
+		super.onBlockAdded(world, x, y, z);
+		if (!world.isRemote && GasUtils.getAdjacentAllCount(world, new BlockVec3(x,y,z))>1) { //FIXME - Called 2 times ? Why?
 			// Rebild network
 			SSGasNetwork net = new SSGasNetwork(world);
-			net.rebuildNetwork(world, new BlockVec3(x,y,z),new BlockVec3(x,y,z));
+			net.rebuildNetwork(world, new BlockVec3(x,y,z));
 		}
-			
+		world.markBlockForUpdate(x, y, z);
+	}
+	
+	@Override
+	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
+		if (GasUtils.getAdjacentAllCount(world, new BlockVec3(x,y,z)) > 1) {
+			// Rebild network
+			for (BlockVec3 node : GasUtils.getAdjacentAll(world, new BlockVec3(x,y,z))) {
+				if (node != null) {
+					SSGasNetwork net = new SSGasNetwork(world);
+					net.rebuildNetwork(world, node,new BlockVec3(x,y,z));
+				}
+			}
+		}
 		super.breakBlock(world, x, y, z, block, meta);
 	}
 	
@@ -116,6 +122,14 @@ public class SSBlockGasPipe  extends Block implements IGasNetworkElement{
     {
         super.onNeighborBlockChange(world, x, y, z, block);
         world.func_147479_m(x, y, z);
+        
+        /*if (block instanceof SSBlockAirVent) {
+        	TileEntity tileEntity = world.getTileEntity(x, y, z);
+        	if (tileEntity instanceof IGasNetworkSource || tileEntity instanceof IGasNetworkVent) {
+        		SSGasNetwork gasNetwork = new SSGasNetwork(world);
+    			gasNetwork.rebuildNetworkFromVent(world, new BlockVec3(x,y,z));
+        	}
+        }*/
     }
     
 	@Override

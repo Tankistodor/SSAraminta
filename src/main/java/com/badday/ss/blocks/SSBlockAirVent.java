@@ -12,8 +12,12 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 import com.badday.ss.SS;
+import com.badday.ss.SSConfig;
 import com.badday.ss.api.IGasNetwork;
 import com.badday.ss.api.IGasNetworkElement;
+import com.badday.ss.api.IGasNetworkVent;
+import com.badday.ss.core.atmos.SSGasNetwork;
+import com.badday.ss.core.utils.BlockVec3;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -125,12 +129,31 @@ public class SSBlockAirVent extends BlockContainer implements IGasNetworkElement
 
 			} else if (itemName.equals("ic2.itemToolWrenchElectric")) {
 				// Rotate AirVent
-				if (side == 0) {
-					world.setBlockMetadataWithNotify(x, y, z, 0, 3);
-	    			entityplayer.getCurrentEquippedItem().damageItem(1,entityplayer);
-				} else if (side == 1) {
-					world.setBlockMetadataWithNotify(x, y, z, 1, 3);
-	    			entityplayer.getCurrentEquippedItem().damageItem(1,entityplayer);
+				int oldMeta = world.getBlockMetadata(x, y, z);
+				if (side != oldMeta && side >= 0 && side < 2) {
+					if (side == 0 && side != oldMeta) {
+						world.setBlockMetadataWithNotify(x, y, z, 0, 3);
+						entityplayer.getCurrentEquippedItem().damageItem(1, entityplayer);
+						
+						TileEntity tileEntity = world.getTileEntity(x, y, z);
+						((IGasNetworkVent) tileEntity).getGasNetwork().removeVent((IGasNetworkVent) tileEntity);
+						// Rebuild new network on DOWN from Vent
+						if (world.getBlock(x, y-1, z) == SSConfig.ssBlockAirVent) {
+							SSGasNetwork net = new SSGasNetwork(world);
+							net.rebuildNetwork(world, new BlockVec3(x,y+1,z));
+						}
+						
+					} else if (side == 1 && side != oldMeta) {
+						world.setBlockMetadataWithNotify(x, y, z, 1, 3);
+						entityplayer.getCurrentEquippedItem().damageItem(1, entityplayer);
+						TileEntity tileEntity = world.getTileEntity(x, y, z);
+						((IGasNetworkVent) tileEntity).getGasNetwork().removeVent((IGasNetworkVent) tileEntity);
+						// Rebuild new network on UP from Vent						
+						if (world.getBlock(x, y+1, z) == SSConfig.ssBlockGasPipe) {
+							SSGasNetwork net = new SSGasNetwork(world);
+							net.rebuildNetwork(world, new BlockVec3(x,y+1,z));
+						}
+					}
 				}
 			}
 			
