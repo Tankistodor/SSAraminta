@@ -111,7 +111,7 @@ public class SSBlockGasPipe  extends Block implements IGasNetworkElement{
 			// Rebild network
 			for (BlockVec3 node : GasUtils.getAdjacentAll(world, new BlockVec3(x,y,z))) {
 				if (node != null) {
-					GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(world,new BlockVec3(x,y,z)));
+					GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(world,node.clone()));
 					//SSGasNetwork net = new SSGasNetwork(world);
 					//net.rebuildNetwork(world, node,new BlockVec3(x,y,z));
 				}

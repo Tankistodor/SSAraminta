@@ -81,7 +81,8 @@ public class SSGasNetwork implements IGasNetwork {
 
 	@Override
 	public String toString() {
-		return "GasNetwork[" + this.hashCode() + "|Pipes:" + this.pipes.size() + "|Acceptors:" + "]";
+		return "GasNetwork[" + this.hashCode() + "|Pipes:" + this.pipes.size() + "|Src:" + sources.size() + "|V:" + vents.size() + 
+				"|Bay:"+this.getVetnSize()+ "|P:"+this.totalPressure + " hPa]";
 	}
 
 	@Override
@@ -226,12 +227,12 @@ public class SSGasNetwork implements IGasNetwork {
 	
 	public void printDebugInfo() {
 		System.out.println("NET : " + this);
-		System.out.println("    pipes: " + this.getPipes().size());
+		/*System.out.println("    pipes: " + this.getPipes().size());
 		System.out.println("    sources: " + this.getSources().size());
 		System.out.println("    vents: " + this.getVents().size());
 		System.out.println("    baySize: " + this.getVetnSize());
 		//System.out.println("    pressure: " + this.getPressure() + " hPa");
-		System.out.println("    total pressure: " + this.totalPressure + " hPa");
+		System.out.println("    total pressure: " + this.totalPressure + " hPa");*/
 	}
 
 	@Override
