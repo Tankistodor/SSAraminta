@@ -135,9 +135,9 @@ public class GasUtils {
 			//Vent
 			if (src instanceof IGasNetworkVent) {
 				int meta = position.clone().modifyPositionFromSide(direction).getBlockMetadata(w);				
-				if (meta == 0 && direction.equals(ForgeDirection.DOWN)) {
+				if ((meta == 0 || meta == 2) && direction.equals(ForgeDirection.DOWN)) {
 					adjacentConnections[direction.ordinal()] = position.clone().modifyPositionFromSide(direction);
-				} else if (meta == 1 && direction.equals(ForgeDirection.UP)) {
+				} else if ((meta == 1 || meta == 3) && direction.equals(ForgeDirection.UP)) {
 					adjacentConnections[direction.ordinal()] = position.clone().modifyPositionFromSide(direction);
 				}
 			}

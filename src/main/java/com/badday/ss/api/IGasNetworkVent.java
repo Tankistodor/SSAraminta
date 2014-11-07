@@ -40,12 +40,22 @@ public interface IGasNetworkVent {
 	 */
 	public boolean getActive();
 	
+	public void setActive(boolean newActive);
+	
 	/**
 	 * Return true if this GasVent placed in sealed bay
 	 * @return boolean
 	 */
 	public boolean getSealed();
 	
+	public void setSealed(boolean newSealed);
+	
+	
+	/**
+	 * return true if pipe can connect to Vent from direction
+	 * @param direction
+	 * @return
+	 */
 	public boolean canConnectFrom(ForgeDirection direction);
 
 	public GasMixture getTank();

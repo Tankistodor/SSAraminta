@@ -35,7 +35,7 @@ public class SSBlockAirVent extends BlockContainer implements IGasNetworkElement
 
 	private IIcon[] iconBuffer;
 	//private int ICON_INACTIVE_SIDE = 0, ICON_BOTTOM = 1, ICON_SIDE_ACTIVATED = 2;
-	private int ICON_SIDE = 0, ICON_SIDE_ON = 1, ICON_SIDE_BACK = 2;
+	private int ICON_SIDE = 0, ICON_SIDE_FRONT = 1, ICON_SIDE_BACK = 2, ICON_SIDE_FRONTON=3;
 
 	public SSBlockAirVent(String assetName) {
 		super(Material.rock);
@@ -52,13 +52,14 @@ public class SSBlockAirVent extends BlockContainer implements IGasNetworkElement
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister par1IconRegister) {
-		iconBuffer = new IIcon[3];
+		iconBuffer = new IIcon[4];
 		//iconBuffer[ICON_INACTIVE_SIDE] = par1IconRegister.registerIcon("ss:airgenSideInactive");
 		//iconBuffer[ICON_BOTTOM] = par1IconRegister.registerIcon("ss:contBottom");
 		//iconBuffer[ICON_SIDE_ACTIVATED] = par1IconRegister.registerIcon("ss:airgenSideActive");
 		iconBuffer[ICON_SIDE] = par1IconRegister.registerIcon("ss:blockGasVentSide");
-		iconBuffer[ICON_SIDE_ON] = par1IconRegister.registerIcon("ss:blockGasVentOn");
+		iconBuffer[ICON_SIDE_FRONT] = par1IconRegister.registerIcon("ss:blockGasVentFront");
 		iconBuffer[ICON_SIDE_BACK] = par1IconRegister.registerIcon("ss:blockGasVentBack");
+		iconBuffer[ICON_SIDE_FRONTON] = par1IconRegister.registerIcon("ss:blockGasVentFrontOn");
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -69,15 +70,22 @@ public class SSBlockAirVent extends BlockContainer implements IGasNetworkElement
 			if (metadata == 0) {
 				return iconBuffer[ICON_SIDE_BACK];
 			} else if (metadata == 1) {
-				return iconBuffer[ICON_SIDE_ON];
+				return iconBuffer[ICON_SIDE_FRONT];
+			} else if (metadata == 2) {
+				return iconBuffer[ICON_SIDE_BACK];
+			} else if (metadata == 3) {
+				return iconBuffer[ICON_SIDE_FRONTON];
 			}
 		}
 		
 		if (side == 0) {
-			if (metadata == 0) // Inactive state
-			{
-				return iconBuffer[ICON_SIDE_ON];
+			if (metadata == 0) {
+				return iconBuffer[ICON_SIDE_FRONT];
 			} else if (metadata == 1) {
+				return iconBuffer[ICON_SIDE_BACK];
+			} else if (metadata == 2) {
+				return iconBuffer[ICON_SIDE_FRONTON];
+			} else if (metadata == 3) {
 				return iconBuffer[ICON_SIDE_BACK];
 			}
 		}
@@ -124,18 +132,18 @@ public class SSBlockAirVent extends BlockContainer implements IGasNetworkElement
 					IGasNetwork net = ((SSTileEntityAirVent) tileEntity).getGasNetwork();
 					
 					if (SS.Debug) { 
-						//net.printDebugInfo();
 						((SSTileEntityAirVent) tileEntity).printDebugInfo();
-						//System.out.println(GasUtils.getGasPressure(test,300,24));
 					}
 				} 
 
 			} else if (itemName.equals("ic2.itemToolWrenchElectric") || itemName.equals("item.thermalexpansion.tool.wrench")) {
 				// Rotate AirVent
 				int oldMeta = world.getBlockMetadata(x, y, z);
-				if (side != oldMeta && side >= 0 && side < 2) {
-					if (side == 0 && side != oldMeta) {
-						world.setBlockMetadataWithNotify(x, y, z, 0, 3);
+				int oldSide = oldMeta & 1;
+				
+				if (side != oldSide && side >= 0 && side < 2) {
+					if (side == 0 && side != oldSide) {
+						world.setBlockMetadataWithNotify(x, y, z, oldMeta & 2, 3); // old meta 1 or 3 -> 0 or 2
 						entityplayer.getCurrentEquippedItem().damageItem(1, entityplayer);
 						
 						TileEntity tileEntity = world.getTileEntity(x, y, z);
@@ -144,12 +152,10 @@ public class SSBlockAirVent extends BlockContainer implements IGasNetworkElement
 						if (SS.Debug) System.out.println("Try to rebild on UP");
 						if (world.getBlock(x, y+1, z) == SSConfig.ssBlockGasPipe) {
 							GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(world,new BlockVec3(x,y+1,z)));
-							//SSGasNetwork net = new SSGasNetwork(world);
-							//net.rebuildNetwork(world, new BlockVec3(x,y+1,z));
 						}
 						
-					} else if (side == 1 && side != oldMeta) {
-						world.setBlockMetadataWithNotify(x, y, z, 1, 3);
+					} else if (side == 1 && side != oldSide) {
+						world.setBlockMetadataWithNotify(x, y, z, oldMeta | 1, 3); // old meta 0 or 2 -> 1 or 3
 						entityplayer.getCurrentEquippedItem().damageItem(1, entityplayer);
 						TileEntity tileEntity = world.getTileEntity(x, y, z);
 						((IGasNetworkVent) tileEntity).getGasNetwork().removeVent((IGasNetworkVent) tileEntity);
@@ -157,8 +163,6 @@ public class SSBlockAirVent extends BlockContainer implements IGasNetworkElement
 						if (SS.Debug) System.out.println("Try to rebild on DOWN");
 						if (world.getBlock(x, y-1, z) == SSConfig.ssBlockGasPipe) {
 							GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(world,new BlockVec3(x,y-1,z)));
-							//SSGasNetwork net = new SSGasNetwork(world);
-							//net.rebuildNetwork(world, new BlockVec3(x,y-1,z));
 						}
 					}
 				}

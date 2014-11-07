@@ -90,9 +90,11 @@ public class SSGasNetwork implements IGasNetwork {
 		return this.vents;
 	}
 
+	
 	/** User for pipes */
+	/*
 	@Deprecated
-	public static BlockVec3[] getAdjacent(World w, BlockVec3 position) {
+	public static BlockVec3[] getAdjacent1(World w, BlockVec3 position) {
 
 		BlockVec3[] adjacentConnections = new BlockVec3[ForgeDirection.VALID_DIRECTIONS.length];
 
@@ -103,7 +105,7 @@ public class SSGasNetwork implements IGasNetwork {
 		}
 		return adjacentConnections;
 	}
-
+	*/
 	
 	//@Deprecated
 	/** 
@@ -136,6 +138,7 @@ public class SSGasNetwork implements IGasNetwork {
 	*/
 
 	@Override
+	@Deprecated
 	public float nipPressure() {
 		
 		float returnPressure = 0;

@@ -30,9 +30,9 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 	public long ticks = 0;
 	public SSFindSealedBay findSealedBay = null;
 	/** AirVent is emits gasmixture */
-	public boolean active = false;
+	private boolean active = false;
 	/** AirVent in sealed bay */
-	public boolean sealed = false;
+	private boolean sealed = false;
 	/** AirVent is conneted to AirNet */
 	public boolean added_to_airvent_net = false;
 	/** BaySize */
@@ -74,6 +74,9 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 		if (!this.worldObj.isRemote && this.ticks % (COOLDOWN * 5) == 0) {
 
 			if (this.findSealedBay != null) {
+				
+				boolean oldActive = this.active && this.sealed;
+				
 				this.sealed = this.findSealedBay.fullcheck();
 				this.active = this.findSealedBay.getActive();
 				this.baySize = this.findSealedBay.getSize();
@@ -87,6 +90,13 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 					this.tank.setCapacity(0);
 					this.sealed = false;
 				}
+				
+				boolean newActive = this.active && this.sealed;
+				
+				if (newActive != oldActive) {
+					updateMeta(newActive);
+				}
+				
 			}
 			
 			if (this.getActive()) MinecraftForge.EVENT_BUS.post(new GasVentRecalculateEvents(this)); //get some gas from source
@@ -142,7 +152,9 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 	 * @return
 	 */
 	public boolean isNormalAir() {
-		// TODO Добавить определение смеси газов и пригодность для дыхания
+		if (this.getPressure() > 11) return false;
+		if (this.getPressure() < 9) return false;
+		//TODO: Add gas mixture check
 		return true;
 	}
 
@@ -199,7 +211,6 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 
 	@Override
 	public int getBaySize() {
-		//TODO may be test add reinit findSeal
 		return this.baySize;
 	}
 
@@ -222,8 +233,11 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 	public boolean canConnectFrom(ForgeDirection direction) {
 		if (this.blockMetadata == 0 && direction.equals(ForgeDirection.DOWN)) {
 			return true;
-		}
-		if (this.blockMetadata == 1 && direction.equals(ForgeDirection.UP)) {
+		} else if (this.blockMetadata == 1 && direction.equals(ForgeDirection.UP)) {
+			return true;
+		} else if (this.blockMetadata == 2 && direction.equals(ForgeDirection.DOWN)) {
+			return true;
+		} else if (this.blockMetadata == 3 && direction.equals(ForgeDirection.UP)) {
 			return true;
 		}
 		return false;
@@ -239,4 +253,24 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 		return this.getTank().getPressure();
 	}
 
+	@Override
+	public void setActive(boolean newActive) {
+		this.active = newActive;
+		
+	}
+
+	@Override
+	public void setSealed(boolean newSealed) {
+		this.sealed = newSealed;
+	}
+
+	public void updateMeta(boolean newActive) {
+		int meta = this.getBlockMetadata();
+		if (newActive) {
+			this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, meta | 2, 3);
+		} else {
+			this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, meta & 1, 3);
+		}
+	}
+	
 }
