@@ -14,6 +14,9 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
 import com.badday.ss.core.utils.AirVentNet;
+import com.badday.ss.core.utils.BlockVec3;
+import com.badday.ss.core.utils.Pathfinding;
+import com.badday.ss.core.utils.PressureCalculator;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
@@ -73,7 +76,7 @@ public class SpaceEventHandler
 		if (entity.worldObj.provider.dimensionId == SS.instance.spaceDimID) {
 			this.lastTimer++;
 			if (this.lastTimer > 20 * 2) {
-				//double pressure = PressureCalculator.getPressureAt(entity.worldObj, new BlockVec3(entity));
+				double pressure = PressureCalculator.getPressureAt(entity.worldObj, new BlockVec3(entity));
 				if(SS.Debug) {
 					// TEMP System.out.println("[" + SS.MODNAME + "] Pressure is: " + pressure);
 				}

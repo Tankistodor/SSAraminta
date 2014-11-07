@@ -131,13 +131,10 @@ public class SSBlockGasMixer extends BlockContainer implements IGasNetworkElemen
 								if (liquid != null)
 									System.out.println("    Tank" + s + ": " + info[i].fluid.getUnlocalizedName() + " - " + info[i].capacity + "/"+info[i].fluid.amount);
 							}
-
 						}
 					}
 				}
-
 			}
-
 		}
 		return false;
 	}

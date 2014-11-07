@@ -41,7 +41,7 @@ public final class PressureCalculator {
       }
 
       if(SS.Debug) {
-        // TEMP System.out.println("[" + SS.MODNAME + "] full time:" + (System.nanoTime() - all_time) / 1000000.0D);
+         //System.out.println("[" + SS.MODNAME + "] full time:" + (System.nanoTime() - all_time) / 1000000.0D);
       }
 
       if(finder.isDone()) {

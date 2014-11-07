@@ -1,5 +1,7 @@
 package com.badday.ss.api;
 
+import com.badday.ss.core.atmos.GasMixture;
+
 
 /**
  * Can provide gases // Generator
@@ -11,12 +13,24 @@ package com.badday.ss.api;
 public interface IGasNetworkSource
 {
 	
-	public int getGasTemperature();
-	public void setGasTemperature();
-
+	/** 
+	 * Get current GasNetwork or create new
+	 * @return IGasNetowrk
+	 */
 	public IGasNetwork getNetwork();
+	
+	/**
+	 * Set new GasNetwork as IGasNetowork
+	 * @param network
+	 */
 	public void setNetwork(IGasNetwork network);
+	
+	/**
+	 * Event called where network changed (Set Source or Vent)
+	 */
 	public void onNetworkChanged();
 	
 	public float nipGas();
+	
+	public GasMixture getMyGas();
 }

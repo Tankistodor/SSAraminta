@@ -33,8 +33,7 @@ public class SSFindSealedBay {
 		this.world = world1;
 		this.head = vec;
 		this.checkCount = SSConfig.ssAirVentBlockArea;
-
-		this.fullcheck();
+		this.sealed = this.fullcheck();
 	}
 
 	/**

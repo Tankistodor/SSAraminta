@@ -34,41 +34,6 @@ public class SSGasNetwork implements IGasNetwork {
 		super();
 		this.world = world;
 	}
-
-	
-	@Override
-	/**
-	 * rebuild network called when pipe is changed 
-	 */
-	public synchronized void r1ebuildNetwork(World w, BlockVec3 node,BlockVec3... ignore) {
-
-		//MinecraftForge.EVENT_BUS.post(new RebuildGasNetworkEvent(w, node.clone()));
-		GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(world,node));
-		
-		/*
-		GasPathfinder finder = new GasPathfinder(w, node);
-		List<BlockVec3> results = finder.exploreNetwork();
-		
-		this.setPipes(finder.getPipes());
-		this.setVents(finder.getVents());
-		this.setSources(finder.getSources());
-		if (SS.Debug)
-			System.out.println("Network "+this.toString() + " rebuided at " + node.toString());
-			*/
-	}
-	
-	/**
-	 * Calles where airVent try to connect to GasNetwork
-	 */
-	public synchronized void r1ebuildNetworkFromVent(World w, BlockVec3 node, int side) {
-
-		Block block = node.getBlockOnSide(w, side);
-
-		if (block != null && block.equals(SSConfig.ssBlockGasPipe)) {
-			this.r1ebuildNetwork(w, node);
-		}
-
-	}
 	
 	@Override
 	public void recalculate() {

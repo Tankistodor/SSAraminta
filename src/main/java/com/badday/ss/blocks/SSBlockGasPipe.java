@@ -10,19 +10,17 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 
 import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
 import com.badday.ss.api.IGasNetworkElement;
-import com.badday.ss.api.IGasNetworkSource;
-import com.badday.ss.api.IGasNetworkVent;
+import com.badday.ss.core.atmos.GasMixture;
 import com.badday.ss.core.atmos.GasUtils;
-import com.badday.ss.core.atmos.SSGasNetwork;
 import com.badday.ss.core.utils.BlockVec3;
 import com.badday.ss.events.RebuildNetworkEvent;
 
@@ -99,8 +97,6 @@ public class SSBlockGasPipe  extends Block implements IGasNetworkElement{
 		if (!world.isRemote && GasUtils.getAdjacentAllCount(world, new BlockVec3(x,y,z))>1) { //FIXME - Called 2 times ? Why?
 			// Rebild network
 			GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(world,new BlockVec3(x,y,z)));
-			//SSGasNetwork net = new SSGasNetwork(world);
-			//net.rebuildNetwork(world, new BlockVec3(x,y,z) );
 		}
 		world.markBlockForUpdate(x, y, z);
 	}
@@ -112,8 +108,6 @@ public class SSBlockGasPipe  extends Block implements IGasNetworkElement{
 			for (BlockVec3 node : GasUtils.getAdjacentAll(world, new BlockVec3(x,y,z))) {
 				if (node != null) {
 					GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(world,node.clone()));
-					//SSGasNetwork net = new SSGasNetwork(world);
-					//net.rebuildNetwork(world, node,new BlockVec3(x,y,z));
 				}
 			}
 		}
@@ -143,12 +137,7 @@ public class SSBlockGasPipe  extends Block implements IGasNetworkElement{
 		if (entityplayer.getCurrentEquippedItem() != null) {
 			String itemName = entityplayer.getCurrentEquippedItem().getUnlocalizedName();
 			if (itemName.equals("item.ss.multitool")) {
-				GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(world,new BlockVec3(x,y,z)));
-				//SSGasNetwork net = new SSGasNetwork(world);
-				//net.rebuildNetwork(world, new BlockVec3(x,y,z));
-				//if (SS.Debug) { 
-				//	net.printDebugInfo();
-				//}
+				//GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(world,new BlockVec3(x,y,z)));
 			}
  		}
 		return false;

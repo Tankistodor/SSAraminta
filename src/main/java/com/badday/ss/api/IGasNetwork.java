@@ -15,20 +15,15 @@ import net.minecraft.world.World;
  */
 public interface IGasNetwork {
 	
-	
-
-	public void r1ebuildNetwork(World w, BlockVec3 node,BlockVec3... ignore);
-	public void r1ebuildNetworkFromVent(World worldObj, BlockVec3 blockVec3,int side);
-
 	/**
 	 * Calculate new values of gas pressure and mixture
 	 */
 	public void recalculate();
 
 	/**
-	 * Set new gas pipes
+	 * Set new gas pipes to GasNetwork
 	 * 
-	 * @param pipes2
+	 * @param List<BlockVec3> pipes2
 	 */
 	public void setPipes(List<BlockVec3> pipes2);
 

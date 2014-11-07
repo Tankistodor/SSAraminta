@@ -13,6 +13,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 
 import com.badday.ss.api.IGasNetwork;
 import com.badday.ss.api.IGasNetworkSource;
+import com.badday.ss.core.atmos.GasMixture;
 
 public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSource, IFluidHandler {
 	
@@ -29,21 +30,9 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 		super();
 		for (int i = 0; i<4; i++ ) {
 			this.tank[i] = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10);
-			this.tankTrust[i] = 50; // 0-100
-			this.totalTrust = 20; // 0-100
+			this.tankTrust[i] = 33; // 0-100
+			this.totalTrust = 1; // 0-100
 		}
-	}
-
-	@Override
-	public int getGasTemperature() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void setGasTemperature() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -68,13 +57,10 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 		return false;
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid) {
-		//for (int i = 2; i < 6; i++) {
 		if (from.ordinal() > 1 && from.ordinal() < 6)
     		return tank[from.ordinal()-2].fill(new FluidStack(fluid,1), false) > 0;
-    	//}
         return false;
 	}
 
@@ -181,10 +167,26 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 		
 	}
 	
+	public GasMixture getMyGas() {
+		GasMixture result = new GasMixture();
+		
+		for (int i = 0; i<4; i++) {
+			if (this.tank[i] != null && this.tank[i].getFluidAmount() >= this.tankTrust[i]*this.totalTrust) {
+				FluidStack transfer = this.tank[i].drain(this.tankTrust[i]*this.totalTrust, true);
+				//FluidStack transfer = this.tank[i].drain(1, true);
+				if (transfer != null)
+					result.addGas(transfer);
+			}
+		}
+		return result;
+	}
+	
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		this.getNetwork().removeSource(this);
+		if (this.gasNetwork != null) {
+			this.getNetwork().removeSource(this);
+		}
 	}
 
 }
