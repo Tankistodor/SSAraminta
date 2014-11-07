@@ -28,18 +28,9 @@ public class SSGasNetwork implements IGasNetwork {
 	public List<IGasNetworkSource> sources = new LinkedList<IGasNetworkSource>(); // Pipes
 	public List<IGasNetworkVent> vents = new LinkedList<IGasNetworkVent>(); // Pipes
 	
-	public float totalPressure = 0;
-
 	public SSGasNetwork(World world) {
 		super();
 		this.world = world;
-	}
-	
-	@Override
-	public void recalculate() {
-		this.totalPressure = this.totalPressure + this.nipPressure();
-		this.totalPressure = this.totalPressure * 0.9f; //
-
 	}
 
 	// ==============================================================
@@ -47,7 +38,7 @@ public class SSGasNetwork implements IGasNetwork {
 	@Override
 	public String toString() {
 		return "GasNetwork[" + this.hashCode() + "|Pipes:" + this.pipes.size() + "|Src:" + sources.size() + "|V:" + vents.size() + 
-				"|Bay:"+this.getVetnSize()+ "|P:"+this.totalPressure + " hPa]";
+				"|Bay:"+this.getVetnSize();
 	}
 
 	@Override

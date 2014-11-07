@@ -13,7 +13,11 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 
 import com.badday.ss.SS;
+import com.badday.ss.SSConfig;
 import com.badday.ss.api.IGasNetworkElement;
+import com.badday.ss.core.atmos.GasUtils;
+import com.badday.ss.core.utils.BlockVec3;
+import com.badday.ss.events.RebuildNetworkEvent;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -105,6 +109,16 @@ public class SSBlockGasMixer extends BlockContainer implements IGasNetworkElemen
 			return iconBuffer[ICON_TOP];
 		}
 		return iconBuffer[ICON_BOTTOM];
+	}
+	
+	@Override
+	public void onBlockAdded(World world, int x, int y, int z) {
+		super.onBlockAdded(world, x, y, z);
+		if (!world.isRemote && world.getBlock(x, y+1, z) == SSConfig.ssBlockGasPipe) { 
+			// Rebild network
+			GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(world,new BlockVec3(x,y+1,z)));
+		}
+		//world.markBlockForUpdate(x, y, z);
 	}
 
 	@Override

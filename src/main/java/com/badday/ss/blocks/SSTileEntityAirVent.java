@@ -16,7 +16,7 @@ import com.badday.ss.core.atmos.SSGasNetwork;
 import com.badday.ss.core.utils.BlockVec3;
 import com.badday.ss.events.AirNetAddEvent;
 import com.badday.ss.events.AirNetRemoveEvent;
-import com.badday.ss.events.GasNetworkRecalculateEvents;
+import com.badday.ss.events.GasVentRecalculateEvents;
 import com.badday.ss.events.RebuildNetworkEvent;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -38,9 +38,6 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 	public IGasNetwork gasNetwork;
 	
 	public GasMixture tank = new GasMixture();
-	
-	public int gasTankCapacity = 0;
-	public int gasTankValue = 0;
 
 	@Override
 	public void updateEntity() {
@@ -89,8 +86,7 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 				}
 			}
 			
-			if (this.getActive())
-				MinecraftForge.EVENT_BUS.post(new GasNetworkRecalculateEvents(this.getGasNetwork())); //demind
+			if (this.getActive()) MinecraftForge.EVENT_BUS.post(new GasVentRecalculateEvents(this)); //get some gas from source
 		}
 
 	}
@@ -188,17 +184,8 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 	}
 
 	public void printDebugInfo() {
-		System.out.println("Vent: "+this.toString());
-		System.out.println("    Network: "+this.gasNetwork);
-		System.out.println("    Size: "+this.getBaySize());
-		System.out.println("    Sealed: "+this.getSealed() + " active: "+ this.getActive());
-		if (this.gasNetwork != null) {
-			for (IGasNetworkSource src : this.gasNetwork.getSources()) {
-				GasMixture gas = src.getMyGas();
-				this.tank.fill(gas);
-				System.out.println("    "+tank.toString());
-			}
-		}
+		System.out.println("Vent: "+this.toString() + " Net: "+this.gasNetwork + " Size: "+this.getBaySize() + 
+				" S:"+this.getSealed() + " A:"+ this.getActive());
 	}
 
 	@Override
@@ -210,6 +197,11 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public GasMixture getTank() {
+		return this.tank;
 	}
 
 }

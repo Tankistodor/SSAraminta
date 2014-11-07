@@ -2,6 +2,8 @@ package com.badday.ss.api;
 
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.badday.ss.core.atmos.GasMixture;
+
 /**
  * GasNetwork interface
  * @author KolesnikovAK
@@ -45,5 +47,7 @@ public interface IGasNetworkVent {
 	public boolean getSealed();
 	
 	public boolean canConnectFrom(ForgeDirection direction);
+
+	public GasMixture getTank();
 
 }

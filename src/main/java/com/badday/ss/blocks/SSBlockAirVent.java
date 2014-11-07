@@ -124,7 +124,7 @@ public class SSBlockAirVent extends BlockContainer implements IGasNetworkElement
 					IGasNetwork net = ((SSTileEntityAirVent) tileEntity).getGasNetwork();
 					
 					if (SS.Debug) { 
-						net.printDebugInfo();
+						//net.printDebugInfo();
 						((SSTileEntityAirVent) tileEntity).printDebugInfo();
 						//System.out.println(GasUtils.getGasPressure(test,300,24));
 					}

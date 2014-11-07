@@ -3,6 +3,8 @@ package com.badday.ss.core.atmos;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badday.ss.SSConfig;
+
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -58,5 +60,8 @@ public class GasMixture {
 		}
 	}
 	
+	public float getPressure() {
+		return GasUtils.getGasPressure(this,this.capacity,SSConfig.ssDefaultTemperature);
+	}
 	
 }

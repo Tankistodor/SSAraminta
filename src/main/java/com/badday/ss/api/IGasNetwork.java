@@ -16,11 +16,6 @@ import net.minecraft.world.World;
 public interface IGasNetwork {
 	
 	/**
-	 * Calculate new values of gas pressure and mixture
-	 */
-	public void recalculate();
-
-	/**
 	 * Set new gas pipes to GasNetwork
 	 * 
 	 * @param List<BlockVec3> pipes2
