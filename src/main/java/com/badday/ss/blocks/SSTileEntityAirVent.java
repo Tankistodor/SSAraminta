@@ -4,6 +4,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 
 import com.badday.ss.SS;
 import com.badday.ss.api.IGasNetwork;
@@ -77,11 +80,11 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 				
 				
 				if (this.baySize > 0) {
-					this.tank.setCapasity(this.baySize * 10);
+					this.tank.setCapacity(this.baySize * 10);
 					this.sealed = true;
 				} else {
 					this.tank = new GasMixture();
-					this.tank.setCapasity(0);
+					this.tank.setCapacity(0);
 					this.sealed = false;
 				}
 			}
@@ -115,13 +118,21 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 			MinecraftForge.EVENT_BUS.post(new AirNetRemoveEvent(new BlockVec3(this)));
 			added_to_airvent_net = false;
 		}
+		if (this.gasNetwork != null) {
+			this.getGasNetwork().removeVent(this);;
+		}
+		
 	}
 
 	@Override
 	public void onChunkUnload() {
+		super.onChunkUnload();
 		if (added_to_airvent_net) {
 			MinecraftForge.EVENT_BUS.post(new AirNetRemoveEvent(new BlockVec3(this)));
 			added_to_airvent_net = false;
+		}
+		if (this.gasNetwork != null) {
+			this.getGasNetwork().removeVent(this);;
 		}
 	}
 
@@ -136,13 +147,32 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound tag) {
-		super.readFromNBT(tag);
+	public void readFromNBT(NBTTagCompound tags) {
+		super.readFromNBT(tags);
+		int count = tags.getInteger("tankCount");
+		this.tank.setCapacity(tags.getInteger("tankCapacity"));
+		for (int i=0; i < count; i++) {
+			if (tags.getBoolean("hasFluid" + i)) {
+				this.tank.addGas(FluidRegistry.getFluidStack(tags.getString("fluidName" + i), tags.getInteger("amount" + i)));
+			}
+		}
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
-		super.writeToNBT(tag);
+	public void writeToNBT(NBTTagCompound tags) {
+		super.writeToNBT(tags);
+		tags.setInteger("tankCount", this.tank.mixtureTank.size());
+		tags.setInteger("tankCapacity", this.tank.getCapacity());
+		int i = 0;
+		for (FluidTank t : this.tank.mixtureTank) {
+			FluidStack liquid = t.getFluid();
+			if (liquid != null && liquid.amount > 0) {
+				i++;
+				tags.setBoolean("hasFluid"+i, liquid != null);
+				tags.setString("fluidName"+i, liquid.getFluid().getName());
+	            tags.setInteger("amount"+i, liquid.amount);
+			}
+		}
 	}
 
 	@Override
@@ -202,6 +232,11 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 	@Override
 	public GasMixture getTank() {
 		return this.tank;
+	}
+
+	@Override
+	public float getPressure() {
+		return this.getTank().getPressure();
 	}
 
 }

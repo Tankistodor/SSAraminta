@@ -50,7 +50,21 @@ public class GasMixture {
 		return res;
 	}
 	
-	public void setCapasity(int value) {
+	public int getTotalAmount() {
+		int res = 0;
+		for (FluidTank tank: mixtureTank) {
+			if (tank != null) {
+				res += tank.getFluidAmount();
+			}
+		}
+		return res;
+	}
+	
+	public int getCapacity() {
+		return this.capacity;
+	}
+	
+	public void setCapacity(int value) {
 		this.capacity = value;
 	}
 
@@ -61,7 +75,15 @@ public class GasMixture {
 	}
 	
 	public float getPressure() {
-		return GasUtils.getGasPressure(this,this.capacity,SSConfig.ssDefaultTemperature);
+		// SIMPLE
+		if (this.getCapacity() > 0) {
+			float t = (float) this.getTotalAmount()/this.getCapacity();
+			return t*10.13f;
+		} else {
+			return 0;
+		}
+		// TODO: MAKE MORE HARD 
+		//return GasUtils.getGasPressure(this,this.capacity,SSConfig.ssDefaultTemperature);
 	}
 	
 }

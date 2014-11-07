@@ -19,7 +19,7 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 	
 	public FluidTank[] tank = new FluidTank[4];
 	public int[] tankTrust = new int[4];  // Регуряторы напора
-	public int 	totalTrust = 0;
+	public int 	totalTrust = 1;
 	public int pressure[] = new int[4]; // Регуряторы напора
 
 	public int renderOffset[] = new int[4];
@@ -173,7 +173,6 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 		for (int i = 0; i<4; i++) {
 			if (this.tank[i] != null && this.tank[i].getFluidAmount() >= this.tankTrust[i]*this.totalTrust) {
 				FluidStack transfer = this.tank[i].drain(this.tankTrust[i]*this.totalTrust, true);
-				//FluidStack transfer = this.tank[i].drain(1, true);
 				if (transfer != null)
 					result.addGas(transfer);
 			}
@@ -184,6 +183,14 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 	@Override
 	public void invalidate() {
 		super.invalidate();
+		if (this.gasNetwork != null) {
+			this.getNetwork().removeSource(this);
+		}
+	}
+	
+	@Override
+	public void onChunkUnload() {
+		super.onChunkUnload();
 		if (this.gasNetwork != null) {
 			this.getNetwork().removeSource(this);
 		}

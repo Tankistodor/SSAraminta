@@ -1,5 +1,6 @@
 package com.badday.ss.events;
 
+import com.badday.ss.SS;
 import com.badday.ss.api.IGasNetworkSource;
 import com.badday.ss.api.IGasNetworkVent;
 import com.badday.ss.core.atmos.GasMixture;
@@ -14,13 +15,16 @@ public class GasVentRecalculateEvents  extends Event {
 		
 		if (vent.getGasNetwork() != null) {
 			
-			vent.getGasNetwork().printDebugInfo();
+			if (SS.Debug) vent.getGasNetwork().printDebugInfo();
 			
 			for (IGasNetworkSource src : vent.getGasNetwork().getSources()) {
 				GasMixture gas = src.getMyGas();
 				vent.getTank().fill(gas);
-				System.out.println("    "+vent.getTank().toString());
-				System.out.println("    Pressure: "+vent.getTank().getPressure());
+				
+				if (SS.Debug) {
+					System.out.println("    "+vent.getTank().toString());
+					System.out.println("    Pressure: "+vent.getPressure() + " hPa");
+				}
 			}
 			
 		}
