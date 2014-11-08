@@ -30,7 +30,5 @@ public interface IGasNetworkSource
 	 */
 	public void onNetworkChanged();
 	
-	public float nipGas();
-	
 	public GasMixture getMyGas();
 }

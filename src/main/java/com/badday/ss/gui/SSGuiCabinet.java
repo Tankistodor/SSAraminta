@@ -16,8 +16,8 @@ public class SSGuiCabinet extends GuiContainer {
 	private static final ResourceLocation guiTexture = new ResourceLocation("ss", "textures/gui/cabinet.png");
 	private final SSTileEntityCabinet cabinet;
 	
-	private static int xSize = 184;//184
-	private static int ySize = 166;
+	private static int xSize = 176;//184
+	private static int ySize = 176;
 	
     public SSGuiCabinet(IInventory player, SSTileEntityCabinet chest)
     {

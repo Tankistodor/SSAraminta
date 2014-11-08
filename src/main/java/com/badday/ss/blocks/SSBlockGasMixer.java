@@ -150,7 +150,16 @@ public class SSBlockGasMixer extends BlockContainer implements IGasNetworkElemen
 				}
 			}
 		}
-		return false;
+		
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
+        if (tileEntity == null || entityplayer.isSneaking()) {
+                return false;
+        }
+        //code to open gui explained later
+        entityplayer.openGui(SS.instance, 0, world, x, y, z);
+        return true;
+		
+		//return false;
 	}
 
 }

@@ -140,14 +140,15 @@ public class SSGasNetwork implements IGasNetwork {
 	@Override
 	@Deprecated
 	public float nipPressure() {
-		
+		return 0.0f;
+		/*
 		float returnPressure = 0;
 		for (IGasNetworkSource g : this.sources) {
 			returnPressure =+ g.nipGas();
 		}
 		
 		return returnPressure;
-		/*
+		
 		
 		Float pressure = 0.0f;
 		int V = 0;

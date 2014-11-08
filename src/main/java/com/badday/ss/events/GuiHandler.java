@@ -8,9 +8,12 @@ import net.minecraft.world.World;
 
 import com.badday.ss.SS;
 import com.badday.ss.blocks.SSTileEntityCabinet;
+import com.badday.ss.blocks.SSTileEntityGasMixer;
 import com.badday.ss.containers.SSContainerCabinet;
+import com.badday.ss.containers.SSContainerGasMixer;
 import com.badday.ss.core.utils.WorldUtils;
 import com.badday.ss.gui.SSGuiCabinet;
+import com.badday.ss.gui.SSGuiGasMixer;
 import com.badday.ss.gui.SSGuiIDs;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -38,7 +41,10 @@ public class GuiHandler implements IGuiHandler {
 	            if (tile instanceof SSTileEntityCabinet)
 	            {
 	            	return new SSGuiCabinet(player.inventory, (SSTileEntityCabinet) tile);
+	            } else if (tile instanceof SSTileEntityGasMixer) {
+	            	return new SSGuiGasMixer(player.inventory, (SSTileEntityGasMixer) tile, 175, 175);
 	            }
+	            
 	        }
 		
 			/*if (ID == SSGuiIDs.GUI_ID_CABINET) {
@@ -69,6 +75,8 @@ public class GuiHandler implements IGuiHandler {
         	if (tile instanceof SSTileEntityCabinet)
             {
         		return new SSContainerCabinet(player.inventory, ((SSTileEntityCabinet) tile), 184, 184); 
+            } else if (tile instanceof SSTileEntityGasMixer) {
+            	return new SSContainerGasMixer(player.inventory, ((SSTileEntityGasMixer) tile), 175, 175);
             }
         }
                 

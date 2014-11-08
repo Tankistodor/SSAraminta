@@ -1,7 +1,12 @@
 package com.badday.ss.blocks;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -15,16 +20,18 @@ import com.badday.ss.api.IGasNetwork;
 import com.badday.ss.api.IGasNetworkSource;
 import com.badday.ss.core.atmos.GasMixture;
 
-public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSource, IFluidHandler {
+public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSource, IFluidHandler, IInventory {
 	
 	public FluidTank[] tank = new FluidTank[4];
-	public int[] tankTrust = new int[4];  // Регуряторы напора
-	public int 	totalTrust = 1;
+	public byte[] tankTrust = new byte[4];  // Регуряторы напора
+	public byte totalTrust = 1;
 	public int pressure[] = new int[4]; // Регуряторы напора
 
 	public int renderOffset[] = new int[4];
 	
 	public IGasNetwork gasNetwork;
+	
+	private ItemStack chargeSlot;
 	
 	public SSTileEntityGasMixer() {
 		super();
@@ -124,13 +131,22 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 	public void readFromNBT(NBTTagCompound tags) {
 		super.readFromNBT(tags);
 		for (int i = 0; i < 4; i++) {
-		 if (tags.getBoolean("hasFluid"+i))
-	        {
-                tank[i].setFluid(FluidRegistry.getFluidStack(tags.getString("fluidName"+i), tags.getInteger("amount"+i)));
-	        }
-	        else
-	            tank[i].setFluid(null);
+			this.tankTrust[i] = tags.getByte("tankTrust" + i);
+			if (tags.getBoolean("hasFluid" + i)) {
+				tank[i].setFluid(FluidRegistry.getFluidStack(tags.getString("fluidName" + i), tags.getInteger("amount" + i)));
+			} else
+				tank[i].setFluid(null);
 		}
+		this.totalTrust = tags.getByte("totalTrust");
+
+		NBTTagList nbttaglist = tags.getTagList("Items", Constants.NBT.TAG_COMPOUND);
+
+		NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(0);
+		int j = nbttagcompound1.getByte("Slot") & 0xff;
+		if (j >= 0 && j < 1) {
+			chargeSlot = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+		}
+
 	}
 
 	@Override
@@ -139,31 +155,26 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 		for (int i = 0; i < 4; i++) {
 			FluidStack liquid = tank[i].getFluid();
 			tags.setBoolean("hasFluid"+i, liquid != null);
+			tags.setByte("tankTrust"+i,this.tankTrust[i]);
 		    if (liquid != null)
 		        {
 		            tags.setString("fluidName"+i, liquid.getFluid().getName());
 		            tags.setInteger("amount"+i, liquid.amount);
 		        }
 		}
-	}
-
-
-
-	/**
-	 * Collect some gases from SourceVent for added in vent
-	 */
-	@Override
-	public float nipGas() {
 		
-		float resultMixerPressure = 0;
-		int localTrust = 0;
-		for (int i = 0; i<4; i++) {
-			if (this.tank[i] != null && this.tank[i].getFluidAmount() >= this.tankTrust[i]) {
-				resultMixerPressure += this.tankTrust[i];
-			}
+		tags.setByte("totalTrust",this.totalTrust);
+		
+		NBTTagList nbttaglist = new NBTTagList();
+
+		if (this.chargeSlot != null) {
+			NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+			nbttagcompound1.setByte("Slot", (byte) 0);
+			this.chargeSlot.writeToNBT(nbttagcompound1);
+			nbttaglist.appendTag(nbttagcompound1);
 		}
-		
-		return resultMixerPressure*this.totalTrust/20;
+
+		tags.setTag("Items", nbttaglist);
 		
 	}
 	
@@ -194,6 +205,89 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 		if (this.gasNetwork != null) {
 			this.getNetwork().removeSource(this);
 		}
+	}
+
+	
+
+	@Override
+    public ItemStack decrStackSize(int slot, int amt) {
+            ItemStack stack = getStackInSlot(slot);
+            if (stack != null) {
+                    if (stack.stackSize <= amt) {
+                            setInventorySlotContents(slot, null);
+                    } else {
+                            stack = stack.splitStack(amt);
+                            if (stack.stackSize == 0) {
+                                    setInventorySlotContents(slot, null);
+                            }
+                    }
+            }
+            return stack;
+    }
+
+	@Override
+	public String getInventoryName() {
+		return "ss.tileentity.gasmixer.chargeSlot";
+	}
+
+	@Override
+	public int getInventoryStackLimit() {
+		return 1;
+	}
+
+	@Override
+	public int getSizeInventory() {
+		return 1;
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int slot) {
+		return this.chargeSlot;
+	}
+
+	@Override
+	public ItemStack getStackInSlotOnClosing(int slot) {
+		ItemStack stack = getStackInSlot(slot);
+        if (stack != null) {
+                setInventorySlotContents(slot, null);
+        }
+        return stack;
+	}
+
+	@Override
+	public boolean hasCustomInventoryName() {
+		return false;
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int arg0, ItemStack arg1) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
+		return ((worldObj.getTileEntity(xCoord, yCoord, zCoord) == this)
+				&& (entityplayer.getDistance((double) xCoord + 0.5D, (double) yCoord + 0.5D, (double) zCoord + 0.5D) <= 64D));
+
+	}
+
+	@Override
+	public void openInventory() {
+		if (worldObj == null) return;		
+	}
+	
+	@Override
+	public void closeInventory() {
+		if (worldObj == null) return;		
+	}
+
+	@Override
+	public void setInventorySlotContents(int slot, ItemStack stack) {
+		this.chargeSlot = stack;
+        if (stack != null && stack.stackSize > getInventoryStackLimit()) {
+                stack.stackSize = getInventoryStackLimit();
+        }  
 	}
 
 }
