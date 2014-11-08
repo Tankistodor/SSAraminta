@@ -4,29 +4,32 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.util.StatCollector;
+
+import com.badday.ss.blocks.SSTileEntityGasMixer;
 
 public class SSContainerGasMixer extends Container {
 	
     private EntityPlayer player;
-    private IInventory gasMixerInv;
+    private final SSTileEntityGasMixer tileEntity;
 
-	public SSContainerGasMixer(IInventory playerInventory, IInventory gasMixerInv,int xSize, int ySize) {
+	public SSContainerGasMixer(IInventory playerInventory, SSTileEntityGasMixer tileEntity) {
 		super();
 		player = ((InventoryPlayer) playerInventory).player;
-		this.gasMixerInv = gasMixerInv;
-		this.gasMixerInv.openInventory();
+		this.tileEntity =  tileEntity;
+		this.tileEntity.openInventory();
 	}
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		return this.gasMixerInv.isUseableByPlayer(player);
+		return this.tileEntity.isUseableByPlayer(player);
 	}
 
 	@Override
     public void onContainerClosed(EntityPlayer entityplayer)
     {
         super.onContainerClosed(entityplayer);
-        gasMixerInv.closeInventory();
+        tileEntity.closeInventory();
     }
 	
 }

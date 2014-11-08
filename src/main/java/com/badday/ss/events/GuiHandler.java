@@ -42,7 +42,7 @@ public class GuiHandler implements IGuiHandler {
 	            {
 	            	return new SSGuiCabinet(player.inventory, (SSTileEntityCabinet) tile);
 	            } else if (tile instanceof SSTileEntityGasMixer) {
-	            	return new SSGuiGasMixer(player.inventory, (SSTileEntityGasMixer) tile, 175, 175);
+	            	return new SSGuiGasMixer(player.inventory, (SSTileEntityGasMixer) tile);
 	            }
 	            
 	        }
@@ -76,7 +76,7 @@ public class GuiHandler implements IGuiHandler {
             {
         		return new SSContainerCabinet(player.inventory, ((SSTileEntityCabinet) tile), 184, 184); 
             } else if (tile instanceof SSTileEntityGasMixer) {
-            	return new SSContainerGasMixer(player.inventory, ((SSTileEntityGasMixer) tile), 175, 175);
+            	return new SSContainerGasMixer(player.inventory, ((SSTileEntityGasMixer) tile));
             }
         }
                 
