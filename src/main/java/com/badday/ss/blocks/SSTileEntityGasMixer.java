@@ -127,6 +127,24 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
         return new FluidTankInfo[] { new FluidTankInfo(fluid, tank[side].getCapacity()) };
     }
 	
+	/**
+	 * Return scaled storage of fluid in tank. Used in Gui
+	 * @param tankId
+	 * @param scale
+	 * @return
+	 */
+	public int getScaled(int tankId, int scale) {
+		if (tank[tankId].getFluid() != null)
+			return tank[tankId].getFluidAmount()*scale/tank[tankId].getCapacity();
+		return 0;
+	}
+	
+	public String getFluidTooltips(int tankId) {
+		if (tank[tankId].getFluid() != null)
+			return tank[tankId].getInfo().fluid.getLocalizedName()+" "+tank[tankId].getFluidAmount()+"/"+tank[tankId].getCapacity();
+		return "empty";
+	}
+	
 	@Override
 	public void readFromNBT(NBTTagCompound tags) {
 		super.readFromNBT(tags);

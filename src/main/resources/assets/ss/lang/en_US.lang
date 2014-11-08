@@ -35,6 +35,7 @@ cabinetFire.name=Fire Cabinet
 cabinetHazard.name=Hazard Cabinet
 cabinetIndustry.name=Industry Cabinet
 blockGasPipeBlack.0.name=High Pressure Gas Pipe
+gasMixer.gui.name=Gas Mixer
 item.ss.multitool.name=Multitool Admin tool
 item.ss.multitool.description=Multitool
 item.welder.name=Welder

@@ -42,20 +42,21 @@ public class SSGuiGasMixer extends GuiContainer {
 		super(new SSContainerGasMixer(player, tileEntity));
 		this.ySize = 176;
 		this.tileEntity = tileEntity;
-		this.name = StatCollector.translateToLocal("ss.GasMixer.gui.name");
+		this.name = StatCollector.translateToLocal("gasMixer.gui.name");
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int param1, int param2) {
 		// draw text and stuff here
 		// the parameters for drawString are: string, x, y, color
-		this.fontRendererObj.drawString(this.name, 68, 5, 4210752);
+		this.fontRendererObj.drawString(this.name, 65, 5, 4210752);
 		int x = (width - xSize) / 2;
 		int y = (height - ySize) / 2;
-		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, "Tank 1", 25, 49, 43, 89);
-		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, "Tank 2", 61, 49, 43 + 36, 89);
-		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, "Tank 3", 97, 49, 43 + 36 + 36, 89);
-		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, "Tank 4", 133, 49, 43 + 36 + 36 + 36, 89);
+		
+		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, tileEntity.getFluidTooltips(0), 25, 49, 43, 89);
+		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, tileEntity.getFluidTooltips(1), 61, 49, 43 + 36, 89);
+		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, tileEntity.getFluidTooltips(2), 97, 49, 43 + 36 + 36, 89);
+		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, tileEntity.getFluidTooltips(3), 133, 49, 43 + 36 + 36 + 36, 89);
 
 		// fontRenderer.drawString("Tiny", 8, 6, 4210752);
 		// draws "Inventory" or your regional equivalent
@@ -72,8 +73,17 @@ public class SSGuiGasMixer extends GuiContainer {
 		int y = (height - ySize) / 2;
 		this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 
-		this.drawTexturedModalRect(x + 62, y + 50, 192, 0, 208, 38);
+		int scale = tileEntity.getScaled(0, 38);
+		this.drawTexturedModalRect(x + 26, y + 50 + 38 - scale, 192, 0, 16, scale);
+		
+		scale = tileEntity.getScaled(1, 38); scale = 38;
+		this.drawTexturedModalRect(x + 62, y + 50 + 38 - scale, 192, 0, 16, scale);
+		
+		scale = tileEntity.getScaled(2, 38); scale = 12;
+		this.drawTexturedModalRect(x + 98, y + 50 + 38 - scale, 192, 0, 16, scale);
 
+		scale = tileEntity.getScaled(3, 38); scale = 30;
+		this.drawTexturedModalRect(x + 134, y + 50 + 38 - scale, 192, 0, 16, scale);
 	}
 
 }
