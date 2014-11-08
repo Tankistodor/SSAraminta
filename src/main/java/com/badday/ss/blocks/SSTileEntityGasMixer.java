@@ -1,5 +1,9 @@
 package com.badday.ss.blocks;
 
+import java.util.List;
+import java.util.Vector;
+
+import ic2.api.network.INetworkDataProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -20,7 +24,7 @@ import com.badday.ss.api.IGasNetwork;
 import com.badday.ss.api.IGasNetworkSource;
 import com.badday.ss.core.atmos.GasMixture;
 
-public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSource, IFluidHandler, IInventory {
+public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSource, IFluidHandler, IInventory,INetworkDataProvider {
 	
 	public FluidTank[] tank = new FluidTank[4];
 	public byte[] tankTrust = new byte[4];  // Регуряторы напора
@@ -306,6 +310,15 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
         if (stack != null && stack.stackSize > getInventoryStackLimit()) {
                 stack.stackSize = getInventoryStackLimit();
         }  
+	}
+
+	@Override
+	public List<String> getNetworkedFields() {
+		Vector<String> vector = new Vector<String>(3);
+		vector.add("tank");
+		vector.add("tankTrust");
+		vector.add("totalTrust");
+		return vector;
 	}
 
 }

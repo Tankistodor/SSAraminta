@@ -33,9 +33,6 @@ public class SSGuiGasMixer extends GuiContainer {
 	private GuiButton buttonTankP;
 	private GuiButton buttonTankM;
 
-	private SSGuiElementInfoRegion tank1 = new SSGuiElementInfoRegion((this.width - this.xSize) / 2 + 153, (this.height - this.ySize) / 2 + 28, 16, 38,
-			new ArrayList<String>(), this.width, this.height, this);
-
 	public String name;
 
 	public SSGuiGasMixer(IInventory player, SSTileEntityGasMixer tileEntity) {
@@ -76,13 +73,13 @@ public class SSGuiGasMixer extends GuiContainer {
 		int scale = tileEntity.getScaled(0, 38);
 		this.drawTexturedModalRect(x + 26, y + 50 + 38 - scale, 192, 0, 16, scale);
 		
-		scale = tileEntity.getScaled(1, 38); scale = 38;
+		scale = tileEntity.getScaled(1, 38);
 		this.drawTexturedModalRect(x + 62, y + 50 + 38 - scale, 192, 0, 16, scale);
 		
-		scale = tileEntity.getScaled(2, 38); scale = 12;
+		scale = tileEntity.getScaled(2, 38);
 		this.drawTexturedModalRect(x + 98, y + 50 + 38 - scale, 192, 0, 16, scale);
 
-		scale = tileEntity.getScaled(3, 38); scale = 30;
+		scale = tileEntity.getScaled(3, 38);
 		this.drawTexturedModalRect(x + 134, y + 50 + 38 - scale, 192, 0, 16, scale);
 	}
 
