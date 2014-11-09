@@ -55,10 +55,6 @@ public class SSGuiGasMixer extends GuiContainer {
 		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, tileEntity.getFluidTooltips(2), 97, 49, 43 + 36 + 36, 89);
 		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, tileEntity.getFluidTooltips(3), 133, 49, 43 + 36 + 36 + 36, 89);
 
-		// fontRenderer.drawString("Tiny", 8, 6, 4210752);
-		// draws "Inventory" or your regional equivalent
-		// fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"),
-		// 8, ySize - 96 + 2, 4210752);
 
 	}
 

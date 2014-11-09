@@ -273,6 +273,7 @@ public class SSTileEntityCabinet extends TileEntity implements IInventory,IMulti
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbttagcompound) {
+		if (SS.Debug) System.out.println("writeToNBT d");
 		super.writeToNBT(nbttagcompound);
 		NBTTagList nbttaglist = new NBTTagList();
 		for (int i = 0; i < chestContents.length; i++) {

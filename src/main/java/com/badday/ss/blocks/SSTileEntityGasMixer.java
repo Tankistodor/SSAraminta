@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Vector;
 
 import ic2.api.network.INetworkDataProvider;
+import ic2.api.network.INetworkUpdateListener;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -20,11 +21,12 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
+import com.badday.ss.SS;
 import com.badday.ss.api.IGasNetwork;
 import com.badday.ss.api.IGasNetworkSource;
 import com.badday.ss.core.atmos.GasMixture;
 
-public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSource, IFluidHandler, IInventory,INetworkDataProvider {
+public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSource, IFluidHandler, IInventory,INetworkDataProvider, INetworkUpdateListener {
 	
 	public FluidTank[] tank = new FluidTank[4];
 	public byte[] tankTrust = new byte[4];  // Регуряторы напора
@@ -173,6 +175,7 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 
 	@Override
 	public void writeToNBT(NBTTagCompound tags) {
+		if (SS.Debug) System.out.println("writeToNBT d");
 		super.writeToNBT(tags);
 		for (int i = 0; i < 4; i++) {
 			FluidStack liquid = tank[i].getFluid();
@@ -319,6 +322,11 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 		vector.add("tankTrust");
 		vector.add("totalTrust");
 		return vector;
+	}
+
+	@Override
+	public void onNetworkUpdate(String field) {
+		//super.onNetworkUpdate(field);		
 	}
 
 }
