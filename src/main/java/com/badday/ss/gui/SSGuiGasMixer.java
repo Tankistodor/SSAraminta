@@ -64,6 +64,10 @@ public class SSGuiGasMixer extends GuiContainer {
 	    this.buttonList.add(new GuiButton(6, x + 154, y + 49, 12, 20, "+"));
 	    this.buttonList.add(new GuiButton(7, x + 154, y + 69, 12, 20, "-"));
 	    
+	    this.buttonList.add(new GuiButton(8, x + 117, y + 6, 12, 20, "+"));
+	    this.buttonList.add(new GuiButton(9, x + 154, y + 6, 12, 20, "-"));
+	    
+	    
 	  }
 	
 	@Override
@@ -82,10 +86,14 @@ public class SSGuiGasMixer extends GuiContainer {
 		int x = (width - xSize) / 2;
 		int y = (height - ySize) / 2;
 
-		this.fontRendererObj.drawString(Byte.toString(this.tileEntity.tankTrust[0]), 34-4, 30, 4210752);
-		this.fontRendererObj.drawString(Byte.toString(this.tileEntity.tankTrust[1]), 70-4, 30, 4210752);
-		this.fontRendererObj.drawString(Byte.toString(this.tileEntity.tankTrust[2]), 106-4, 30, 4210752);
-		this.fontRendererObj.drawString(Byte.toString(this.tileEntity.tankTrust[3]), 141-4, 30, 4210752);
+		this.fontRendererObj.drawString(Byte.toString(this.tileEntity.tankTrust[0]), 34 - 4, 30, 4210752);
+		this.fontRendererObj.drawString(Byte.toString(this.tileEntity.tankTrust[1]), 70 - 4, 30, 4210752);
+		this.fontRendererObj.drawString(Byte.toString(this.tileEntity.tankTrust[2]), 106 - 4, 30, 4210752);
+		this.fontRendererObj.drawString(Byte.toString(this.tileEntity.tankTrust[3]), 141 - 4, 30, 4210752);
+		
+		this.fontRendererObj.drawString(Byte.toString(this.tileEntity.totalTrust), 133 +6, 12, 4210752);
+		
+		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, "Total Gain Vent", 133 + 6, 12, 133 + 6 + 10, 133 + 6 + 10);
 		
 		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, tileEntity.getFluidTooltips(0), 25, 49, 43, 89);
 		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, tileEntity.getFluidTooltips(1), 61, 49, 43 + 36, 89);
