@@ -3,6 +3,7 @@ package com.badday.ss.blocks;
 import java.util.List;
 import java.util.Vector;
 
+import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkDataProvider;
 import ic2.api.network.INetworkUpdateListener;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +27,10 @@ import com.badday.ss.api.IGasNetwork;
 import com.badday.ss.api.IGasNetworkSource;
 import com.badday.ss.core.atmos.GasMixture;
 
-public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSource, IFluidHandler, IInventory,INetworkDataProvider, INetworkUpdateListener {
+import cpw.mods.fml.common.FMLCommonHandler;
+
+public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSource, IFluidHandler, IInventory, INetworkDataProvider, INetworkUpdateListener,
+		INetworkClientTileEntityEventListener {
 	
 	public FluidTank[] tank = new FluidTank[4];
 	public byte[] tankTrust = new byte[4];  // Регуряторы напора
@@ -43,8 +47,8 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 		super();
 		for (int i = 0; i<4; i++ ) {
 			this.tank[i] = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10);
-			this.tankTrust[i] = 33; // 0-100
-			this.totalTrust = 1; // 0-100
+			this.tankTrust[i] = 0; // 0-99
+			this.totalTrust = 1; // 0-15
 		}
 	}
 
@@ -69,12 +73,55 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 		
 	}
 
+	/**
+	 * Called on server side when Player clicked the button on client side
+	 * @param player
+	 * @param event
+	 */
+	public void onNetworkEvent(EntityPlayer player, int event)
+	  {
+	    switch (event) { 
+	    	case 0:
+	    		if (this.tankTrust[0] < 89)
+	    			this.tankTrust[0]++;
+	    		break;
+	    	case 1:
+	    		if (this.tankTrust[0] > 0)
+	    			this.tankTrust[0]--;
+	    		break;
+	    	case 2:
+	    		if (this.tankTrust[1] < 89)
+	    			this.tankTrust[1]++;
+	    		break;
+	    	case 3:
+	    		if (this.tankTrust[1] > 0)
+	    			this.tankTrust[1]--;
+	    		break;
+	    	case 4:
+	    		if (this.tankTrust[2] < 89)
+	    			this.tankTrust[2]++;
+	    		break;
+	    	case 5:
+	    		if (this.tankTrust[2] > 0)
+	    			this.tankTrust[2]--;
+	    		break;
+	    	case 6:
+	    		if (this.tankTrust[3] < 89)
+	    			this.tankTrust[3]++;
+	    		break;
+	    	case 7:
+	    		if (this.tankTrust[3] > 0)
+	    			this.tankTrust[3]--;
+	    		break;
+	    }
+	  }
+	
 	@Override
 	public boolean canDrain(ForgeDirection from, Fluid fluid) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
+	
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid) {
 		if (from.ordinal() > 1 && from.ordinal() < 6)

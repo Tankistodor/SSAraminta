@@ -118,16 +118,16 @@ public class SSBlockMultiFake extends BlockContainer {
 	 * Delete main block if fakeblock is destroy
 	 */
     @Override
-    public void breakBlock(World world, int x, int y, int z, Block par5, int par6)
+    public void breakBlock(World world, int x, int y, int z, Block block, int par6)
     {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
 
         if (tileEntity instanceof SSTileEntityMultiFake)
         {
-            ((SSTileEntityMultiFake) tileEntity).onBlockRemoval();
+            ((SSTileEntityMultiFake) tileEntity).onBlockRemoval(tileEntity);
         }
 
-        super.breakBlock(world, x, y, z, par5, par6);
+        super.breakBlock(world, x, y, z, block, par6);
     }
 	
 	/**

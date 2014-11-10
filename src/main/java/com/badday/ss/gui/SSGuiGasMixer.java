@@ -1,12 +1,12 @@
 package com.badday.ss.gui;
 
+import ic2.core.IC2;
+import ic2.core.network.NetworkManager;
 import ic2.core.util.GuiTooltiphelper;
-
-import java.util.ArrayList;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
@@ -20,6 +20,7 @@ public class SSGuiGasMixer extends GuiContainer {
 	private static final ResourceLocation guiTexture = new ResourceLocation("ss", "textures/gui/GuiGasMixer.png");
 
 	private SSTileEntityGasMixer tileEntity;
+	private IInventory player;
 
 	private GuiButton buttonTank1p;
 	private GuiButton buttonTank1m;
@@ -39,9 +40,44 @@ public class SSGuiGasMixer extends GuiContainer {
 		super(new SSContainerGasMixer(player, tileEntity));
 		this.ySize = 176;
 		this.tileEntity = tileEntity;
+		this.player = player;
 		this.name = StatCollector.translateToLocal("gasMixer.gui.name");
 	}
 
+	@Override
+	public void initGui()
+	  {
+	    super.initGui();
+	    
+	    int x = (width - xSize) / 2;
+		int y = (height - ySize) / 2;
+	    
+	    this.buttonList.add(new GuiButton(0, x + 46, y + 49, 12, 20, "+"));
+	    this.buttonList.add(new GuiButton(1, x + 46, y + 69, 12, 20, "-"));
+	    
+	    this.buttonList.add(new GuiButton(2, x + 83, y + 49, 12, 20, "+"));
+	    this.buttonList.add(new GuiButton(3, x + 83, y + 69, 12, 20, "-"));
+	    
+	    this.buttonList.add(new GuiButton(4, x + 117, y + 49, 12, 20, "+"));
+	    this.buttonList.add(new GuiButton(5, x + 117, y + 69, 12, 20, "-"));
+	    
+	    this.buttonList.add(new GuiButton(6, x + 154, y + 49, 12, 20, "+"));
+	    this.buttonList.add(new GuiButton(7, x + 154, y + 69, 12, 20, "-"));
+	    
+	    this.buttonList.add(new GuiButton(8, x + 117, y + 6, 12, 20, "+"));
+	    this.buttonList.add(new GuiButton(9, x + 154, y + 6, 12, 20, "-"));
+	    
+	    
+	  }
+	
+	@Override
+	protected void actionPerformed(GuiButton guibutton)
+	  {
+	    super.actionPerformed(guibutton);
+	    ((NetworkManager)IC2.network.get()).initiateClientTileEntityEvent(this.tileEntity, guibutton.id);
+	  }
+	
+	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int param1, int param2) {
 		// draw text and stuff here
@@ -49,13 +85,20 @@ public class SSGuiGasMixer extends GuiContainer {
 		this.fontRendererObj.drawString(this.name, 65, 5, 4210752);
 		int x = (width - xSize) / 2;
 		int y = (height - ySize) / 2;
+
+		this.fontRendererObj.drawString(Byte.toString(this.tileEntity.tankTrust[0]), 34 - 4, 30, 4210752);
+		this.fontRendererObj.drawString(Byte.toString(this.tileEntity.tankTrust[1]), 70 - 4, 30, 4210752);
+		this.fontRendererObj.drawString(Byte.toString(this.tileEntity.tankTrust[2]), 106 - 4, 30, 4210752);
+		this.fontRendererObj.drawString(Byte.toString(this.tileEntity.tankTrust[3]), 141 - 4, 30, 4210752);
+		
+		this.fontRendererObj.drawString(Byte.toString(this.tileEntity.totalTrust), 133 +6, 12, 4210752);
+		
+		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, "Total Gain Vent", 133 + 6, 12, 133 + 6 + 10, 133 + 6 + 10);
 		
 		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, tileEntity.getFluidTooltips(0), 25, 49, 43, 89);
 		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, tileEntity.getFluidTooltips(1), 61, 49, 43 + 36, 89);
 		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, tileEntity.getFluidTooltips(2), 97, 49, 43 + 36 + 36, 89);
 		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, tileEntity.getFluidTooltips(3), 133, 49, 43 + 36 + 36 + 36, 89);
-
-
 	}
 
 	@Override

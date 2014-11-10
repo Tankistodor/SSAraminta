@@ -37,6 +37,7 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 	public boolean added_to_airvent_net = false;
 	/** BaySize */
 	public int baySize = 0;
+	public int lastBaySize = 0;
 	public boolean normalGas = true;
 	public IGasNetwork gasNetwork;
 	
@@ -81,15 +82,21 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 				this.active = this.findSealedBay.getActive();
 				this.baySize = this.findSealedBay.getSize();
 				
-				
 				if (this.baySize > 0) {
-					this.tank.setCapacity(this.baySize * 10);
 					this.sealed = true;
 				} else {
-					this.tank = new GasMixture();
-					this.tank.setCapacity(0);
 					this.sealed = false;
 				}
+
+				if ((this.tank == null ) || (this.lastBaySize == 0 && this.baySize > 0)) {
+					this.tank = new GasMixture();					
+				}
+				
+				if (this.lastBaySize != this.baySize) {
+					this.tank.setCapacity(this.baySize * 10);
+				}
+				
+				this.lastBaySize = this.baySize;
 				
 				boolean newActive = this.active && this.sealed;
 				
@@ -198,7 +205,7 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 	public IGasNetwork getGasNetwork() {
 		if (gasNetwork == null) {
 			this.gasNetwork = new SSGasNetwork(worldObj);
-			if (this.getBlockMetadata() == 0)
+			if (this.getBlockMetadata() == 0 || this.getBlockMetadata() == 2)
 				GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(worldObj,new BlockVec3(this.xCoord,this.yCoord+1,this.zCoord))); else
 					GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(worldObj,new BlockVec3(this.xCoord,this.yCoord-1,this.zCoord)));
 		}
