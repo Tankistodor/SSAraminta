@@ -69,12 +69,13 @@ public class SSBlockGasMixer extends BlockContainer implements IGasNetworkElemen
 	public IIcon getIcon(int side, int metadata) {
 
 		if (side > 1 && side < 5) {
-			if (metadata == 0) // Inactive state
+			/*if (metadata == 0) // Inactive state
 			{
 				return iconBuffer[ICON_INACTIVE_SIDE];
 			} else if (metadata == 1) {
 				return iconBuffer[ICON_ACTIVE_SIDE];
-			}
+			}*/
+			return iconBuffer[ICON_INACTIVE_SIDE];
 		}
 		if (side == 1) {
 			return iconBuffer[ICON_TOP];
@@ -92,10 +93,11 @@ public class SSBlockGasMixer extends BlockContainer implements IGasNetworkElemen
 
 		if (side > 1 && side < 6) {
 			SSTileEntityGasMixer thistile = (SSTileEntityGasMixer) iblockaccess.getTileEntity(x, y, z);
-			if (thistile.getTankInfo(ForgeDirection.getOrientation(side-2))[0] != null) // Inactive state
+			//if (thistile.getTankInfo(ForgeDirection.getOrientation(side-2))[0] != null) // Inactive state
+			if (thistile.getTankInfo(ForgeDirection.getOrientation(side))[0] != null) // Inactive state
 			{
-				if (thistile.getTankInfo(ForgeDirection.getOrientation(side-2))[0].fluid != null &&
-						thistile.getTankInfo(ForgeDirection.getOrientation(side-2))[0].fluid.amount>0) {
+				if (thistile.getTankInfo(ForgeDirection.getOrientation(side))[0].fluid != null &&
+						thistile.getTankInfo(ForgeDirection.getOrientation(side))[0].fluid.amount>0) {
 					return iconBuffer[ICON_ACTIVE_SIDE];	
 				} else {
 					return iconBuffer[ICON_INACTIVE_SIDE];
