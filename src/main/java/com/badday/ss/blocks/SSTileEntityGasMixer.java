@@ -49,6 +49,11 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 	}
 
 	@Override
+	public boolean hasTileEntity(int metadata) {
+		return true;
+	}
+	
+	@Override
 	public IGasNetwork getNetwork() {
 		return this.gasNetwork;
 	}
