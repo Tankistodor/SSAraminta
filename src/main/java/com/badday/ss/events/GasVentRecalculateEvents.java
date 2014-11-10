@@ -23,7 +23,7 @@ public class GasVentRecalculateEvents  extends Event {
 				
 				if (SS.Debug) {
 					System.out.println("    "+vent.getTank().toString());
-					System.out.println("    Pressure: "+vent.getPressure() + " hPa");
+					System.out.println("    Pressure: "+vent.getPressure() + " hPa Atmos right:" + vent.getGasIsNormal());
 				}
 			}
 			

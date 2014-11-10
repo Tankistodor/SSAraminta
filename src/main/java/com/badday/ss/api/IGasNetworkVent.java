@@ -61,4 +61,6 @@ public interface IGasNetworkVent {
 	public GasMixture getTank();
 
 	public float getPressure();
+	
+	public boolean getGasIsNormal();
 }

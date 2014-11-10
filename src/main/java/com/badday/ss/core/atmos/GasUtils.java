@@ -15,6 +15,7 @@ import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
 import com.badday.ss.api.IGasNetworkSource;
 import com.badday.ss.api.IGasNetworkVent;
+import com.badday.ss.blocks.SSTileEntityAirVent;
 import com.badday.ss.core.utils.BlockVec3;
 import com.badday.ss.events.RebuildNetworkEvent;
 
@@ -187,6 +188,21 @@ public class GasUtils {
 		return validConnections;
 	}
 	
+	public static boolean checkAtmos(World w, SSTileEntityAirVent vent, GasMixture tank) {
+		
+		float pressure = vent.getPressure();
+		
+		if (pressure < 9 || pressure > 11) return false;
+		
+		int part = tank.getPercentOfGas("fluid.oxygen");
+		if ((part < 18) || (part > 30)) return false;
+		
+		part = tank.getPercentOfGas("fluid.nitrogen");
+		if ((part < 70) || (part > 80)) return false;
+		
+		//System.out.println("DDD: "+tank.getPercentOfGas("fluid.oxygen"));
+		return true;
+	}
 }
 
 

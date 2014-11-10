@@ -93,4 +93,13 @@ public class GasMixture {
 		//return GasUtils.getGasPressure(this,this.capacity,SSConfig.ssDefaultTemperature);
 	}
 	
+	public int getPercentOfGas(String name) {
+		for (FluidTank tank: mixtureTank) {
+			if (tank.getFluid().getUnlocalizedName().equals(name)) {
+				return tank.getFluidAmount() * 100 / this.getCapacity();
+			}
+		}
+		return 0;
+	}
+	
 }

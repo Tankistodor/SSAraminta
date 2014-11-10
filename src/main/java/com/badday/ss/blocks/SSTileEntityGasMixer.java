@@ -52,7 +52,7 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 		}
 	}
 
-	@Override
+	
 	public boolean hasTileEntity(int metadata) {
 		return true;
 	}
@@ -113,6 +113,15 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 	    		if (this.tankTrust[3] > 0)
 	    			this.tankTrust[3]--;
 	    		break;
+	    	case 8:
+	    		if (this.totalTrust > 0)
+	    			this.totalTrust--;
+	    		break;
+	    	case 9:
+	    		if (this.totalTrust < 10)
+	    			this.totalTrust++;
+	    		break;
+	    	
 	    }
 	  }
 	

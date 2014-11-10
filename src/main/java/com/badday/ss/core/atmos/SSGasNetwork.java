@@ -187,12 +187,6 @@ public class SSGasNetwork implements IGasNetwork {
 	
 	public void printDebugInfo() {
 		System.out.println("NET : " + this);
-		/*System.out.println("    pipes: " + this.getPipes().size());
-		System.out.println("    sources: " + this.getSources().size());
-		System.out.println("    vents: " + this.getVents().size());
-		System.out.println("    baySize: " + this.getVetnSize());
-		//System.out.println("    pressure: " + this.getPressure() + " hPa");
-		System.out.println("    total pressure: " + this.totalPressure + " hPa");*/
 	}
 
 	@Override

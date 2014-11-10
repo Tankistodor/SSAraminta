@@ -38,7 +38,7 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 	/** BaySize */
 	public int baySize = 0;
 	public int lastBaySize = 0;
-	public boolean normalGas = true;
+	public boolean normalGas = false;
 	public IGasNetwork gasNetwork;
 	
 	public GasMixture tank = new GasMixture();
@@ -88,7 +88,8 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 					this.sealed = false;
 				}
 
-				if ((this.tank == null ) || (this.lastBaySize == 0 && this.baySize > 0)) {
+				//if ((this.tank == null ) || (this.lastBaySize == 0 && this.baySize > 0)) {
+				if (this.tank == null || this.sealed == false) {
 					this.tank = new GasMixture();					
 				}
 				
@@ -100,8 +101,10 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 				
 				boolean newActive = this.active && this.sealed;
 				
+				this.normalGas = GasUtils.checkAtmos(this.worldObj, this, this.tank);
 				if (newActive != oldActive) {
 					updateMeta(newActive);
+					this.normalGas = GasUtils.checkAtmos(this.worldObj, this, this.tank);
 				}
 				
 			}
@@ -153,21 +156,10 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 		}
 	}
 
-	/**
-	 * Gas suitable for breathing
-	 * 
-	 * @return
-	 */
-	public boolean isNormalAir() {
-		if (this.getPressure() > 11) return false;
-		if (this.getPressure() < 9) return false;
-		//TODO: Add gas mixture check
-		return true;
-	}
-
 	@Override
 	public void readFromNBT(NBTTagCompound tags) {
 		super.readFromNBT(tags);
+		this.tank = new GasMixture();
 		int count = tags.getInteger("tankCount");
 		this.tank.setCapacity(tags.getInteger("tankCapacity"));
 		for (int i=0; i < count; i++) {
@@ -184,6 +176,7 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 		tags.setInteger("tankCount", this.tank.mixtureTank.size());
 		tags.setInteger("tankCapacity", this.tank.getCapacity());
 		int i = 0;
+
 		for (FluidTank t : this.tank.mixtureTank) {
 			FluidStack liquid = t.getFluid();
 			if (liquid != null && liquid.amount > 0) {
@@ -279,6 +272,11 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 		} else {
 			this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, meta & 1, 3);
 		}
+	}
+
+	@Override
+	public boolean getGasIsNormal() {
+		return this.normalGas;
 	}
 	
 }

@@ -64,8 +64,8 @@ public class SSGuiGasMixer extends GuiContainer {
 	    this.buttonList.add(new GuiButton(6, x + 154, y + 49, 12, 20, "+"));
 	    this.buttonList.add(new GuiButton(7, x + 154, y + 69, 12, 20, "-"));
 	    
-	    this.buttonList.add(new GuiButton(8, x + 117, y + 6, 12, 20, "+"));
-	    this.buttonList.add(new GuiButton(9, x + 154, y + 6, 12, 20, "-"));
+	    this.buttonList.add(new GuiButton(8, x + 117, y + 6, 12, 20, "-"));
+	    this.buttonList.add(new GuiButton(9, x + 154, y + 6, 12, 20, "+"));
 	    
 	    
 	  }
