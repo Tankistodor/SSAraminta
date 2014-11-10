@@ -23,20 +23,6 @@ public class SSTileEntityMultiFake extends TileEntity {
 		}
 	}
 
-	
-	
-	
-	public void onBlockRemoval() {
-		if (this.mainBlockPosition != null) {
-			TileEntity tileEntity = this.worldObj.getTileEntity(this.mainBlockPosition.x, this.mainBlockPosition.y, this.mainBlockPosition.z);
-
-			if (tileEntity != null && tileEntity instanceof IMultiBlock) {
-				IMultiBlock mainBlock = (IMultiBlock) tileEntity;
-				mainBlock.onDestroy(this);
-			}
-		}
-	}
-
 	public boolean onBlockActivated(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer) {
 		if (this.mainBlockPosition != null) {
 			TileEntity tileEntity = this.worldObj.getTileEntity(this.mainBlockPosition.x, this.mainBlockPosition.y, this.mainBlockPosition.z);
@@ -70,6 +56,23 @@ public class SSTileEntityMultiFake extends TileEntity {
 		if (this.mainBlockPosition != null) {
 			nbt.setTag("mainBlockPosition", this.mainBlockPosition.writeToNBT(new NBTTagCompound()));
 		}
+	}
+
+	public void onBlockRemoval(TileEntity callingBlock) {
+
+		if (this.mainBlockPosition != null) {
+			TileEntity tileEntity = this.worldObj.getTileEntity(this.mainBlockPosition.x, this.mainBlockPosition.y, this.mainBlockPosition.z);
+
+			if (tileEntity != null && tileEntity instanceof IMultiBlock) {
+				IMultiBlock mainBlock = (IMultiBlock) tileEntity;
+				mainBlock.onDestroy(this);
+			}
+		}
+
+		final BlockVec3 thisBlock = new BlockVec3(this);
+		this.worldObj.setBlockToAir(thisBlock.x, thisBlock.y + 1, thisBlock.z);
+		this.worldObj.func_147480_a(thisBlock.x, thisBlock.y, thisBlock.z, true);
+
 	}
 
 }

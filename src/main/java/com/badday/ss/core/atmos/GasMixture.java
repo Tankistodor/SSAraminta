@@ -20,6 +20,9 @@ public class GasMixture {
 		int amount = 0;
 		boolean fluidExists = false;
 		
+		if (this.capacity - this.getTotalAmount() < resource.amount) 
+			return 0;
+		
 		for (FluidTank tank: mixtureTank) {
 			if (tank.getFluid() != null && tank.getFluid().isFluidEqual(resource)) {
 				amount = tank.fill(resource, true);
@@ -66,6 +69,10 @@ public class GasMixture {
 	
 	public void setCapacity(int value) {
 		this.capacity = value;
+		for (FluidTank tank: mixtureTank) {
+			tank.setCapacity(this.capacity);
+		}
+		
 	}
 
 	public void fill(GasMixture gas) {

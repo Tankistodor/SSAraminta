@@ -202,16 +202,16 @@ public class SSBlockCabinet extends BlockContainer {
 	
 	
     @Override
-    public void breakBlock(World var1, int var2, int var3, int var4, Block var5, int var6)
+    public void breakBlock(World world, int x, int y, int z, Block block, int par6)
     {
-        final TileEntity var9 = var1.getTileEntity(var2, var3, var4);
+        final TileEntity tileEntity = world.getTileEntity(x, y, z);
 
-        if (var9 instanceof SSTileEntityCabinet)
+        if (tileEntity instanceof SSTileEntityCabinet)
         {
-            ((SSTileEntityCabinet) var9).onDestroy(var9);
+            ((SSTileEntityCabinet) tileEntity).onDestroy(tileEntity);
         }
 
-        super.breakBlock(var1, var2, var3, var4, var5, var6);
+        super.breakBlock(world, x, y, z, block, par6);
     }
 
 	@Override
