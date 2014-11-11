@@ -3,15 +3,20 @@ package com.badday.ss.blocks;
 import java.util.List;
 import java.util.Vector;
 
+import ic2.api.energy.event.EnergyTileLoadEvent;
+import ic2.api.energy.event.EnergyTileUnloadEvent;
+import ic2.api.energy.tile.IEnergySink;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkDataProvider;
 import ic2.api.network.INetworkUpdateListener;
+import ic2.core.IC2;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -30,7 +35,7 @@ import com.badday.ss.core.atmos.GasMixture;
 import cpw.mods.fml.common.FMLCommonHandler;
 
 public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSource, IFluidHandler, IInventory, INetworkDataProvider, INetworkUpdateListener,
-		INetworkClientTileEntityEventListener {
+		INetworkClientTileEntityEventListener,IEnergySink {
 	
 	public FluidTank[] tank = new FluidTank[4];
 	public byte[] tankTrust = new byte[4];  // Регуряторы напора
@@ -42,6 +47,12 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 	public IGasNetwork gasNetwork;
 	
 	private ItemStack chargeSlot;
+	
+	// Energy
+	public double energy = 0.0D;
+	public int maxEnergy = 5000;
+	private boolean addedToEnergyNet = false;
+	public float guiChargeLevel;
 	
 	public SSTileEntityGasMixer() {
 		super();
@@ -232,6 +243,8 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 			chargeSlot = ItemStack.loadItemStackFromNBT(nbttagcompound1);
 		}
 
+		
+		this.energy = tags.getDouble("energy");
 	}
 
 	@Override
@@ -262,6 +275,7 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 
 		tags.setTag("Items", nbttaglist);
 		
+		tags.setDouble("energy", this.energy);
 	}
 	
 	public GasMixture getMyGas() {
@@ -277,21 +291,7 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 		return result;
 	}
 	
-	@Override
-	public void invalidate() {
-		super.invalidate();
-		if (this.gasNetwork != null) {
-			this.getNetwork().removeSource(this);
-		}
-	}
 	
-	@Override
-	public void onChunkUnload() {
-		super.onChunkUnload();
-		if (this.gasNetwork != null) {
-			this.getNetwork().removeSource(this);
-		}
-	}
 
 	
 
@@ -382,6 +382,8 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 		vector.add("tank");
 		vector.add("tankTrust");
 		vector.add("totalTrust");
+		vector.add("energy");
+		vector.add("guiChargeLevel");
 		return vector;
 	}
 
@@ -389,5 +391,105 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 	public void onNetworkUpdate(String field) {
 		//super.onNetworkUpdate(field);		
 	}
+	
+	@Override
+	public void validate() {
+		if (!this.worldObj.isRemote) {
+		      MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+
+		      this.addedToEnergyNet = true;
+		    }
+		super.validate();
+	}
+	
+	@Override
+	public void invalidate() {
+		if ((!this.worldObj.isRemote) && (this.addedToEnergyNet)) {
+			MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
+
+			this.addedToEnergyNet = false;
+		}
+		super.invalidate();
+		if (this.gasNetwork != null) {
+			this.getNetwork().removeSource(this);
+		}
+	}
+
+	@Override
+	public void onChunkUnload() {
+		if ((!this.worldObj.isRemote) && (this.addedToEnergyNet)) {
+			MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
+
+			this.addedToEnergyNet = false;
+		}
+		super.onChunkUnload();
+		if (this.gasNetwork != null) {
+			this.getNetwork().removeSource(this);
+		}
+	}
+	
+	@Override
+	public void updateEntity()
+	  {
+	    super.updateEntity();
+
+	    if (!this.worldObj.isRemote) {
+	      if (this.maxEnergy - this.energy >= 1.0D) {
+	    	  //TODO: Add chargeSlot
+	        /*double amount = this.dischargeSlot.discharge(this.maxEnergy - this.energy, false);
+
+	        if (amount > 0.0D) {
+	          this.energy += amount;*/
+
+	          markDirty();
+	        }
+	      }
+
+	      this.guiChargeLevel = Math.min(1.0F, (float)this.energy / this.maxEnergy);
+	  }
+	
+
+	@Override
+	public boolean acceptsEnergyFrom(TileEntity emitter, ForgeDirection direction) {
+		if (direction.equals(ForgeDirection.DOWN)) return true;
+		return false;
+	}
+
+
+	@Override
+	public double getDemandedEnergy() {
+		return this.maxEnergy - this.energy;
+	}
+
+
+	@Override
+	public int getSinkTier() {
+		return 1;
+	}
+
+
+	@Override
+	public double injectEnergy(ForgeDirection directionFrom, double amount, double voltage) {
+		 if (this.energy >= this.maxEnergy) {
+		      return amount;
+		    }
+		    this.energy += amount;
+		    return 0.0D;
+	}
+	
+	public double getEnergy()
+	  {
+	    return this.energy;
+	  }
+
+	  public boolean useEnergy(double amount)
+	  {
+	    if (this.energy >= amount) {
+	      this.energy -= amount;
+
+	      return true;
+	    }
+	    return false;
+	  }
 
 }

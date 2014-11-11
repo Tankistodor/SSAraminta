@@ -64,6 +64,8 @@ public class SSContainerGasMixer extends Container implements INetworkTileEntity
 		vector.add("tank");
 		vector.add("tankTrust");
 		vector.add("totalTrust");
+		vector.add("energy");
+		vector.add("guiChargeLevel");
 		return vector;
 	}
 

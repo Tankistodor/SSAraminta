@@ -86,6 +86,9 @@ public class SSGuiGasMixer extends GuiContainer {
 		int x = (width - xSize) / 2;
 		int y = (height - ySize) / 2;
 
+		this.fontRendererObj.drawString(Double.toString(this.tileEntity.energy), 5, 5, 4210752);
+		this.fontRendererObj.drawString(Float.toString(this.tileEntity.guiChargeLevel), 5, 15, 4210752);
+		
 		this.fontRendererObj.drawString(Byte.toString(this.tileEntity.tankTrust[0]), 34 - 4, 30, 4210752);
 		this.fontRendererObj.drawString(Byte.toString(this.tileEntity.tankTrust[1]), 70 - 4, 30, 4210752);
 		this.fontRendererObj.drawString(Byte.toString(this.tileEntity.tankTrust[2]), 106 - 4, 30, 4210752);
