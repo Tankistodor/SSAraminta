@@ -1,8 +1,10 @@
-package com.badday.ss.core.utils;
+package com.badday.ss.core.atmos;
 
 
 import com.badday.ss.SSConfig;
 import com.badday.ss.api.SSAPI;
+import com.badday.ss.core.utils.BlockVec3;
+
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -11,7 +13,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 public class Pathfinding {
-  public static int PATH_ITERATIONS = 1000;
+  public static int PATH_ITERATIONS = 128;
 
   private World world;
   private BlockVec3 start;

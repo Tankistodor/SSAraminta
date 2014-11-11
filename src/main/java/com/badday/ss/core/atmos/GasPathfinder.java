@@ -14,6 +14,7 @@ import com.badday.ss.api.IGasNetworkSource;
 import com.badday.ss.api.IGasNetworkVent;
 import com.badday.ss.core.utils.BlockVec3;
 
+@Deprecated
 public class GasPathfinder {
 
 	public GasPathfinder(BlockVec3 start) {

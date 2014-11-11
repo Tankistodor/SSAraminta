@@ -92,7 +92,7 @@ public class SSConfig {
 	/**
 	 * max distance for pathfinder check airvent
 	 */
-	public static int ssPathfinderMaxDistance = 64; 
+	public static int ssPathfinderMaxDistance = 32; 
 	
 	public static int ssCabinetSize =  36;
 	

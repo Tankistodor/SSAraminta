@@ -1,6 +1,8 @@
 package com.badday.ss.core.utils;
 
 import com.badday.ss.SS;
+import com.badday.ss.core.atmos.Pathfinding;
+
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.List;
 /**
  * Created by userad on 26/10/14.
  */
+@Deprecated
 public final class PressureCalculator {
   private PressureCalculator() {}
 
@@ -16,7 +19,7 @@ public final class PressureCalculator {
   public static double getPressureAt(World world, BlockVec3 coords) {
 
     //First - search nearby airvents
-    List airvents = AirVentNet.getNearbyAirvents(coords.x, coords.y, coords.z);
+    List airvents = AirVentNet.getNearbyAirvents(world, coords.x, coords.y, coords.z);
     if (airvents.isEmpty()) {
       return 0.0D; //You are dead, man
     }
