@@ -41,6 +41,8 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 	public boolean normalGas = true;
 	public IGasNetwork gasNetwork;
 	
+	private boolean fistLoadFlag = true;
+	
 	public GasMixture tank = new GasMixture();
 
 	@Override
@@ -60,10 +62,7 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 		}
 		
 		
-		if (!added_to_airvent_net) {
-			MinecraftForge.EVENT_BUS.post(new AirNetAddEvent(new BlockVec3(this),this));
-			added_to_airvent_net = true;
-		}
+		//registeredAirVent(); registered only if vent is Active and Sealed
 
 		if (!this.worldObj.isRemote && this.ticks % COOLDOWN == 0) {
 
@@ -89,7 +88,11 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 				}
 
 				if ((this.tank == null ) || (this.lastBaySize == 0 && this.baySize > 0)) {
-					this.tank = new GasMixture();					
+					if (fistLoadFlag) {
+						this.fistLoadFlag = false;
+					} else {
+						this.tank = new GasMixture();
+					}
 				}
 				
 				if (this.lastBaySize != this.baySize) {
@@ -131,10 +134,7 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 	public void invalidate() {
 		super.invalidate();
 		this.findSealedBay = null;
-		if (added_to_airvent_net) {
-			MinecraftForge.EVENT_BUS.post(new AirNetRemoveEvent(new BlockVec3(this)));
-			added_to_airvent_net = false;
-		}
+		unregisteredAirVent();
 		if (this.gasNetwork != null) {
 			this.getGasNetwork().removeVent(this);;
 		}
@@ -144,10 +144,7 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 	@Override
 	public void onChunkUnload() {
 		super.onChunkUnload();
-		if (added_to_airvent_net) {
-			MinecraftForge.EVENT_BUS.post(new AirNetRemoveEvent(new BlockVec3(this)));
-			added_to_airvent_net = false;
-		}
+		unregisteredAirVent();
 		if (this.gasNetwork != null) {
 			this.getGasNetwork().removeVent(this);;
 		}
@@ -168,6 +165,7 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 	@Override
 	public void readFromNBT(NBTTagCompound tags) {
 		super.readFromNBT(tags);
+		this.tank = new GasMixture();
 		int count = tags.getInteger("tankCount");
 		this.tank.setCapacity(tags.getInteger("tankCapacity"));
 		for (int i=0; i < count; i++) {
@@ -187,10 +185,10 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 		for (FluidTank t : this.tank.mixtureTank) {
 			FluidStack liquid = t.getFluid();
 			if (liquid != null && liquid.amount > 0) {
-				i++;
 				tags.setBoolean("hasFluid"+i, liquid != null);
 				tags.setString("fluidName"+i, liquid.getFluid().getName());
 	            tags.setInteger("amount"+i, liquid.amount);
+	            i++;
 			}
 		}
 	}
@@ -275,10 +273,25 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 	public void updateMeta(boolean newActive) {
 		int meta = this.getBlockMetadata();
 		if (newActive) {
+			registeredAirVent();
 			this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, meta | 2, 3);
 		} else {
+			unregisteredAirVent();
 			this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, meta & 1, 3);
 		}
 	}
+
+	public void registeredAirVent() {
+		if (!added_to_airvent_net) {
+			MinecraftForge.EVENT_BUS.post(new AirNetAddEvent(new BlockVec3(this),this));
+			added_to_airvent_net = true;
+		}
+	}
 	
+	public void unregisteredAirVent() {
+		if (added_to_airvent_net) {
+			MinecraftForge.EVENT_BUS.post(new AirNetRemoveEvent(new BlockVec3(this)));
+			added_to_airvent_net = false;
+		}
+	}
 }

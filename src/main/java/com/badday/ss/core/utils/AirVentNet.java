@@ -2,6 +2,8 @@ package com.badday.ss.core.utils;
 
 import com.badday.ss.SSConfig;
 import com.badday.ss.blocks.SSTileEntityAirVent;
+
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -31,7 +33,7 @@ public final class AirVentNet {
     airvents_coord_x.remove(vent.x);
   }
 
-  public static List getNearbyAirvents(int x, int y, int z) {
+  public static List getNearbyAirvents(World w, int x, int y, int z) {
     int radius = SSConfig.ssPathfinderMaxDistance;
     BlockVec3 candidate;
     List neighbours = new ArrayList();
@@ -39,7 +41,7 @@ public final class AirVentNet {
       if(airvents_coord_x.get(i) != null) {
         candidate = (BlockVec3) airvents.get(airvents_coord_x.get(i));
         if(((z - candidate.z) * (z - candidate.z) + (y - candidate.y) * (y - candidate.y)) < radius * radius) {
-          neighbours.add(candidate);
+        		neighbours.add(candidate);
         }
       }
     }

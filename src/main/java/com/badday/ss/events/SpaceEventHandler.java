@@ -13,10 +13,9 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 
 import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
+import com.badday.ss.core.atmos.FindNearestVentJob;
 import com.badday.ss.core.utils.AirVentNet;
 import com.badday.ss.core.utils.BlockVec3;
-import com.badday.ss.core.utils.Pathfinding;
-import com.badday.ss.core.utils.PressureCalculator;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
@@ -29,6 +28,8 @@ public class SpaceEventHandler
 	private HashMap<String, Integer> vacuumPlayers;
 	private HashMap<String, Integer> cloakPlayersTimers;
 	private long lastTimer = 0;
+	
+	private FindNearestVentJob job;
 
 	private final int CLOAK_CHECK_TIMEOUT_SEC = 5;
 
@@ -73,12 +74,33 @@ public class SpaceEventHandler
 		}*/
 		
 		//Ok. get pressure
-		if (entity.worldObj.provider.dimensionId == SS.instance.spaceDimID) {
+		int distance = 0;
+		if (entity.worldObj.provider.dimensionId == SS.instance.spaceDimID && entity.worldObj.isRemote) {
 			this.lastTimer++;
-			if (this.lastTimer > 20 * 2) {
-				double pressure = PressureCalculator.getPressureAt(entity.worldObj, new BlockVec3(entity));
+			
+			if (this.lastTimer % 80 == 0) { // 160 - for 1 player
+
+				long time1 = System.nanoTime();
+				
+				//int distance = FindNearestVent.getDistance(entity.worldObj, new BlockVec3(entity));
+				
+				if (job == null) {
+					job = new FindNearestVentJob(entity.worldObj, new BlockVec3(entity));
+					job.run();
+				} else {
+					if (!job.isAlive()) {
+						distance = job.getDistance();
+					}
+				}
+				
+				if (job.isDone()) {
+					job = new FindNearestVentJob(entity.worldObj, new BlockVec3(entity));
+					job.run();
+				}
+				
 				if(SS.Debug) {
-					// TEMP System.out.println("[" + SS.MODNAME + "] Pressure is: " + pressure);
+					long time2 = System.nanoTime();
+					System.out.println("[" + SS.MODNAME + "] Distance is: " + distance + " time: " + (time2 - time1) / 1000000.0D + "ms");
 				}
 			}
 		}
