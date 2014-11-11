@@ -262,7 +262,6 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 	@Override
 	public void setActive(boolean newActive) {
 		this.active = newActive;
-		
 	}
 
 	@Override

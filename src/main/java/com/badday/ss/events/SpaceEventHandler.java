@@ -75,7 +75,8 @@ public class SpaceEventHandler
 		
 		//Ok. get pressure
 		int distance = 0;
-		if (entity.worldObj.provider.dimensionId == SS.instance.spaceDimID && entity.worldObj.isRemote) {
+		if (entity.worldObj.provider.dimensionId == SS.instance.spaceDimID && !entity.worldObj.isRemote) {
+			
 			this.lastTimer++;
 			
 			if (this.lastTimer % 80 == 0) { // 160 - for 1 player
@@ -91,6 +92,10 @@ public class SpaceEventHandler
 					if (!job.isAlive()) {
 						distance = job.getDistance();
 					}
+					
+					if (!job.getValidAtmos()) {
+						entity.attackEntityFrom(DamageSource.drown, 1);
+					}
 				}
 				
 				if (job.isDone()) {
@@ -102,6 +107,8 @@ public class SpaceEventHandler
 					long time2 = System.nanoTime();
 					System.out.println("[" + SS.MODNAME + "] Distance is: " + distance + " time: " + (time2 - time1) / 1000000.0D + "ms");
 				}
+				
+				
 			}
 		}
 		

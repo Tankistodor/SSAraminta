@@ -3,9 +3,10 @@ package com.badday.ss.core.atmos;
 import java.util.Date;
 import java.util.List;
 
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-import com.badday.ss.SS;
+import com.badday.ss.api.IGasNetworkVent;
 import com.badday.ss.core.utils.AirVentNet;
 import com.badday.ss.core.utils.BlockVec3;
 
@@ -14,6 +15,7 @@ public class FindNearestVentJob extends Thread {
 	
 	private World world;
 	private BlockVec3 coords;
+	private BlockVec3 nearestVent = BlockVec3.INVALID_VECTOR;
 	//private Pathfinding pathFinding;
 	private boolean stop = false;
 	private int maxIterations;
@@ -45,12 +47,14 @@ public class FindNearestVentJob extends Thread {
 			
 			for(Object airvent: airvents) {
 
+				nearestVent = (BlockVec3) airvent;
 			      finder = new Pathfinding(world, (BlockVec3) airvent, coords);
 
 			      while (!finder.isDone()) {
 			        
 			        
 			        if (isTerminated() || finder.isDone()) {
+			        	nearestVent = (BlockVec3) airvent;
 						break;
 					}
 
@@ -107,5 +111,14 @@ public class FindNearestVentJob extends Thread {
 		return distance;
 	}
 
+	public synchronized boolean getValidAtmos() {
+		if (distance > 0 && !nearestVent.equals(BlockVec3.INVALID_VECTOR)) {
+			TileEntity te = nearestVent.getTileEntity(world);
+			if (te instanceof IGasNetworkVent) {
+				return ((IGasNetworkVent) te).getPressure()>9; 
+			}
+		}
+		return false;
+	}
 	
 }
