@@ -115,7 +115,7 @@ public class FindNearestVentJob extends Thread {
 		if (distance > 0 && !nearestVent.equals(BlockVec3.INVALID_VECTOR)) {
 			TileEntity te = nearestVent.getTileEntity(world);
 			if (te instanceof IGasNetworkVent) {
-				return ((IGasNetworkVent) te).getPressure()>9; 
+				return ((IGasNetworkVent) te).getGasIsNormal(); 
 			}
 		}
 		return false;

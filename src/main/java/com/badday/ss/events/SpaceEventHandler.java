@@ -79,7 +79,7 @@ public class SpaceEventHandler
 			
 			this.lastTimer++;
 			
-			if (this.lastTimer % 80 == 0) { // 160 - for 1 player
+			if (this.lastTimer % 60 == 0) { // 160 - for 1 player
 
 				long time1 = System.nanoTime();
 				
