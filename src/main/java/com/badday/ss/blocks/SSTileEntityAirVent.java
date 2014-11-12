@@ -20,7 +20,7 @@ import com.badday.ss.core.utils.BlockVec3;
 import com.badday.ss.events.AirNetAddEvent;
 import com.badday.ss.events.AirNetRemoveEvent;
 import com.badday.ss.events.GasVentRecalculateEvents;
-import com.badday.ss.events.RebuildNetworkEvent;
+import com.badday.ss.events.RebuildNetworkPoint;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 
@@ -196,8 +196,8 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 		if (gasNetwork == null) {
 			this.gasNetwork = new SSGasNetwork(worldObj);
 			if (this.getBlockMetadata() == 0 || this.getBlockMetadata() == 2)
-				GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(worldObj,new BlockVec3(this.xCoord,this.yCoord+1,this.zCoord))); else
-					GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(worldObj,new BlockVec3(this.xCoord,this.yCoord-1,this.zCoord)));
+				GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkPoint(worldObj,new BlockVec3(this.xCoord,this.yCoord+1,this.zCoord))); else
+					GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkPoint(worldObj,new BlockVec3(this.xCoord,this.yCoord-1,this.zCoord)));
 		}
 		return this.gasNetwork;
 	}

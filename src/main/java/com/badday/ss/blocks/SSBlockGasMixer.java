@@ -17,7 +17,7 @@ import com.badday.ss.SSConfig;
 import com.badday.ss.api.IGasNetworkElement;
 import com.badday.ss.core.atmos.GasUtils;
 import com.badday.ss.core.utils.BlockVec3;
-import com.badday.ss.events.RebuildNetworkEvent;
+import com.badday.ss.events.RebuildNetworkPoint;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -118,7 +118,7 @@ public class SSBlockGasMixer extends BlockContainer implements IGasNetworkElemen
 		super.onBlockAdded(world, x, y, z);
 		if (!world.isRemote && world.getBlock(x, y+1, z) == SSConfig.ssBlockGasPipe) { 
 			// Rebild network
-			GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(world,new BlockVec3(x,y+1,z)));
+			GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkPoint(world,new BlockVec3(x,y+1,z)));
 		}
 		//world.markBlockForUpdate(x, y, z);
 	}

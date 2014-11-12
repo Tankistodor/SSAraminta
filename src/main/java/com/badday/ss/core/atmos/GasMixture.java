@@ -115,7 +115,7 @@ public class GasMixture {
 		FluidStack o2 = null;
 		int co2 = 0;
 		for (FluidTank tank: mixtureTank) {
-			if (tank.getFluid().getUnlocalizedName().equals(drainGas)) {
+			if (amount > 0 && tank != null && tank.getFluid() != null && tank.getFluid().getUnlocalizedName().equals(drainGas)) {
 				o2 = tank.drain(amount, true);
 			}
 		}
@@ -131,7 +131,7 @@ public class GasMixture {
 	 */
 	public void dispel(String drainGas, int amount) {
 		for (FluidTank tank: mixtureTank) {
-			if (tank != null && tank.getFluid().getUnlocalizedName().equals(drainGas)) {
+			if (amount > 0 && tank != null && tank.getFluid() != null && tank.getFluid().getUnlocalizedName().equals(drainGas)) {
 				tank.drain(amount, true);
 			}
 		}

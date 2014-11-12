@@ -9,7 +9,6 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
-import com.badday.ss.api.SSAPI;
 import com.badday.ss.blocks.SSBlockAirVent;
 import com.badday.ss.blocks.SSBlockCabinet;
 import com.badday.ss.blocks.SSBlockGasMixer;
@@ -26,6 +25,7 @@ import com.badday.ss.blocks.SSTileEntityMultiFake;
 import com.badday.ss.core.utils.SSSettings;
 import com.badday.ss.items.SSItemBlockCabinet;
 import com.badday.ss.items.SSItemBlockGasPipe;
+import com.badday.ss.items.SSItemGasAnalyzer;
 import com.badday.ss.items.SSItemHidden;
 import com.badday.ss.items.SSItemMetaBlockWallCasing;
 import com.badday.ss.items.SSItemMetaBlockWallCasingRaw;
@@ -87,6 +87,7 @@ public class SSConfig {
 	public static Item ssScrewDriver;
 	public static Item ssWelder;
 	public static Item ssMultitool;
+	public static Item ssGasAnalyser;
 	
 	public static int ssAirVentBlockArea = 2048;
 	/**
@@ -152,6 +153,7 @@ public class SSConfig {
 		ssScrewDriver = new SSItemScrewdriver();
 		ssWelder = new SSItemWelder();
 		ssMultitool = new SSItemMultitool();
+		ssGasAnalyser = new SSItemGasAnalyzer("gasAnalyser");
 	}
 
 	public static void RegisterBlocks() {

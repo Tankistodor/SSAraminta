@@ -22,7 +22,7 @@ import com.badday.ss.api.IGasNetworkElement;
 import com.badday.ss.core.atmos.GasMixture;
 import com.badday.ss.core.atmos.GasUtils;
 import com.badday.ss.core.utils.BlockVec3;
-import com.badday.ss.events.RebuildNetworkEvent;
+import com.badday.ss.events.RebuildNetworkPoint;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -96,7 +96,7 @@ public class SSBlockGasPipe  extends Block implements IGasNetworkElement{
 		super.onBlockAdded(world, x, y, z);
 		if (!world.isRemote && GasUtils.getAdjacentAllCount(world, new BlockVec3(x,y,z))>1) { //FIXME - Called 2 times ? Why?
 			// Rebild network
-			GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(world,new BlockVec3(x,y,z)));
+			GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkPoint(world,new BlockVec3(x,y,z)));
 		}
 		world.markBlockForUpdate(x, y, z);
 	}
@@ -107,7 +107,7 @@ public class SSBlockGasPipe  extends Block implements IGasNetworkElement{
 			// Rebild network
 			for (BlockVec3 node : GasUtils.getAdjacentAll(world, new BlockVec3(x,y,z))) {
 				if (node != null) {
-					GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(world,node.clone()));
+					GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkPoint(world,node.clone()));
 				}
 			}
 		}

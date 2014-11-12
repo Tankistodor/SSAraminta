@@ -12,7 +12,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class SSItem extends Item {
 
-	//protected Icon[] textures;
+	protected IIcon[] textures;
 
 	public SSItem() {
 		super();
@@ -22,7 +22,13 @@ public class SSItem extends Item {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIconFromDamage(int meta) {
-		//return textures[meta];
-		return this.itemIcon;
+		if (textures != null) {
+			if (meta < this.textures.length) {
+				return this.textures[meta];
+			}
+			return this.textures.length < 1 ? this.itemIcon : this.textures[0];
+		} else {
+			return this.itemIcon;
+		}
 	}
 }

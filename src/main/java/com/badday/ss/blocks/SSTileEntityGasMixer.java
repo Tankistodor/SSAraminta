@@ -289,7 +289,7 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 					FluidStack transfer = this.tank[i].drain(this.tankTrust[i]*this.totalTrust, true);
 					if (transfer != null) {
 						result.addGas(transfer);
-						this.energy -= this.tankTrust[i]*this.totalTrust;
+						this.energy -= this.tankTrust[i]*this.totalTrust*5;
 					}
 				}
 			}

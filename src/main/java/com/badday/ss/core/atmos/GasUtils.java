@@ -7,7 +7,6 @@ import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 
@@ -17,30 +16,29 @@ import com.badday.ss.api.IGasNetworkSource;
 import com.badday.ss.api.IGasNetworkVent;
 import com.badday.ss.blocks.SSTileEntityAirVent;
 import com.badday.ss.core.utils.BlockVec3;
-import com.badday.ss.events.RebuildNetworkEvent;
+import com.badday.ss.events.RebuildNetworkPoint;
 
 
 public class GasUtils {
 
-	public static ConcurrentHashMap<String,RebuildNetworkEvent> pointToRebuild = new ConcurrentHashMap<String,RebuildNetworkEvent>();
+	public static ConcurrentHashMap<String,RebuildNetworkPoint> pointToRebuild = new ConcurrentHashMap<String,RebuildNetworkPoint>();
 	
-	public static void registeredEventRebuildGasNetwork(RebuildNetworkEvent point) {
+	public static void registeredEventRebuildGasNetwork(RebuildNetworkPoint point) {
 		String index = point.coords.x + ":" + point.coords.y + ":" + point.coords.z;
 		System.out.println("Added event to rebuld net on "+index);
 		pointToRebuild.put(index, point);
 	}
 	
-	public static void removeAirVent(RebuildNetworkEvent point) {
+	public static void removeAirVent(RebuildNetworkPoint point) {
 	    String index = point.coords.x + ":" + point.coords.y + ":" + point.coords.z;
 	    pointToRebuild.remove(index);
 	}
-	
 
 	/**
 	 * Event called from SSTickHandlerServer
 	 */
 	public static void rebuildGasNetworkEvent() {
-		for (RebuildNetworkEvent point : pointToRebuild.values()) {
+		for (RebuildNetworkPoint point : pointToRebuild.values()) {
 			System.out.println("Start to rebuld net on "+point.coords.toString());
 			
 			SSGasNetwork network = new SSGasNetwork(point.world);

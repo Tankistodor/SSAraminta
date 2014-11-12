@@ -17,12 +17,12 @@ public class GasVentRecalculateEvents  extends Event {
 			
 			if (SS.Debug) vent.getGasNetwork().printDebugInfo();
 			
+			vent.getTank().dispel("fluid.oxygen","fluid.carbondioxide",(int) (vent.getBaySize()/99)); // dispel 1% oxygen -> CO2
+			
+			vent.getTank().dispel("fluid.carbondioxide",(int) (vent.getBaySize()/99)); // dispel 1% CO2 - EMULATE SCRUBBER
+			
 			for (IGasNetworkSource src : vent.getGasNetwork().getSources()) {
-				
-				vent.getTank().dispel("fluid.oxygen","fluid.carbondioxide",(int) (vent.getBaySize()/99)); // dispel 1% oxygen -> CO2
-				
-				vent.getTank().dispel("fluid.carbondioxide",(int) (vent.getBaySize()/99)); // dispel 1% CO2 - EMULATE SCRUBBER
-				
+								
 				if (vent.getTank().capacity > vent.getTank().getTotalAmount()) {
 					GasMixture gas = src.getMyGas();
 					vent.getTank().fill(gas);

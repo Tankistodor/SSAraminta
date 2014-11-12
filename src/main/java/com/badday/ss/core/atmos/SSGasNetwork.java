@@ -14,7 +14,7 @@ import com.badday.ss.api.IGasNetwork;
 import com.badday.ss.api.IGasNetworkSource;
 import com.badday.ss.api.IGasNetworkVent;
 import com.badday.ss.core.utils.BlockVec3;
-import com.badday.ss.events.RebuildNetworkEvent;
+import com.badday.ss.events.RebuildNetworkPoint;
 
 /**
  * 
