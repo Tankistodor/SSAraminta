@@ -197,10 +197,9 @@ public class GasUtils {
 		int part = tank.getPercentOfGas("fluid.oxygen");
 		if ((part < 18) || (part > 30)) return false;
 		
-		part = tank.getPercentOfGas("fluid.nitrogen");
+		part = tank.getPercentOfGas("fluid.carbondioxide");
 		if ((part < 70) || (part > 80)) return false;
-		
-		//System.out.println("DDD: "+tank.getPercentOfGas("fluid.oxygen"));
+
 		return true;
 	}
 }

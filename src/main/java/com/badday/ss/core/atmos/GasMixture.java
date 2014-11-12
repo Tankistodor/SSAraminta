@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badday.ss.SSConfig;
 
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -43,14 +44,16 @@ public class GasMixture {
 	public String toString() {
 		
 		String res = "";
+		int cap = 0;
 		
 		for (FluidTank tank: mixtureTank) {
-			if (tank != null) {
-				res += tank.getFluid().getUnlocalizedName()+": "+tank.getCapacity()+"/"+tank.getFluidAmount()+" ";
+			if (tank != null && tank.getFluidAmount()>0 && tank.getCapacity()>0) {
+				res += tank.getFluid().getUnlocalizedName()+": "+tank.getFluidAmount()+" "+Float.toString(tank.getFluidAmount()*100.0f / tank.getCapacity())+"% ";
+				cap = tank.getCapacity();
 			}
 		}
 		
-		return res;
+		return "Cap: "+cap+" "+res;
 	}
 	
 	public int getTotalAmount() {
@@ -100,6 +103,38 @@ public class GasMixture {
 			}
 		}
 		return 0;
+	}
+
+	/**
+	 * Emulate gas consumption - Dispel drainGas into fillGas
+	 * @param drainGas
+	 * @param fillGas
+	 * @param amount
+	 */
+	public void dispel(String drainGas, String fillGas, int amount) {
+		FluidStack o2 = null;
+		int co2 = 0;
+		for (FluidTank tank: mixtureTank) {
+			if (tank.getFluid().getUnlocalizedName().equals(drainGas)) {
+				o2 = tank.drain(amount, true);
+			}
+		}
+		if (o2 != null)
+			addGas(new FluidStack(SSConfig.fluidCarbonDioxide,o2.amount));
+		
+	}
+
+	/**
+	 * Emulate work scrubber
+	 * @param drainGas
+	 * @param amount
+	 */
+	public void dispel(String drainGas, int amount) {
+		for (FluidTank tank: mixtureTank) {
+			if (tank != null && tank.getFluid().getUnlocalizedName().equals(drainGas)) {
+				tank.drain(amount, true);
+			}
+		}
 	}
 	
 }

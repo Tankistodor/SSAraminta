@@ -280,12 +280,18 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 	
 	public GasMixture getMyGas() {
 		GasMixture result = new GasMixture();
-		
+		this.markDirty();
 		for (int i = 0; i<4; i++) {
 			if (this.tank[i] != null && this.tank[i].getFluidAmount() >= this.tankTrust[i]*this.totalTrust) {
-				FluidStack transfer = this.tank[i].drain(this.tankTrust[i]*this.totalTrust, true);
-				if (transfer != null)
-					result.addGas(transfer);
+				
+				if (this.getEnergy() > this.tankTrust[i]*this.totalTrust) {
+				
+					FluidStack transfer = this.tank[i].drain(this.tankTrust[i]*this.totalTrust, true);
+					if (transfer != null) {
+						result.addGas(transfer);
+						this.energy -= this.tankTrust[i]*this.totalTrust;
+					}
+				}
 			}
 		}
 		return result;
@@ -477,19 +483,22 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 		    return 0.0D;
 	}
 	
-	public double getEnergy()
-	  {
-	    return this.energy;
-	  }
+	public double getEnergy() {
+		return this.energy;
+	}
 
-	  public boolean useEnergy(double amount)
-	  {
-	    if (this.energy >= amount) {
-	      this.energy -= amount;
+	public boolean useEnergy(double amount) {
+		if (this.energy >= amount) {
+			this.energy -= amount;
 
-	      return true;
-	    }
-	    return false;
-	  }
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public int getGuiChargeLevel(int scale) {
+		return (int) (this.energy * scale / this.maxEnergy);
+	}
 
 }

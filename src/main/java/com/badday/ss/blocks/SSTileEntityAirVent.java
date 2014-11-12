@@ -103,6 +103,7 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 				
 				boolean newActive = this.active && this.sealed;
 				
+				this.markDirty();
 				this.normalGas = GasUtils.checkAtmos(this.worldObj, this, this.tank);
 				if (newActive != oldActive) {
 					updateMeta(newActive);

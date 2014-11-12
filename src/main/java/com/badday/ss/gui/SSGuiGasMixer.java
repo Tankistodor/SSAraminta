@@ -86,8 +86,6 @@ public class SSGuiGasMixer extends GuiContainer {
 		int x = (width - xSize) / 2;
 		int y = (height - ySize) / 2;
 
-		this.fontRendererObj.drawString(Double.toString(this.tileEntity.energy), 5, 5, 4210752);
-		this.fontRendererObj.drawString(Float.toString(this.tileEntity.guiChargeLevel), 5, 15, 4210752);
 		
 		this.fontRendererObj.drawString(Byte.toString(this.tileEntity.tankTrust[0]), 34 - 4, 30, 4210752);
 		this.fontRendererObj.drawString(Byte.toString(this.tileEntity.tankTrust[1]), 70 - 4, 30, 4210752);
@@ -96,8 +94,16 @@ public class SSGuiGasMixer extends GuiContainer {
 		
 		this.fontRendererObj.drawString(Byte.toString(this.tileEntity.totalTrust), 133 +6, 12, 4210752);
 		
-		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, "Total Gain Vent", 133 + 6, 12, 133 + 6 + 10, 133 + 6 + 10);
+		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, "Total Gain Vent", 133 + 6, 12, 133 + 6 + 10, 12 + 10);
 		
+		
+		//this.fontRendererObj.drawString(Double.toString(this.tileEntity.energy), 5, 5, 4210752);
+		//this.fontRendererObj.drawString(Float.toString(this.tileEntity.guiChargeLevel), 5, 15, 4210752);
+		
+		// Energy
+		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, "Energy: "+(this.tileEntity.getGuiChargeLevel(100))+"%", 12, 50, 12 + 7, 50 + 38);
+		
+		// Gas
 		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, tileEntity.getFluidTooltips(0), 25, 49, 43, 89);
 		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, tileEntity.getFluidTooltips(1), 61, 49, 43 + 36, 89);
 		GuiTooltiphelper.drawAreaTooltip(param1 - this.guiLeft, param2 - this.guiTop, tileEntity.getFluidTooltips(2), 97, 49, 43 + 36 + 36, 89);
@@ -111,7 +117,15 @@ public class SSGuiGasMixer extends GuiContainer {
 		int x = (width - xSize) / 2;
 		int y = (height - ySize) / 2;
 		this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+		
+		// Energy
+		int scalef = tileEntity.getGuiChargeLevel(38);
+		this.drawTexturedModalRect(x + 12, y + 50 + 38 - scalef, 220, 0, 7, scalef);
+		if (tileEntity.getEnergy() > 0) {
+			this.drawTexturedModalRect(x + 10, y + 37,208,0,12,10);
+		}
 
+		// Gas
 		int scale = tileEntity.getScaled(0, 38);
 		this.drawTexturedModalRect(x + 26, y + 50 + 38 - scale, 192, 0, 16, scale);
 		

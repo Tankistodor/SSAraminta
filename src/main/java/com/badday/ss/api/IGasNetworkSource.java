@@ -31,4 +31,6 @@ public interface IGasNetworkSource
 	public void onNetworkChanged();
 	
 	public GasMixture getMyGas();
+	
+	public int getGuiChargeLevel(int scale);
 }
