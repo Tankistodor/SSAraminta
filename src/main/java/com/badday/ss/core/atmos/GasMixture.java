@@ -98,7 +98,7 @@ public class GasMixture {
 	
 	public int getPercentOfGas(String name) {
 		for (FluidTank tank: mixtureTank) {
-			if (tank.getFluid().getUnlocalizedName().equals(name)) {
+			if (tank != null && tank.getFluid() != null && tank.getFluid().getUnlocalizedName().equals(name)) {
 				return tank.getFluidAmount() * 100 / this.getCapacity();
 			}
 		}

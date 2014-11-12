@@ -15,6 +15,8 @@ import com.badday.ss.core.utils.WorldUtils;
 import com.badday.ss.gui.SSGuiCabinet;
 import com.badday.ss.gui.SSGuiGasMixer;
 import com.badday.ss.gui.SSGuiIDs;
+import com.badday.ss.gui.SSGuiItemGasAnalyser;
+import com.badday.ss.items.SSInventoryItem;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IGuiHandler;
@@ -28,6 +30,11 @@ public class GuiHandler implements IGuiHandler {
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+			
+			if (ID == 10) {
+				//return new SSGuiItemGasAnalyser(player, player.inventory, new SSInventoryItem(player.getHeldItem()));
+				//http://www.minecraftforum.net/forums/mapping-and-modding/mapping-and-modding-tutorials/1571597-1-7-2-1-6-4-custom-inventories-in-items-and
+			}
 			
 			if (!world.blockExists(x, y, z)) {
 				if (SS.Debug) System.out.println("["+SS.MODNAME+"] Block not exists");
