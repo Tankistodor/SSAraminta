@@ -3,12 +3,15 @@ package com.badday.ss.events;
 import java.util.HashMap;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 
 import com.badday.ss.SS;
@@ -34,11 +37,21 @@ public class SpaceEventHandler
 
 	private final int CLOAK_CHECK_TIMEOUT_SEC = 5;
 
+  private static final String PREFIX = EnumChatFormatting.GREEN + "[SSAraminta] " + EnumChatFormatting.RESET;
+
 	public SpaceEventHandler() {
 		vacuumPlayers = new HashMap<String, Integer>();
 		cloakPlayersTimers = new HashMap<String, Integer>();
 		this.lastTimer = 0;
 	}
+
+  @SubscribeEvent
+  public void onDrawDebugText(RenderGameOverlayEvent.Text event) {
+    if(Minecraft.getMinecraft().gameSettings.showDebugInfo) {
+      event.left.add(null);
+      event.left.add(PREFIX + "AirVentCount: " + AirVentNet.airvents.size());
+    }
+  }
 
 	@SubscribeEvent
 	public void addToVentNet(AirNetAddEvent event) {
