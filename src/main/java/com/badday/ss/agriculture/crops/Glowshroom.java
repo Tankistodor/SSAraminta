@@ -53,4 +53,15 @@ public class Glowshroom extends BaseCrop {
   public ItemStack getGain(ICropTile crop) {
     return null;
   }
+
+  @Override
+  public int maxSize() {
+    return 3;
+  }
+
+  @Override
+  public boolean canGrow(ICropTile crop) {
+    return crop.getSize() < 3;
+  }
+
 }
