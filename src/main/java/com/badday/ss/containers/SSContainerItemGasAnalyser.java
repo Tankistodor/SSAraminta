@@ -41,7 +41,7 @@ public class SSContainerItemGasAnalyser extends ContainerBase {
         atmosInfo.add("No get data or battery is low");
         
         if (!player.worldObj.isRemote) {
-        	this.atmosInfo = GasUtils.getAtmosInfoForGui(player.worldObj);;
+        	this.atmosInfo = GasUtils.getAtmosInfoForGui(player);;
         }
 		
 		toolInventory.openInventory();

@@ -106,9 +106,11 @@ public class GasMixture {
 	}
 
 	public int getPercentOfGas(FluidTank fluidtank) {
-		for (FluidTank tank: mixtureTank) {
-			if (tank != null && tank.getFluid() != null && tank.getFluid().fluidID == fluidtank.getFluid().fluidID) {
-				return tank.getFluidAmount() * 100 / this.getCapacity();
+		if (this.getCapacity() > 0) {
+			for (FluidTank tank : mixtureTank) {
+				if (tank != null && tank.getFluid() != null && tank.getFluid().fluidID == fluidtank.getFluid().fluidID) {
+					return tank.getFluidAmount() * 100 / this.getCapacity();
+				}
 			}
 		}
 		return 0;
