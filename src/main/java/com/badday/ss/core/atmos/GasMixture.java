@@ -105,6 +105,15 @@ public class GasMixture {
 		return 0;
 	}
 
+	public int getPercentOfGas(FluidTank fluidtank) {
+		for (FluidTank tank: mixtureTank) {
+			if (tank != null && tank.getFluid() != null && tank.getFluid().fluidID == fluidtank.getFluid().fluidID) {
+				return tank.getFluidAmount() * 100 / this.getCapacity();
+			}
+		}
+		return 0;
+	}
+	
 	/**
 	 * Emulate gas consumption - Dispel drainGas into fillGas
 	 * @param drainGas

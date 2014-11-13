@@ -1,5 +1,6 @@
 package com.badday.ss.core.atmos;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -21,6 +22,7 @@ import com.badday.ss.events.RebuildNetworkPoint;
 
 public class GasUtils {
 
+	public static BlockVec3 playerNearestVent = BlockVec3.INVALID_VECTOR;
 	public static ConcurrentHashMap<String,RebuildNetworkPoint> pointToRebuild = new ConcurrentHashMap<String,RebuildNetworkPoint>();
 	
 	public static void registeredEventRebuildGasNetwork(RebuildNetworkPoint point) {
@@ -199,6 +201,34 @@ public class GasUtils {
 		if ((part < 70) || (part > 80)) return false;
 
 		return true;
+	}
+	
+	public static List<String> getAtmosInfoForGui(World world) {
+		List<String> res = new ArrayList<String>();
+		//res.{ "No any gas presents here" };
+		if (!playerNearestVent.equals(BlockVec3.INVALID_VECTOR)) {
+			TileEntity te = playerNearestVent.getTileEntity(world);
+			if (te instanceof SSTileEntityAirVent) {
+				SSTileEntityAirVent t = ((SSTileEntityAirVent) te);
+				res.add("Bay size: " +
+						t.baySize + " blocks");
+				res.add("Pressure: " + 
+						String.format("%.2f",(t.getPressure()))+" hPa");
+				
+				res.add("Gas mixture:");
+				if (t.tank != null && t.tank.mixtureTank != null) {
+					
+					for (FluidTank fluidtank : t.tank.mixtureTank) {
+						res.add("    " + fluidtank.getInfo().fluid.getLocalizedName() + " "+ fluidtank.getFluidAmount() +" (" +t.tank.getPercentOfGas(fluidtank) + "%)");		
+					}
+				}
+
+			}
+			
+		} else {
+			res.add("No any gas detected");
+		}
+		return res; 
 	}
 }
 

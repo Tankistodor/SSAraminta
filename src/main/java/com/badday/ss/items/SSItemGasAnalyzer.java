@@ -29,10 +29,10 @@ public class SSItemGasAnalyzer extends SSItemBaseElectric implements IBoxable {
 	public boolean onItemUseFirst(ItemStack itemstack,
 			EntityPlayer entityPlayer, World world, int x, int y, int z,
 			int side, float hitX, float hitY, float hitZ) {
-		if (!canTakeDamage(itemstack, 1))
-			return false;
+		//if (!canTakeDamage(itemstack, 1))
+			//return false;
 		
-		world.playSoundEffect(x + 0.5f, y, z + 0.5f, "ss:gasAnalyser", 4F, 1F);
+		//world.playSoundEffect(x + 0.5f, y, z + 0.5f, "ss:gasAnalyser", 4F, 1F);
 		//System.out.println("[" + SS.MODNAME + "] sound " + "ss:welder"+rnd);
 		return false;
 
@@ -61,16 +61,20 @@ public class SSItemGasAnalyzer extends SSItemBaseElectric implements IBoxable {
 	    return "Welder";
 	  }*/
 	
+	@Override
 	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer) {
 		
 		if (entityplayer.isSneaking()) {
             return itemstack;
 		}
 		
+		if (!canTakeDamage(itemstack, 1))
+			return itemstack;
+		
 		if (!world.isRemote) {
-			entityplayer.openGui(SS.instance, 100, world, entityplayer.serverPosX, entityplayer.serverPosY, entityplayer.serverPosZ);
+			entityplayer.openGui(SS.instance, 10, world, entityplayer.serverPosX, entityplayer.serverPosY, entityplayer.serverPosZ);
 		} else {
-			
+			world.playSoundEffect(entityplayer.serverPosX + 0.5f, entityplayer.serverPosY, entityplayer.serverPosZ + 0.5f, "ss:gasAnalyser", 4F, 1F);			
 		}
 		
 		return itemstack;

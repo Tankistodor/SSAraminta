@@ -40,3 +40,5 @@ item.ss.multitool.name=Multitool Admin tool
 item.ss.multitool.description=Multitool
 item.welder.name=Welder
 item.screwdriver.name=Screwdriver
+fluid.oxygen="Oxygen O2"
+fluid.carbondioxide="Carbon Dioxide CO2"

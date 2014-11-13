@@ -121,4 +121,12 @@ public class FindNearestVentJob extends Thread {
 		return false;
 	}
 	
+	public synchronized BlockVec3 getNearestVent() {
+		if (distance > 0 && !nearestVent.equals(BlockVec3.INVALID_VECTOR)) {
+			return nearestVent.clone();
+		}
+		return BlockVec3.INVALID_VECTOR;
+	}
+
+	
 }

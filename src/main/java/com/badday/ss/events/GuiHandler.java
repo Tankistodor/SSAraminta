@@ -11,6 +11,7 @@ import com.badday.ss.blocks.SSTileEntityCabinet;
 import com.badday.ss.blocks.SSTileEntityGasMixer;
 import com.badday.ss.containers.SSContainerCabinet;
 import com.badday.ss.containers.SSContainerGasMixer;
+import com.badday.ss.containers.SSContainerItemGasAnalyser;
 import com.badday.ss.core.utils.WorldUtils;
 import com.badday.ss.gui.SSGuiCabinet;
 import com.badday.ss.gui.SSGuiGasMixer;
@@ -32,7 +33,10 @@ public class GuiHandler implements IGuiHandler {
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
 			
 			if (ID == 10) {
-				//return new SSGuiItemGasAnalyser(player, player.inventory, new SSInventoryItem(player.getHeldItem()));
+				SSInventoryItem inventoryItem = new SSInventoryItem(player.getHeldItem());
+			
+				return new SSGuiItemGasAnalyser(player, player.inventory,inventoryItem , new SSContainerItemGasAnalyser(player,player.inventory,inventoryItem));
+			
 				//http://www.minecraftforum.net/forums/mapping-and-modding/mapping-and-modding-tutorials/1571597-1-7-2-1-6-4-custom-inventories-in-items-and
 			}
 			
@@ -74,6 +78,14 @@ public class GuiHandler implements IGuiHandler {
             player.addChatMessage(new ChatComponentText("[" + SS.MODNAME + "] player instance null server-side. This is a bug."));
             return null;
         }
+        
+        if (ID == 10) {
+			SSInventoryItem inventoryItem = new SSInventoryItem(player.getHeldItem());
+			
+			return new SSContainerItemGasAnalyser(player,player.inventory,inventoryItem);
+			
+			//http://www.minecraftforum.net/forums/mapping-and-modding/mapping-and-modding-tutorials/1571597-1-7-2-1-6-4-custom-inventories-in-items-and
+		}
         
         TileEntity tile = world.getTileEntity(x, y, z);
 

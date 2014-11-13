@@ -14,6 +14,7 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
 import com.badday.ss.core.atmos.FindNearestVentJob;
+import com.badday.ss.core.atmos.GasUtils;
 import com.badday.ss.core.utils.AirVentNet;
 import com.badday.ss.core.utils.BlockVec3;
 
@@ -91,6 +92,7 @@ public class SpaceEventHandler
 				} else {
 					if (!job.isAlive()) {
 						distance = job.getDistance();
+						GasUtils.playerNearestVent = job.getNearestVent();
 					}
 					
 					if (!job.getValidAtmos()) {
