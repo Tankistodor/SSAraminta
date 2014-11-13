@@ -13,6 +13,11 @@ import net.minecraft.util.IIcon;
 public abstract class BaseCrop extends CropCard {
 
   @Override
+  public String discoveredBy() {
+    return "UserAd";
+  }
+
+  @Override
   @SideOnly(Side.CLIENT)
   public void registerSprites(IIconRegister iconRegister) {
     textures = new IIcon[maxSize()];
@@ -30,6 +35,11 @@ public abstract class BaseCrop extends CropCard {
   @Override
   public boolean canGrow(ICropTile crop) {
     return crop.getSize() < 4;
+  }
+
+  @Override
+  public int getOptimalHavestSize(ICropTile crop) {
+    return maxSize();
   }
 
 

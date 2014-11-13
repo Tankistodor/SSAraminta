@@ -46,11 +46,6 @@ public class DestroyingAngel extends BaseCrop {
   }
 
   @Override
-  public int getOptimalHavestSize(ICropTile crop) {
-    return 0;
-  }
-
-  @Override
   public boolean canBeHarvested(ICropTile crop) {
     return false;
   }

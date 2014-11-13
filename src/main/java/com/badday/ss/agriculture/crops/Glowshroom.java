@@ -39,10 +39,6 @@ public class Glowshroom extends BaseCrop {
     return new String[] { "Mushroom", "Green", "White", "Food", "Glowing"};
   }
 
-  @Override
-  public int getOptimalHavestSize(ICropTile crop) {
-    return 0;
-  }
 
   @Override
   public boolean canBeHarvested(ICropTile crop) {
@@ -62,6 +58,11 @@ public class Glowshroom extends BaseCrop {
   @Override
   public boolean canGrow(ICropTile crop) {
     return crop.getSize() < 3;
+  }
+
+  @Override
+  public int getEmittedLight(ICropTile crop) {
+    return crop.getSize() * 2;
   }
 
 }
