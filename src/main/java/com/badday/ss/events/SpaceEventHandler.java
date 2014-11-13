@@ -1,6 +1,7 @@
 package com.badday.ss.events;
 
-import java.util.HashMap;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -9,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 
 import com.badday.ss.SS;
@@ -17,8 +19,12 @@ import com.badday.ss.core.atmos.FindNearestVentJob;
 import com.badday.ss.core.atmos.GasUtils;
 import com.badday.ss.core.utils.AirVentNet;
 import com.badday.ss.core.utils.BlockVec3;
+import com.badday.ss.entity.player.SSPlayerData;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 
 /**
  * Обработчик событий в мире Space
@@ -26,8 +32,10 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
  */
 public class SpaceEventHandler
 {
-	private HashMap<String, Integer> vacuumPlayers;
-	private HashMap<String, Integer> cloakPlayersTimers;
+	private ConcurrentHashMap<UUID, SSPlayerData> playerStatsMap = new ConcurrentHashMap<UUID, SSPlayerData>();
+	
+	//private HashMap<String, Integer> vacuumPlayers;
+	//private HashMap<String, Integer> cloakPlayersTimers;
 	private long lastTimer = 0;
 	
 	private FindNearestVentJob job;
@@ -35,8 +43,8 @@ public class SpaceEventHandler
 	private final int CLOAK_CHECK_TIMEOUT_SEC = 5;
 
 	public SpaceEventHandler() {
-		vacuumPlayers = new HashMap<String, Integer>();
-		cloakPlayersTimers = new HashMap<String, Integer>();
+		//vacuumPlayers = new HashMap<String, Integer>();
+		//cloakPlayersTimers = new HashMap<String, Integer>();
 		this.lastTimer = 0;
 	}
 
@@ -50,6 +58,76 @@ public class SpaceEventHandler
 		AirVentNet.removeAirVent(event.coords);
 	}
 
+	
+	@SubscribeEvent
+    public void onPlayerLogin(PlayerLoggedInEvent event)
+    {
+        if (event.player instanceof EntityPlayerMP)
+        {
+            this.onPlayerLogin((EntityPlayerMP) event.player);
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerLogout(PlayerLoggedOutEvent event)
+    {
+        if (event.player instanceof EntityPlayerMP)
+        {
+            this.onPlayerLogout((EntityPlayerMP) event.player);
+        }
+    }
+    
+    @SubscribeEvent
+    public void onPlayerRespawn(PlayerRespawnEvent event)
+    {
+        if (event.player instanceof EntityPlayerMP)
+        {
+            this.onPlayerRespawn((EntityPlayerMP) event.player);
+        }
+    }
+    
+    
+    private void onPlayerLogin(EntityPlayerMP player)
+    {
+    	SSPlayerData oldData = this.playerStatsMap.remove(player.getPersistentID());
+        if (oldData != null)
+        {
+            oldData.saveNBTData(player.getEntityData());
+        }
+
+        SSPlayerData stats = SSPlayerData.get(player);
+
+        //GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_GET_CELESTIAL_BODY_LIST, new Object[] { }), player);
+    }
+
+    private void onPlayerLogout(EntityPlayerMP player)
+    {
+
+    }
+    
+    private void onPlayerRespawn(EntityPlayerMP player)
+    {
+    	SSPlayerData oldData = this.playerStatsMap.remove(player.getPersistentID());
+    	SSPlayerData stats = SSPlayerData.get(player);
+
+        if (oldData != null)
+        {
+            stats.copyFrom(oldData, false);
+        }
+
+       // stats.player = new WeakReference<EntityPlayerMP>(player);
+    }
+	
+    @SubscribeEvent
+    public void onEntityConstructing(EntityEvent.EntityConstructing event)
+    {
+        if (event.entity instanceof EntityPlayerMP && SSPlayerData.get((EntityPlayerMP) event.entity) == null)
+        {
+            SSPlayerData.register((EntityPlayerMP) event.entity);
+        }
+    }
+	
+	
 	@SubscribeEvent
 	public void livingUpdate(LivingUpdateEvent event)
 	{
@@ -92,7 +170,11 @@ public class SpaceEventHandler
 				} else {
 					if (!job.isAlive()) {
 						distance = job.getDistance();
-						GasUtils.playerNearestVent = job.getNearestVent();
+						if (entity instanceof EntityPlayerMP)
+						{
+							SSPlayerData data = SSPlayerData.get((EntityPlayerMP) entity);
+							data.playerNearestVent = job.getNearestVent();
+						}
 					}
 					
 					if (!job.getValidAtmos()) {
@@ -233,11 +315,12 @@ public class SpaceEventHandler
 		} catch (Exception e) { e.printStackTrace(); }
 	}*/
 	
+	/*
 	private void setPlayerAirValue(EntityLivingBase entity, Integer air)
 	{
 		vacuumPlayers.remove(((EntityPlayerMP)entity).getDisplayName());
 		vacuumPlayers.put(((EntityPlayerMP)entity).getDisplayName(), air);
-	}
+	}*/
 
 	/**
 	 * Проверка, находится ли Entity в открытом космосе

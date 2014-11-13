@@ -79,6 +79,10 @@ public class SS {
 		}
 		
 		SSPacketHandler.INSTANCE.ordinal();
+		
+		/*SSPlayerHandler handler = new SSPlayerHandler();
+        MinecraftForge.EVENT_BUS.register(handler);
+        FMLCommonHandler.instance().bus().register(handler);*/
 	}
 	
 	@EventHandler
@@ -104,6 +108,7 @@ public class SS {
 		initData();
 		
 		MinecraftForge.EVENT_BUS.register(new AntiFallDamage());
+		
 		MinecraftForge.EVENT_BUS.register(new SpaceEventHandler());
 
 		if (FMLCommonHandler.instance().getSide().isClient()) {

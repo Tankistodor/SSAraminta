@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -17,12 +19,12 @@ import com.badday.ss.api.IGasNetworkSource;
 import com.badday.ss.api.IGasNetworkVent;
 import com.badday.ss.blocks.SSTileEntityAirVent;
 import com.badday.ss.core.utils.BlockVec3;
+import com.badday.ss.entity.player.SSPlayerData;
 import com.badday.ss.events.RebuildNetworkPoint;
 
 
 public class GasUtils {
 
-	public static BlockVec3 playerNearestVent = BlockVec3.INVALID_VECTOR;
 	public static ConcurrentHashMap<String,RebuildNetworkPoint> pointToRebuild = new ConcurrentHashMap<String,RebuildNetworkPoint>();
 	
 	public static void registeredEventRebuildGasNetwork(RebuildNetworkPoint point) {
@@ -203,11 +205,19 @@ public class GasUtils {
 		return true;
 	}
 	
-	public static List<String> getAtmosInfoForGui(World world) {
+	public static List<String> getAtmosInfoForGui(EntityPlayer player) {
 		List<String> res = new ArrayList<String>();
+		BlockVec3 playerNearestVent = BlockVec3.INVALID_VECTOR;
 		//res.{ "No any gas presents here" };
+		if (player instanceof EntityPlayerMP) {
+			SSPlayerData data = SSPlayerData.get((EntityPlayerMP)player);
+			if (data != null) {
+				playerNearestVent = data.playerNearestVent;
+			}
+		}
+		
 		if (!playerNearestVent.equals(BlockVec3.INVALID_VECTOR)) {
-			TileEntity te = playerNearestVent.getTileEntity(world);
+			TileEntity te = playerNearestVent.getTileEntity(player.worldObj);
 			if (te instanceof SSTileEntityAirVent) {
 				SSTileEntityAirVent t = ((SSTileEntityAirVent) te);
 				res.add("Bay size: " +
@@ -219,8 +229,22 @@ public class GasUtils {
 				if (t.tank != null && t.tank.mixtureTank != null) {
 					
 					for (FluidTank fluidtank : t.tank.mixtureTank) {
-						res.add("    " + fluidtank.getInfo().fluid.getLocalizedName() + " "+ fluidtank.getFluidAmount() +" (" +t.tank.getPercentOfGas(fluidtank) + "%)");		
+						if (fluidtank != null && fluidtank.getFluidAmount() > 0)
+							res.add("    " + fluidtank.getInfo().fluid.getLocalizedName() + " "+ fluidtank.getFluidAmount() +" (" +t.tank.getPercentOfGas(fluidtank) + "%)");		
 					}
+				}
+				
+				if (SS.Debug) {
+					try {
+						res.add("DEBUG:");
+						if (t.gasNetwork != null) {
+							// res.add("  GasNet: "+t.gasNetwork.toString());
+							res.add("  GasNet: pipes: " + t.gasNetwork.getPipes().size() + " mix: " + t.gasNetwork.getSources().size() + " vents: "
+									+ t.gasNetwork.getVents().size());
+						}
+					} finally {
+					}
+					
 				}
 
 			}
