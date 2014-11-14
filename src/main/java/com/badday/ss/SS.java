@@ -27,6 +27,7 @@ import com.badday.ss.world.space.BiomeSpace;
 import com.badday.ss.world.space.SpaceProvider;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -153,6 +154,13 @@ public class SS {
 	public void serverLoad(FMLServerStartingEvent event) {
 		event.registerServerCommand(new SpaceTpCommand());
 		event.registerServerCommand(new SSCommandPathfinder());
+		
+		if (Loader.isModLoaded("PlayerAPI"))
+        {
+            //ClientPlayerAPI.register(Constants.MOD_ID_CORE, GCPlayerBaseSP.class);
+			System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        }
+		
 	}
 	
 	public static int getEntityId() {

@@ -35,13 +35,13 @@ public class SSInjectContainer extends DummyModContainer {
 	  public List<ArtifactVersion> getDependencies()
 	  {
 	    LinkedList deps = new LinkedList();
-	    deps.add(VersionParser.parseVersionReference("required-after:Forge@[8.9.0.762,)"));
+	    deps.add(VersionParser.parseVersionReference("required-after:Forge@[10.12.2.1148,)"));
 	    return deps;
 	  }
 
 	  public VersionRange acceptableMinecraftVersionRange()
 	  {
-	    return VersionParser.parseRange("[1.6.4]");
+	    return VersionParser.parseRange("[1.7.10]");
 	  }
 	
 }

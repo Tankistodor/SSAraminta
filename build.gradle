@@ -29,7 +29,17 @@ minecraft {
     //replace "@MOD_VERSION@", project.version 
 }
 
+sourceSets.main {
+    java {
+        srcDirs = ['src/main/java', 'src/main/java']
+    }
+    resources {
+        srcDirs = ['src/main/resources', 'src/main/resources']
+    }
+}
+
 dependencies {
+	compile fileTree(dir: 'lib', include: '*.jar')
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
     //compile "some.group:artifact:version:classifier"
@@ -42,7 +52,6 @@ dependencies {
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
 }
 
 processResources

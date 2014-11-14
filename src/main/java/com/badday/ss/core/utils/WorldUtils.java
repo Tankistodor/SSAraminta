@@ -36,7 +36,7 @@ public class WorldUtils {
 	}
 	
 	
-	public static double getItemGravity(EntityItem e)
+	public static double getItemGravity3(EntityItem e)
 	{
 		return 0.03999999910593033D - 0.05999999910593033D/1.75D; /*
 		if (e.worldObj.provider instanceof SSWorldProviderSpace)
@@ -51,11 +51,11 @@ public class WorldUtils {
 		}*/
 	}
 
-	public static double getItemGravity2(EntityItem e)
+	public static double getItemGravity(EntityItem e)
 	{
 		if (e.worldObj.provider instanceof SpaceProvider)
 		{
-			return 1.0D;
+			return 0.03999999910593033D - 0.05999999910593033D/1.75D;
 		}
 		else
 		{

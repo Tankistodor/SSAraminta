@@ -8,9 +8,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 
+import com.badday.ss.api.IPlayerData;
 import com.badday.ss.core.utils.BlockVec3;
 
-public class SSPlayerData implements IExtendedEntityProperties {
+public class SSPlayerData implements IPlayerData,IExtendedEntityProperties {
 
 	private static final String SS_PLAYER_PROP = "SSPlayerData";
 	

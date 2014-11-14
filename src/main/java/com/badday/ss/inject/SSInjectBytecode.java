@@ -1,364 +1,362 @@
 package com.badday.ss.inject;
 
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
-import cpw.mods.fml.common.versioning.VersionParser;
-import cpw.mods.fml.common.versioning.VersionRange;
-
-import java.io.PrintStream;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 
 import net.minecraft.launchwrapper.IClassTransformer;
-import net.minecraft.launchwrapper.LaunchClassLoader;
+import net.minecraft.launchwrapper.Launch;
 
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.IntInsnNode;
 import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
+import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
+import cpw.mods.fml.common.versioning.VersionParser;
 
 public class SSInjectBytecode implements IClassTransformer {
 
-	HashMap<String, String> nodemap = new HashMap();
+	HashMap<String, ObfuscationEntry> nodemap = new HashMap();
 	private boolean deobfuscated = true;
 	private boolean optifinePresent;
+	private boolean isServer;
+	private boolean playerApiActive;
+	private DefaultArtifactVersion mcVersion;
+	private static int operationCount = 0;
+	private static int injectionCount = 0;
 
 	public SSInjectBytecode() {
-		try
-	    {
-	      URLClassLoader loader = new LaunchClassLoader(((URLClassLoader)getClass().getClassLoader()).getURLs());
-	      URL classResource = loader.findResource(String.valueOf("net.minecraft.world.World").replace('.', '/').concat(".class"));
-	      if (classResource == null)
-	      {
-	        this.deobfuscated = false;
-	      }
-	      else
-	      {
-	        this.deobfuscated = true;
-	      }
 
-	      classResource = loader.findResource(String.valueOf("CustomColorizer").replace('.', '/').concat(".class"));
-	      if (classResource == null)
-	      {
-	        this.optifinePresent = false;
-	      }
-	      else
-	      {
-	        this.optifinePresent = true;
-	      }
-	    }
-	    catch (Exception e)
-	    {
-	      e.printStackTrace();
-	    }
+		this.mcVersion = new DefaultArtifactVersion((String) cpw.mods.fml.relauncher.FMLInjectionData.data()[4]);
+		try {
+			this.deobfuscated = (Launch.classLoader.getClassBytes("net.minecraft.world.World") != null);
+			this.optifinePresent = (Launch.classLoader.getClassBytes("CustomColorizer") != null);
+			this.playerApiActive = (Launch.classLoader.getClassBytes("api.player.forge.PlayerAPITransformer") != null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-	    if (this.deobfuscated)
-	    {
-	      this.nodemap.put("respawnPlayerMethod", "respawnPlayer");
-	      this.nodemap.put("worldClass", "net/minecraft/world/World");
-	      this.nodemap.put("playerMP", "net/minecraft/entity/player/EntityPlayerMP");
-	      this.nodemap.put("netLoginHandler", "net/minecraft/network/NetLoginHandler");
-	      this.nodemap.put("confManagerClass", "net/minecraft/server/management/ServerConfigurationManager");
-	      this.nodemap.put("createPlayerMethod", "createPlayerForUser");
-	      this.nodemap.put("createPlayerDesc", "(Ljava/lang/String;)L" + (String)this.nodemap.get("playerMP") + ";");
-	      this.nodemap.put("respawnPlayerDesc", "(L" + (String)this.nodemap.get("playerMP") + ";IZ)L" + (String)this.nodemap.get("playerMP") + ";");
-	      this.nodemap.put("itemInWorldManagerClass", "net/minecraft/src/ItemInWorldManager");
+		if (mcVersionMatches("[1.7.10]")) {
+			this.nodemap.put("PlayerMP", new ObfuscationEntry("net/minecraft/entity/player/EntityPlayerMP", "mw"));
+			this.nodemap.put("worldClass", new ObfuscationEntry("net/minecraft/world/World", "ahb"));
+			this.nodemap.put("confManagerClass", new ObfuscationEntry("net/minecraft/server/management/ServerConfigurationManager", "oi"));
+			this.nodemap.put("gameProfileClass", new ObfuscationEntry("com/mojang/authlib/GameProfile"));
+			this.nodemap.put("itemInWorldManagerClass", new ObfuscationEntry("net/minecraft/server/management/ItemInWorldManager", "mx"));
+			this.nodemap.put("playerControllerClass", new ObfuscationEntry("net/minecraft/client/multiplayer/PlayerControllerMP", "bje"));
+			this.nodemap.put("playerClient", new ObfuscationEntry("net/minecraft/client/entity/EntityClientPlayerMP", "bjk"));
+			this.nodemap.put("statFileWriterClass", new ObfuscationEntry("net/minecraft/stats/StatFileWriter", "pq"));
+			this.nodemap.put("netHandlerPlayClientClass", new ObfuscationEntry("net/minecraft/client/network/NetHandlerPlayClient", "bjb"));
+			this.nodemap.put("entityLivingClass", new ObfuscationEntry("net/minecraft/entity/EntityLivingBase", "sv"));
+			this.nodemap.put("entityItemClass", new ObfuscationEntry("net/minecraft/entity/item/EntityItem", "xk"));
+			this.nodemap.put("entityRendererClass", new ObfuscationEntry("net/minecraft/client/renderer/EntityRenderer", "blt"));
+			this.nodemap.put("worldRendererClass", new ObfuscationEntry("net/minecraft/client/renderer/WorldRenderer", "blo"));
+			this.nodemap.put("renderGlobalClass", new ObfuscationEntry("net/minecraft/client/renderer/RenderGlobal", "bma"));
+			this.nodemap.put("tessellatorClass", new ObfuscationEntry("net/minecraft/client/renderer/Tessellator", "bmh"));
+			this.nodemap.put("renderManagerClass", new ObfuscationEntry("net/minecraft/client/renderer/entity/RenderManager", "bnn"));
+			this.nodemap.put("tileEntityRendererClass", new ObfuscationEntry("net/minecraft/client/renderer/tileentity/TileEntityRendererDispatcher", "bmk"));
+			this.nodemap.put("containerPlayer", new ObfuscationEntry("net/minecraft/inventory/ContainerPlayer", "aap"));
+			this.nodemap.put("minecraft", new ObfuscationEntry("net/minecraft/client/Minecraft", "bao"));
+			this.nodemap.put("session", new ObfuscationEntry("net/minecraft/util/Session", "bbs"));
+			this.nodemap.put("guiScreen", new ObfuscationEntry("net/minecraft/client/gui/GuiScreen", "bdw"));
+			this.nodemap.put("itemRendererClass", new ObfuscationEntry("net/minecraft/client/renderer/ItemRenderer", "bly"));
+			this.nodemap.put("vecClass", new ObfuscationEntry("net/minecraft/util/Vec3", "azw"));
+			this.nodemap.put("entityClass", new ObfuscationEntry("net/minecraft/entity/Entity", "sa"));
+			this.nodemap.put("guiSleepClass", new ObfuscationEntry("net/minecraft/client/gui/GuiSleepMP", "bdi"));
+			this.nodemap.put("effectRendererClass", new ObfuscationEntry("net/minecraft/client/particle/EffectRenderer", "bkn"));
+			this.nodemap.put("forgeHooks", new ObfuscationEntry("net/minecraftforge/client/ForgeHooksClient"));
+			// this.nodemap.put("customPlayerMP", new
+			// ObfuscationEntry("micdoodle8/mods/galacticraft/core/entities/player/GCEntityPlayerMP"));
+			// this.nodemap.put("customPlayerSP", new
+			// ObfuscationEntry("micdoodle8/mods/galacticraft/core/entities/player/GCEntityClientPlayerMP"));
+			// this.nodemap.put("customEntityOtherPlayer", new
+			// ObfuscationEntry("micdoodle8/mods/galacticraft/core/entities/player/GCEntityOtherPlayerMP"));
+			this.nodemap.put("packetSpawnPlayer", new ObfuscationEntry("net/minecraft/network/play/server/S0CPacketSpawnPlayer", "gb"));
+			this.nodemap.put("entityOtherPlayer", new ObfuscationEntry("net/minecraft/client/entity/EntityOtherPlayerMP", "bll"));
+			this.nodemap.put("minecraftServer", new ObfuscationEntry("net/minecraft/server/MinecraftServer"));
+			this.nodemap.put("worldServer", new ObfuscationEntry("net/minecraft/world/WorldServer", "mt"));
+			this.nodemap.put("worldClient", new ObfuscationEntry("net/minecraft/client/multiplayer/WorldClient", "bjf"));
+			this.nodemap.put("tileEntityClass", new ObfuscationEntry("net/minecraft/tileentity/TileEntity", "aor"));
+			this.nodemap.put("musicTicker", new ObfuscationEntry("net/minecraft/client/audio/MusicTicker", "btg"));
+			this.nodemap.put("chunkProviderServer", new ObfuscationEntry("net/minecraft/world/gen/ChunkProviderServer", "ms"));
+			this.nodemap.put("netHandlerLoginServer", new ObfuscationEntry("net/minecraft/server/network/NetHandlerLoginServer", "nn"));
 
-	      this.nodemap.put("attemptLoginMethodBukkit", "");
-	      this.nodemap.put("attemptLoginDescBukkit", "");
+			this.nodemap.put("thePlayer", new FieldObfuscationEntry("thePlayer", "h"));
+			this.nodemap.put("glRenderList", new FieldObfuscationEntry("glRenderList", "z"));
+			this.nodemap.put("cps_worldObj", new FieldObfuscationEntry("worldObj", "i"));
 
-	      this.nodemap.put("playerControllerClass", "net/minecraft/client/multiplayer/PlayerControllerMP");
-	      this.nodemap.put("playerClient", "net/minecraft/client/entity/EntityClientPlayerMP");
-	      this.nodemap.put("netClientHandler", "net/minecraft/client/multiplayer/NetClientHandler");
-	      this.nodemap.put("createClientPlayerMethod", "func_78754_a");
-	      this.nodemap.put("createClientPlayerDesc", "(L" + (String)this.nodemap.get("worldClass") + ";)L" + (String)this.nodemap.get("playerClient") + ";");
+			this.nodemap.put("createPlayerMethod", new MethodObfuscationEntry("createPlayerForUser", "f", "(L" + getNameDynamic("gameProfileClass") + ";)L"
+					+ getNameDynamic("PlayerMP") + ";"));
+			this.nodemap.put("respawnPlayerMethod", new MethodObfuscationEntry("respawnPlayer", "a", "(L" + getNameDynamic("PlayerMP") + ";IZ)L"
+					+ getNameDynamic("PlayerMP") + ";"));
+			this.nodemap.put("createClientPlayerMethod", new MethodObfuscationEntry("func_147493_a", "a", "(L" + getNameDynamic("worldClass") + ";L"
+					+ getNameDynamic("statFileWriterClass") + ";)L" + getNameDynamic("playerClient") + ";"));
+			this.nodemap.put("moveEntityMethod", new MethodObfuscationEntry("moveEntityWithHeading", "e", "(FF)V")); //1
+			this.nodemap.put("onUpdateMethod", new MethodObfuscationEntry("onUpdate", "h", "()V")); //1
+			this.nodemap.put("updateLightmapMethod", new MethodObfuscationEntry("updateLightmap", "i", "(F)V"));
+			this.nodemap.put("renderOverlaysMethod", new MethodObfuscationEntry("renderOverlays", "b", "(F)V"));
+			this.nodemap.put("updateFogColorMethod", new MethodObfuscationEntry("updateFogColor", "j", "(F)V"));
+			this.nodemap.put("getFogColorMethod", new MethodObfuscationEntry("getFogColor", "f", "(F)L" + getNameDynamic("vecClass") + ";"));
+			this.nodemap.put("getSkyColorMethod", new MethodObfuscationEntry("getSkyColor", "a", "(L" + getNameDynamic("entityClass") + ";F)L"
+					+ getNameDynamic("vecClass") + ";"));
+			this.nodemap.put("wakeEntityMethod", new MethodObfuscationEntry("func_146418_g", "f", "()V"));
+			this.nodemap.put("orientBedCamera", new MethodObfuscationEntry("orientBedCamera", "(L" + getNameDynamic("minecraft") + ";L"
+					+ getNameDynamic("entityLivingClass") + ";)V"));
+			this.nodemap.put("renderParticlesMethod", new MethodObfuscationEntry("renderParticles", "a", "(L" + getNameDynamic("entityClass") + ";F)V"));
+			this.nodemap.put("customPlayerMPConstructor", new MethodObfuscationEntry("<init>", "(L" + getNameDynamic("minecraftServer") + ";L"
+					+ getNameDynamic("worldServer") + ";L" + getNameDynamic("gameProfileClass") + ";L" + getNameDynamic("itemInWorldManagerClass") + ";)V"));
+			this.nodemap.put("customPlayerSPConstructor", new MethodObfuscationEntry("<init>", "(L" + getNameDynamic("minecraft") + ";L"
+					+ getNameDynamic("worldClass") + ";L" + getNameDynamic("session") + ";L" + getNameDynamic("netHandlerPlayClientClass") + ";L"
+					+ getNameDynamic("statFileWriterClass") + ";)V"));
+			this.nodemap.put("handleSpawnPlayerMethod",
+					new MethodObfuscationEntry("handleSpawnPlayer", "a", "(L" + getNameDynamic("packetSpawnPlayer") + ";)V"));
+			this.nodemap.put("orientCamera", new MethodObfuscationEntry("orientCamera", "h", "(F)V"));
+			this.nodemap.put("renderManagerMethod", new MethodObfuscationEntry("func_147939_a", "a", "(L" + getNameDynamic("entityClass") + ";DDDFFZ)Z"));
+			this.nodemap.put("setupGLTranslationMethod", new MethodObfuscationEntry("setupGLTranslation", "f", "()V"));
+			this.nodemap.put("preRenderBlocksMethod", new MethodObfuscationEntry("preRenderBlocks", "b", "(I)V"));
+			this.nodemap.put("setPositionMethod", new MethodObfuscationEntry("setPosition", "a", "(III)V"));
+			this.nodemap.put("updateRendererMethod", new MethodObfuscationEntry("updateRenderer", "a", "(L" + getNameDynamic("entityLivingClass") + ";)V"));
+			this.nodemap.put("loadRenderersMethod", new MethodObfuscationEntry("loadRenderers", "a", "()V"));
+			this.nodemap.put("renderGlobalInitMethod", new MethodObfuscationEntry("<init>", "(L" + getNameDynamic("minecraft") + ";)V"));
+			this.nodemap.put("sortAndRenderMethod", new MethodObfuscationEntry("sortAndRender", "a", "(L" + getNameDynamic("entityLivingClass") + ";ID)I"));
+			this.nodemap.put("addVertexMethod", new MethodObfuscationEntry("addVertex", "a", "(DDD)V"));
+			this.nodemap.put("renderTileAtMethod", new MethodObfuscationEntry("renderTileEntityAt", "a", "(L" + getNameDynamic("tileEntityClass") + ";DDDF)V"));
+			this.nodemap.put("startGame", new MethodObfuscationEntry("startGame", "ag", "()V"));
+			this.nodemap.put("canRenderOnFire", new MethodObfuscationEntry("canRenderOnFire", "aA", "()Z"));
+			this.nodemap.put("CGSpopulate", new MethodObfuscationEntry("populate", "a", "(Lapu;II)V"));
+			this.nodemap.put("attemptLoginMethodBukkit", new MethodObfuscationEntry("attemptLogin", "attemptLogin", "(L"
+					+ getNameDynamic("netHandlerLoginServer") + ";L" + getNameDynamic("gameProfileClass") + ";Ljava/lang/String;)L"
+					+ getNameDynamic("PlayerMP") + ";"));
+		}
 
-	      this.nodemap.put("entityLivingClass", "net/minecraft/entity/EntityLivingBase");
-	      this.nodemap.put("moveEntityMethod", "moveEntityWithHeading");
-	      this.nodemap.put("moveEntityDesc", "(FF)V");
+		try {
+			this.isServer = (Launch.classLoader.getClassBytes(getNameDynamic("renderGlobalClass")) == null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-	      this.nodemap.put("entityItemClass", "net/minecraft/entity/item/EntityItem");
-	      this.nodemap.put("onUpdateMethod", "onUpdate");
-	      this.nodemap.put("onUpdateDesc", "()V");
-
-	      this.nodemap.put("entityRendererClass", "net/minecraft/client/renderer/EntityRenderer");
-	      this.nodemap.put("updateLightmapMethod", "updateLightmap");
-	      this.nodemap.put("updateLightmapDesc", "(F)V");
-
-	      this.nodemap.put("player", "net/minecraft/entity/player/EntityPlayer");
-	      this.nodemap.put("containerPlayer", "net/minecraft/inventory/ContainerPlayer");
-	      this.nodemap.put("invPlayerClass", "net/minecraft/entity/player/InventoryPlayer");
-
-	      this.nodemap.put("minecraft", "net/minecraft/client/Minecraft");
-	      this.nodemap.put("session", "net/minecraft/util/Session");
-	      this.nodemap.put("guiPlayer", "net/minecraft/client/gui/inventory/GuiInventory");
-	      this.nodemap.put("thePlayer", "thePlayer");
-	      this.nodemap.put("displayGui", "displayGuiScreen");
-	      this.nodemap.put("guiScreen", "net/minecraft/src/GuiScreen");
-	      this.nodemap.put("displayGuiDesc", "(L" + (String)this.nodemap.get("guiScreen") + ";)V");
-	      this.nodemap.put("runTick", "runTick");
-	      this.nodemap.put("runTickDesc", "()V");
-	      this.nodemap.put("clickMiddleMouseButton", "clickMiddleMouseButton");
-	      this.nodemap.put("clickMiddleMouseButtonDesc", "()V");
-
-	      this.nodemap.put("itemRendererClass", "net/minecraft/client/renderer/ItemRenderer");
-	      this.nodemap.put("renderOverlaysMethod", "renderOverlays");
-	      this.nodemap.put("renderOverlaysDesc", "(F)V");
-
-	      this.nodemap.put("updateFogColorMethod", "updateFogColor");
-	      this.nodemap.put("updateFogColorDesc", "(F)V");
-	      this.nodemap.put("getFogColorMethod", "getFogColor");
-	      this.nodemap.put("getSkyColorMethod", "getSkyColor");
-	      this.nodemap.put("vecClass", "net/minecraft/util/Vec3");
-	      this.nodemap.put("entityClass", "net/minecraft/entity/Entity");
-	      this.nodemap.put("getFogColorDesc", "(F)L" + (String)this.nodemap.get("vecClass") + ";");
-	      this.nodemap.put("getSkyColorDesc", "(L" + (String)this.nodemap.get("entityClass") + ";F)L" + (String)this.nodemap.get("vecClass") + ";");
-
-	      this.nodemap.put("guiSleepClass", "net/minecraft/client/gui/GuiSleepMP");
-	      this.nodemap.put("wakeEntityMethod", "wakeEntity");
-	      this.nodemap.put("wakeEntityDesc", "()V");
-
-	      this.nodemap.put("orientCameraDesc", "(L" + (String)this.nodemap.get("minecraft") + ";L" + (String)this.nodemap.get("entityLivingClass") + ";)V");
-
-	      this.nodemap.put("blockClass", "net/minecraft/block/Block");
-	      this.nodemap.put("breakBlockMethod", "breakBlock");
-	      this.nodemap.put("breakBlockDesc", "(L" + (String)this.nodemap.get("worldClass") + ";IIIII)V");
-	    }
-	    else
-	    {
-	      String mcVersion = (String)cpw.mods.fml.relauncher.FMLInjectionData.data()[4];
-
-	      if (VersionParser.parseRange("[1.6.4]").containsVersion(new DefaultArtifactVersion(mcVersion)))
-	      {
-	        this.nodemap.put("worldClass", "abw");
-
-	        this.nodemap.put("playerMP", "jv");
-	        this.nodemap.put("netLoginHandler", "jy");
-	        this.nodemap.put("confManagerClass", "hn");
-	        this.nodemap.put("createPlayerMethod", "a");
-	        this.nodemap.put("createPlayerDesc", "(Ljava/lang/String;)L" + (String)this.nodemap.get("playerMP") + ";");
-	        this.nodemap.put("respawnPlayerMethod", "a");
-	        this.nodemap.put("respawnPlayerDesc", "(L" + (String)this.nodemap.get("playerMP") + ";IZ)L" + (String)this.nodemap.get("playerMP") + ";");
-	        this.nodemap.put("itemInWorldManagerClass", "jw");
-
-	        this.nodemap.put("attemptLoginMethodBukkit", "attemptLogin");
-	        this.nodemap.put("attemptLoginDescBukkit", "(L" + (String)this.nodemap.get("netLoginHandler") + ";Ljava/lang/String;Ljava/lang/String;)L" + (String)this.nodemap.get("playerMP") + ";");
-
-	        this.nodemap.put("playerControllerClass", "bdc");
-	        this.nodemap.put("playerClient", "bdi");
-	        this.nodemap.put("netClientHandler", "bcw");
-	        this.nodemap.put("createClientPlayerMethod", "a");
-	        this.nodemap.put("createClientPlayerDesc", "(L" + (String)this.nodemap.get("worldClass") + ";)L" + (String)this.nodemap.get("playerClient") + ";");
-
-	        this.nodemap.put("entityLivingClass", "of");
-	        this.nodemap.put("moveEntityMethod", "e");
-	        this.nodemap.put("moveEntityDesc", "(FF)V");
-
-	        this.nodemap.put("entityItemClass", "ss");
-	        this.nodemap.put("onUpdateMethod", "l_");
-	        this.nodemap.put("onUpdateDesc", "()V");
-
-	        this.nodemap.put("entityRendererClass", "bfe");
-	        this.nodemap.put("updateLightmapMethod", "h");
-	        this.nodemap.put("updateLightmapDesc", "(F)V");
-
-	        this.nodemap.put("player", "uf");
-	        this.nodemap.put("containerPlayer", "vv");
-	        this.nodemap.put("invPlayerClass", "ud");
-
-	        this.nodemap.put("minecraft", "atv");
-	        this.nodemap.put("session", "aus");
-	        this.nodemap.put("guiPlayer", "axv");
-	        this.nodemap.put("thePlayer", "h");
-	        this.nodemap.put("displayGui", "a");
-	        this.nodemap.put("guiScreen", "awe");
-	        this.nodemap.put("displayGuiDesc", "(L" + (String)this.nodemap.get("guiScreen") + ";)V");
-	        this.nodemap.put("runTick", "k");
-	        this.nodemap.put("runTickDesc", "()V");
-	        this.nodemap.put("clickMiddleMouseButton", "W");
-	        this.nodemap.put("clickMiddleMouseButtonDesc", "()V");
-
-	        this.nodemap.put("itemRendererClass", "bfj");
-	        this.nodemap.put("renderOverlaysMethod", "b");
-	        this.nodemap.put("renderOverlaysDesc", "(F)V");
-
-	        this.nodemap.put("updateFogColorMethod", "i");
-	        this.nodemap.put("updateFogColorDesc", "(F)V");
-	        this.nodemap.put("getFogColorMethod", "f");
-	        this.nodemap.put("getSkyColorMethod", "a");
-	        this.nodemap.put("vecClass", "atc");
-	        this.nodemap.put("entityClass", "nn");
-	        this.nodemap.put("getFogColorDesc", "(F)L" + (String)this.nodemap.get("vecClass") + ";");
-	        this.nodemap.put("getSkyColorDesc", "(L" + (String)this.nodemap.get("entityClass") + ";F)L" + (String)this.nodemap.get("vecClass") + ";");
-
-	        this.nodemap.put("guiSleepClass", "avm");
-	        this.nodemap.put("wakeEntityMethod", "g");
-	        this.nodemap.put("wakeEntityDesc", "()V");
-
-	        this.nodemap.put("orientCameraDesc", "(L" + (String)this.nodemap.get("minecraft") + ";L" + (String)this.nodemap.get("entityLivingClass") + ";)V");
-	      }
-	      
-	    }
-	  }
-
-	  public byte[] transform(String name, String transformedName, byte[] bytes)
-	  {
-	    /*if (name.replace('.', '/').equals(this.nodemap.get("confManagerClass")))
-	    {
-	      bytes = transform1(name, bytes, this.nodemap);
-	    }
-	    else if (name.replace('.', '/').equals(this.nodemap.get("playerControllerClass")))
-	    {
-	      bytes = transform2(name, bytes, this.nodemap);
-	    }
-	    else*/ if (name.replace('.', '/').equals(this.nodemap.get("entityLivingClass")))
-	    {
-	      bytes = transform3(name, bytes, this.nodemap);
-	    }
-	    else if (name.replace('.', '/').equals(this.nodemap.get("entityItemClass")))
-	    {
-	      bytes = transform4(name, bytes, this.nodemap);
-	    }/*
-	    else if (name.replace('.', '/').equals(this.nodemap.get("entityRendererClass")))
-	    {
-	      bytes = transform5(name, bytes, this.nodemap);
-	    }
-	    else if (name.replace('.', '/').equals(this.nodemap.get("itemRendererClass")))
-	    {
-	      bytes = transform14(name, bytes, this.nodemap);
-	    }
-	    else if (name.replace('.', '/').equals(this.nodemap.get("guiSleepClass")))
-	    {
-	      bytes = transform7(name, bytes, this.nodemap);
-	    }
-	    else if (name.equals("net.minecraftforge.client.ForgeHooksClient"))
-	    {
-	      bytes = transform8(name, bytes, this.nodemap);
-	    }
-
-	    if (name.contains("galacticraft"))
-	    {
-	      bytes = transform9(name, bytes, this.nodemap);
-	    }*/
-
-	    return bytes;
 	}
 
-	  public byte[] transform3(String name, byte[] bytes, HashMap<String, String> map)
-	  {
-	    ClassNode node = new ClassNode();
-	    ClassReader reader = new ClassReader(bytes);
-	    reader.accept(node, 0);
+	@Override
+	public byte[] transform(String name, String transformedName, byte[] bytes) {
 
-	    int operationCount = 1;
-	    int injectionCount = 0;
+		String testName = name.replace('.', '/');
 
-	    Iterator methods = node.methods.iterator();
+		if (this.deobfuscated) {
+			return transformVanillaDeobfuscated(testName, bytes);
+		}
+		if (testName.length() <= 3) {
+			return transformVanillaObfuscated(testName, bytes);
+		}
 
-	    while (methods.hasNext())
-	    {
-	      MethodNode methodnode = (MethodNode)methods.next();
+		return bytes;
+	}
 
-	      if ((methodnode.name.equals(map.get("moveEntityMethod"))) && (methodnode.desc.equals(map.get("moveEntityDesc"))))
-	      {
-	        for (int count = 0; count < methodnode.instructions.size(); count++)
-	        {
-	          AbstractInsnNode list = methodnode.instructions.get(count);
+	private byte[] transformVanillaDeobfuscated(String testName, byte[] bytes) {
+		if (testName.equals(getName("entityLivingClass"))) {
+			return transformEntityLiving(bytes);
+		}
+		if (testName.equals(getName("entityItemClass"))) {
+			return transformEntityItem(bytes);
+		}
+		return bytes;
+	}
 
-	          if ((list instanceof LdcInsnNode))
-	          {
-	            LdcInsnNode nodeAt = (LdcInsnNode)list;
+	private byte[] transformVanillaObfuscated(String testName, byte[] bytes) {
 
-	            if (nodeAt.cst.equals(Double.valueOf(0.08D)))
-	            {
-	              VarInsnNode beforeNode = new VarInsnNode(25, 0);
-	              MethodInsnNode overwriteNode = new MethodInsnNode(184, "ss/core/utils/WorldUtils", "getGravityForEntity", "(L" + (String)map.get("entityLivingClass") + ";)D");
+		if (testName.equals(((ObfuscationEntry) this.nodemap.get("entityLivingClass")).obfuscatedName)) {
+			return transformEntityLiving(bytes);
+		}
+		if (testName.equals(((ObfuscationEntry) this.nodemap.get("entityItemClass")).obfuscatedName)) {
+			return transformEntityItem(bytes);
+		}
+		return bytes;
+	}
 
-	              methodnode.instructions.insertBefore(nodeAt, beforeNode);
-	              methodnode.instructions.set(nodeAt, overwriteNode);
-	              injectionCount++;
-	            }
-	          }
-	        }
-	      }
-	    }
-	    
-	    ClassWriter writer = new ClassWriter(1);
-	    node.accept(writer);
-	    bytes = writer.toByteArray();
+	public byte[] transformEntityLiving(byte[] bytes) {
+		ClassNode node = startInjection(bytes);
 
-	    System.out.println("SS successfully injected bytecode into: " + node.name + " (" + injectionCount + " / " + operationCount + ")");
+		operationCount = 1;
 
-	    return bytes;
-	  }
-	  
-	  public byte[] transform4(String name, byte[] bytes, HashMap<String, String> map)
-	  {
-	    ClassNode node = new ClassNode();
-	    ClassReader reader = new ClassReader(bytes);
-	    reader.accept(node, 0);
+		MethodNode method = getMethod(node, "moveEntityMethod");
 
-	    int operationCount = 2;
-	    int injectionCount = 0;
+		if (method != null) {
+			for (int count = 0; count < method.instructions.size(); count++) {
+				AbstractInsnNode list = method.instructions.get(count);
 
-	    Iterator methods = node.methods.iterator();
+				if ((list instanceof LdcInsnNode)) {
+					LdcInsnNode nodeAt = (LdcInsnNode) list;
 
-	    while (methods.hasNext())
-	    {
-	      MethodNode methodnode = (MethodNode)methods.next();
+					if (nodeAt.cst.equals(Double.valueOf(0.08D))) {
+						VarInsnNode beforeNode = new VarInsnNode(25, 0);
+						MethodInsnNode overwriteNode = new MethodInsnNode(184, "com/badday/ss/core/utils/WorldUtils", "getGravityForEntity", "(L"
+								+ getNameDynamic("entityClass") + ";)D");
 
-	      if ((methodnode.name.equals(map.get("onUpdateMethod"))) && (methodnode.desc.equals(map.get("onUpdateDesc"))))
-	      {
-	        for (int count = 0; count < methodnode.instructions.size(); count++)
-	        {
-	          AbstractInsnNode list = methodnode.instructions.get(count);
+						method.instructions.insertBefore(nodeAt, beforeNode);
+						method.instructions.set(nodeAt, overwriteNode);
+						injectionCount += 1;
+					}
+				}
+			}
+		}
 
-	          if ((list instanceof LdcInsnNode))
-	          {
-	            LdcInsnNode nodeAt = (LdcInsnNode)list;
+		return finishInjection(node);
+	}
 
-	            if (nodeAt.cst.equals(Double.valueOf(0.03999999910593033D)))
-	            {
-	              VarInsnNode beforeNode = new VarInsnNode(25, 0);
-	              MethodInsnNode overwriteNode = new MethodInsnNode(184, "ss/core/utils/WorldUtils", "getItemGravity", "(L" + (String)map.get("entityItemClass") + ";)D");
+	public byte[] transformEntityItem(byte[] bytes) {
+		ClassNode node = startInjection(bytes);
 
-	              methodnode.instructions.insertBefore(nodeAt, beforeNode);
-	              methodnode.instructions.set(nodeAt, overwriteNode);
-	              injectionCount++;
-	            }
+		operationCount = 1;
 
-	            if (nodeAt.cst.equals(Double.valueOf(0.9800000190734863D)))
-	            {
-	              VarInsnNode beforeNode = new VarInsnNode(25, 0);
-	              MethodInsnNode overwriteNode = new MethodInsnNode(184, "ss/core/utils/WorldUtils", "getItemGravity2", "(L" + (String)map.get("entityItemClass") + ";)D");
+		MethodNode method = getMethod(node, "onUpdateMethod");
 
-	              methodnode.instructions.insertBefore(nodeAt, beforeNode);
-	              methodnode.instructions.set(nodeAt, overwriteNode);
-	              injectionCount++;
-	            }
-	          }
-	        }
-	      }
-	    }
+		if (method != null) {
+			for (int count = 0; count < method.instructions.size(); count++) {
+				AbstractInsnNode list = method.instructions.get(count);
 
-	    ClassWriter writer = new ClassWriter(1);
-	    node.accept(writer);
-	    bytes = writer.toByteArray();
+				if ((list instanceof LdcInsnNode)) {
+					LdcInsnNode nodeAt = (LdcInsnNode) list;
 
-	    System.out.println("SS successfully injected bytecode into: " + node.name + " (" + injectionCount + " / " + operationCount + ")");
+					if (nodeAt.cst.equals(Double.valueOf(0.03999999910593033D))) {
+						VarInsnNode beforeNode = new VarInsnNode(25, 0);
+						MethodInsnNode overwriteNode = new MethodInsnNode(184, "com/badday/ss/core/utils/WorldUtils", "getItemGravity", "(L"
+								+ getNameDynamic("entityItemClass") + ";)D");
 
-	    return bytes;
-	  }  
+						method.instructions.insertBefore(nodeAt, beforeNode);
+						method.instructions.set(nodeAt, overwriteNode);
+						injectionCount += 1;
+					}
+				}
+			}
+		}
+
+		return finishInjection(node);
+	}
+
+	// =======================================
+
+	private boolean mcVersionMatches(String testVersion) {
+		return VersionParser.parseRange(testVersion).containsVersion(this.mcVersion);
+	}
+
+	public static class FieldObfuscationEntry extends ObfuscationEntry {
+		public FieldObfuscationEntry(String name, String obfuscatedName) {
+			super(obfuscatedName);
+		}
+	}
+
+	private MethodNode getMethod(ClassNode node, String keyName) {
+		for (MethodNode methodNode : node.methods) {
+			if (methodMatches(keyName, methodNode)) {
+				return methodNode;
+			}
+		}
+
+		return null;
+	}
+
+	private boolean methodMatches(String keyName, MethodInsnNode node) {
+		return (node.name.equals(getNameDynamic(keyName))) && (node.desc.equals(getDescDynamic(keyName)));
+	}
+
+	private boolean methodMatches(String keyName, MethodNode node) {
+		return (node.name.equals(getNameDynamic(keyName))) && (node.desc.equals(getDescDynamic(keyName)));
+	}
+
+	public String getName(String keyName) {
+		return ((ObfuscationEntry) this.nodemap.get(keyName)).name;
+	}
+
+	public String getObfName(String keyName) {
+		return ((ObfuscationEntry) this.nodemap.get(keyName)).obfuscatedName;
+	}
+
+	public String getNameDynamic(String keyName) {
+		try {
+			if (this.deobfuscated) {
+				return getName(keyName);
+			}
+
+			return getObfName(keyName);
+		} catch (NullPointerException e) {
+			System.err.println("Could not find key: " + keyName);
+			throw e;
+		}
+	}
+
+	public String getDescDynamic(String keyName) {
+		return ((MethodObfuscationEntry) this.nodemap.get(keyName)).methodDesc;
+	}
+
+	private boolean classPathMatches(String keyName, String className) {
+		return className.replace('.', '/').equals(getNameDynamic(keyName));
+	}
+
+	private void printLog(String message) {
+		System.out.println(message);
+	}
+
+	private ClassNode startInjection(byte[] bytes) {
+		ClassNode node = new ClassNode();
+		ClassReader reader = new ClassReader(bytes);
+		reader.accept(node, 0);
+		injectionCount = 0;
+		operationCount = 0;
+		return node;
+	}
+
+	private byte[] finishInjection(ClassNode node) {
+		return finishInjection(node, true);
+	}
+
+	private byte[] finishInjection(ClassNode node, boolean printToLog) {
+		ClassWriter writer = new ClassWriter(1);
+		node.accept(writer);
+
+		if (printToLog) {
+			printResultsAndReset(node.name);
+		}
+
+		return writer.toByteArray();
+	}
+
+	public static class MethodObfuscationEntry extends ObfuscationEntry {
+		public String methodDesc;
+
+		public MethodObfuscationEntry(String name, String obfuscatedName, String methodDesc) {
+			super(obfuscatedName);
+			this.methodDesc = methodDesc;
+		}
+
+		public MethodObfuscationEntry(String commonName, String methodDesc) {
+			this(commonName, commonName, methodDesc);
+		}
+	}
+
+	public static class ObfuscationEntry {
+		public String name;
+		public String obfuscatedName;
+
+		public ObfuscationEntry(String name, String obfuscatedName) {
+			this.name = name;
+			this.obfuscatedName = obfuscatedName;
+		}
+
+		public ObfuscationEntry(String commonName) {
+			this(commonName, commonName);
+		}
+	}
+
+	private void printResultsAndReset(String nodeName) {
+		if (operationCount > 0) {
+			if (injectionCount >= operationCount) {
+				printLog("SSInject successfully injected bytecode into: " + nodeName + " (" + injectionCount + " / " + operationCount + ")");
+			} else {
+				System.err.println("Potential problem: SSInjectcticraft did not complete injection of bytecode into: " + nodeName + " (" + injectionCount
+						+ " / " + operationCount + ")");
+			}
+		}
+	}
+
 }

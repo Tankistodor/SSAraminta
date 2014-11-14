@@ -63,10 +63,6 @@ public class SSCommandPathfinder extends CommandBase
               }
             }
 
-        		//notifyAdmins()
-                //notifyAdmins(icommandsender, "/space: teleporting player " + astring[0] + " to space", new Object[0]);
-                //player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(astring[0]);
-                //player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(astring[0]);
         }
 
         if (player == null)

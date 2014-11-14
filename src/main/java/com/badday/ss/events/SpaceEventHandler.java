@@ -131,6 +131,7 @@ public class SpaceEventHandler
        // stats.player = new WeakReference<EntityPlayerMP>(player);
     }
 	
+     
     @SubscribeEvent
     public void onEntityConstructing(EntityEvent.EntityConstructing event)
     {
@@ -160,10 +161,6 @@ public class SpaceEventHandler
 			entity.attackEntityFrom(DamageSource.outOfWorld, 9000);
 			return;
 		}
-		
-		/*if (entity instanceof EntityPlayerMP) { 
-			updatePlayerCloakState(entity);
-		}*/
 		
 		//Ok. get pressure
 		int distance = 0;
@@ -286,83 +283,4 @@ public class SpaceEventHandler
 		
 	}
 
-	/*private void updatePlayerCloakState(EntityLivingBase entity) {
-		// Make sure for elapsed time is second after last update
-		if (System.currentTimeMillis() - this.lastTimer > 1000)
-			lastTimer = System.currentTimeMillis();
-		else 
-			return;
-		
-		try {
-			EntityPlayerMP p = (EntityPlayerMP)entity;
-			Integer cloakTicks = this.cloakPlayersTimers.get(p.username);
-			
-			if (cloakTicks == null) {
-				this.cloakPlayersTimers.remove(p.username);
-				this.cloakPlayersTimers.put(p.username, 0);
-				
-				return;
-			}
-			
-			if (cloakTicks >= CLOAK_CHECK_TIMEOUT_SEC) {
-				this.cloakPlayersTimers.remove(p.username);
-				this.cloakPlayersTimers.put(p.username, 0);
-				
-				List<CloakedArea> cloaks = WarpDrive.instance.cloaks.getCloaksForPoint(p.worldObj.provider.dimensionId, MathHelper.floor_double(p.posX), MathHelper.floor_double(p.posY), MathHelper.floor_double(p.posZ), false);
-				if (cloaks.size() != 0) {
-					//System.out.println("[Cloak] Player inside " + cloaks.size() + " cloaked areas");
-					for (CloakedArea area : cloaks) {
-						//System.out.println("[Cloak] Frequency: " + area.frequency + ". In: " + area.isPlayerInArea(p) + ", W: " + area.isPlayerWithinArea(p));
-						if (!area.isPlayerInArea(p) && area.isPlayerWithinArea(p)) {
-							WarpDrive.instance.cloaks.playerEnteringCloakedArea(area, p);
-						}
-					}
-				} else {
-					//System.out.println("[Cloak] Player is not inside any cloak fields. Check, which field player may left...");
-					WarpDrive.instance.cloaks.checkPlayerLeavedArea(p);
-				}
-			} else {
-				this.cloakPlayersTimers.remove(p.username);
-				this.cloakPlayersTimers.put(p.username, cloakTicks + 1);			
-			}
-		} catch (Exception e) { e.printStackTrace(); }
-	}*/
-	
-	/*
-	private void setPlayerAirValue(EntityLivingBase entity, Integer air)
-	{
-		vacuumPlayers.remove(((EntityPlayerMP)entity).getDisplayName());
-		vacuumPlayers.put(((EntityPlayerMP)entity).getDisplayName(), air);
-	}*/
-
-	/**
-	 * Проверка, находится ли Entity в открытом космосе
-	 * @param e
-	 * @return
-	 */
-	private boolean isEntityInVacuum(Entity e)
-	{
-		int x = MathHelper.floor_double(e.posX);
-		int y = MathHelper.floor_double(e.posY);
-		int z = MathHelper.floor_double(e.posZ);
-		Block id1 = e.worldObj.getBlock(x, y, z);
-		Block id2 = e.worldObj.getBlock(x, y + 1, z);
-
-		if (id1 == SSConfig.ssBlockAir || id2 == SSConfig.ssBlockAir)
-			return false;
-		return true;
-	}
-
-	private boolean consumeO2(ItemStack[] i)
-	{
-		for (int j = 0; j < i.length; ++j)
-			//if (i[j] != null && i[j].equals(SS.IC2_Air[0]) && i[j].getItemDamage() == SS.IC2_Air[1])
-			if (i[j] != null && i[j].equals(SS.IC2_Air[0]))
-			{
-				if (--i[j].stackSize <= 0)
-					i[j] = null;
-				return true;
-			}
-		return false;
-	}
 }

@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+@Deprecated
 public class Pathfinding {
   public static int PATH_ITERATIONS = 128;
 

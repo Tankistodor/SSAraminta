@@ -63,8 +63,6 @@ public class SSFindSealedBay {
 
 	public boolean fullcheck() {
 
-		long time1 = System.nanoTime();
-
 		this.checkCount = SSConfig.ssAirVentBlockArea;
 
 		nextLayer = new LinkedList<BlockVec3>();
@@ -78,24 +76,8 @@ public class SSFindSealedBay {
 		this.active = true;
 		this.bayBlocks = 0;
 		this.doLayer();
-		
-		/*
-		 * long time2 = System.nanoTime();
-		 * 
-		 * if (this.sealed && !this.blockToReplace.isEmpty()) {
-		 * // TODO механизм замены блоков если
-			replace_block();
-		}*/
-		long time3 = System.nanoTime();
 
-		if (SS.Debug && false ) {
-			System.out.println("[" + SS.MODNAME + "] AirVent Check Completed at x: " + this.head.x + " y: " + this.head.y + " z: " + this.head.z);
-			System.out.println("   Sealed: " + this.sealed + " active: " + this.getActive());
-			System.out.println("   Total Time taken: " + (time3 - time1) / 1000000.0D + "ms");
-		    System.out.println("   Looped through: " + this.getSize() + " blocks");
-		}
 		return this.sealed;
-
 	}
 
 	private void doLayer() {

@@ -18,9 +18,9 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
 public class SSInjectPlugin implements IFMLLoadingPlugin, IFMLCallHook {
 
-	private static String transformerMain = "ss.inject.SSInjectBytecode";
+	private static String transformerMain = "com.badday.ss.inject.SSInjectBytecode";
 	public static boolean hasRegistered = false;
-	public static final String mcVersion = "[1.6.4]";
+	public static final String mcVersion = "[1.7.10]";
 	public static File mcDir;
 
 	public String[] getLibraryRequestClass() {
@@ -63,7 +63,7 @@ public class SSInjectPlugin implements IFMLLoadingPlugin, IFMLCallHook {
 	}
 
 	public String[] getASMTransformerClass() {
-		versionCheck("[1.6.4]", "SSInject");
+		versionCheck("[1.7.10]", "SSInject");
 		String[] asmStrings = { transformerMain };
 
 		if (!hasRegistered) {
@@ -90,11 +90,11 @@ public class SSInjectPlugin implements IFMLLoadingPlugin, IFMLCallHook {
 	}
 
 	public String getModContainerClass() {
-		return "ss.inject.SSInjectContainer";
+		return "com.badday.ss.inject.SSInjectContainer";
 	}
 
 	public String getSetupClass() {
-		return "ss.inject.SSInjectPlugin";
+		return "com.badday.ss.inject.SSInjectPlugin";
 	}
 
 	public void injectData(Map<String, Object> data) {
