@@ -62,6 +62,7 @@ public class SSInjectPlugin implements IFMLLoadingPlugin, IFMLCallHook {
 		}
 	}
 
+	@Override
 	public String[] getASMTransformerClass() {
 		versionCheck("[1.7.10]", "SSInject");
 		String[] asmStrings = { transformerMain };
@@ -89,14 +90,17 @@ public class SSInjectPlugin implements IFMLLoadingPlugin, IFMLCallHook {
 		return asmStrings;
 	}
 
+	@Override
 	public String getModContainerClass() {
 		return "com.badday.ss.inject.SSInjectContainer";
 	}
 
+	@Override
 	public String getSetupClass() {
 		return "com.badday.ss.inject.SSInjectPlugin";
 	}
 
+	@Override
 	public void injectData(Map<String, Object> data) {
 		if (data.containsKey("mcLocation")) {
 			mcDir = (File) data.get("mcLocation");

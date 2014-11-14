@@ -13,6 +13,8 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Opcodes;
+
 import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
 import cpw.mods.fml.common.versioning.VersionParser;
 
@@ -174,24 +176,29 @@ public class SSInjectBytecode implements IClassTransformer {
 		return bytes;
 	}
 
-	public byte[] transformEntityLiving(byte[] bytes) {
-		ClassNode node = startInjection(bytes);
+	
+	public byte[] transformEntityLiving(byte[] bytes)
+	{
+		ClassNode node = this.startInjection(bytes);
 
 		operationCount = 1;
 
-		MethodNode method = getMethod(node, "moveEntityMethod");
+		MethodNode method = this.getMethod(node, "moveEntityMethod");
 
-		if (method != null) {
-			for (int count = 0; count < method.instructions.size(); count++) {
-				AbstractInsnNode list = method.instructions.get(count);
+		if (method != null)
+		{
+			for (int count = 0; count < method.instructions.size(); count++)
+			{
+				final AbstractInsnNode list = method.instructions.get(count);
 
-				if ((list instanceof LdcInsnNode)) {
-					LdcInsnNode nodeAt = (LdcInsnNode) list;
+				if (list instanceof LdcInsnNode)
+				{
+					final LdcInsnNode nodeAt = (LdcInsnNode) list;
 
-					if (nodeAt.cst.equals(Double.valueOf(0.08D))) {
-						VarInsnNode beforeNode = new VarInsnNode(25, 0);
-						MethodInsnNode overwriteNode = new MethodInsnNode(184, "com/badday/ss/core/utils/WorldUtils", "getGravityForEntity", "(L"
-								+ getNameDynamic("entityClass") + ";)D");
+					if (nodeAt.cst.equals(0.08D))
+					{
+						final VarInsnNode beforeNode = new VarInsnNode(Opcodes.ALOAD, 0);
+						final MethodInsnNode overwriteNode = new MethodInsnNode(Opcodes.INVOKESTATIC, "com/badday/ss/core/utils/WorldUtils", "getGravityForEntity", "(L" + this.getNameDynamic("entityClass") + ";)D");
 
 						method.instructions.insertBefore(nodeAt, beforeNode);
 						method.instructions.set(nodeAt, overwriteNode);
@@ -201,7 +208,7 @@ public class SSInjectBytecode implements IClassTransformer {
 			}
 		}
 
-		return finishInjection(node);
+		return this.finishInjection(node);
 	}
 
 	public byte[] transformEntityItem(byte[] bytes) {
@@ -353,7 +360,7 @@ public class SSInjectBytecode implements IClassTransformer {
 			if (injectionCount >= operationCount) {
 				printLog("SSInject successfully injected bytecode into: " + nodeName + " (" + injectionCount + " / " + operationCount + ")");
 			} else {
-				System.err.println("Potential problem: SSInjectcticraft did not complete injection of bytecode into: " + nodeName + " (" + injectionCount
+				System.err.println("Potential problem: SSInject did not complete injection of bytecode into: " + nodeName + " (" + injectionCount
 						+ " / " + operationCount + ")");
 			}
 		}

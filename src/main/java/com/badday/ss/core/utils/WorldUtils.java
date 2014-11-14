@@ -3,6 +3,7 @@ package com.badday.ss.core.utils;
 import java.util.Iterator;
 
 import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,7 +22,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class WorldUtils {
 
-	public static double getGravityForEntity(EntityLivingBase eLiving)
+	//public static double getGravityForEntity(EntityLivingBase eLiving)
+	public static double getGravityForEntity(Entity eLiving)
 	{
 		if (eLiving.worldObj.provider instanceof SpaceProvider)
 		{
