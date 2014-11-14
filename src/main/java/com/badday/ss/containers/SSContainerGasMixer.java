@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
 import net.minecraft.tileentity.TileEntity;
 
 import com.badday.ss.blocks.SSTileEntityGasMixer;
@@ -27,6 +28,9 @@ public class SSContainerGasMixer extends Container implements INetworkTileEntity
 		player = ((InventoryPlayer) playerInventory).player;
 		this.tileEntity =  tileEntity;
 		this.tileEntity.openInventory();
+		//this.layoutContainer(playerInventory, tileEntity, 176, 176);
+		
+		
 	}
 
 	@Override
@@ -40,6 +44,32 @@ public class SSContainerGasMixer extends Container implements INetworkTileEntity
         super.onContainerClosed(entityplayer);
         tileEntity.closeInventory();
     }
+	
+	protected void layoutContainer(IInventory playerInventory, IInventory chestInventory, int xSize, int ySize) {
+		// Make charge slot
+		addSlotToContainer(makeSlot(chestInventory, 0, 8 , 8));
+		
+		int leftCol = (xSize - 162) / 2 + 1;
+        for (int playerInvRow = 0; playerInvRow < 3; playerInvRow++)
+        {
+            for (int playerInvCol = 0; playerInvCol < 9; playerInvCol++)
+            {
+                addSlotToContainer(new Slot(playerInventory, playerInvCol + playerInvRow * 9 + 9, leftCol + playerInvCol * 18-4, ySize - (4 - playerInvRow) * 18
+                        - 10));
+            }
+
+        }
+
+        for (int hotbarSlot = 0; hotbarSlot < 9; hotbarSlot++)
+        {
+            addSlotToContainer(new Slot(playerInventory, hotbarSlot, leftCol + hotbarSlot * 18 - 4, ySize - 24));
+        }
+		
+	}
+	
+	public Slot makeSlot(IInventory chestInventory, int index, int x, int y) {
+		return new Slot(chestInventory, index, x, y);
+	}
 	
 	@Override
 	public void onNetworkEvent(int event) {

@@ -12,8 +12,8 @@ import net.minecraft.item.ItemStack;
 public class SSContainerCabinet extends Container {
     private EntityPlayer player;
     private IInventory chest;
-    private final int ROWLENGHT = 9;//9
-    private final int ROWCOUNT = SSConfig.ssCabinetSize/ROWLENGHT; 
+    private final int ROWLENGHT = 9;
+    private final int ROWCOUNT = 4; 
 	
     public SSContainerCabinet(IInventory playerInventory, IInventory chestInventory, int xSize, int ySize)
     {
