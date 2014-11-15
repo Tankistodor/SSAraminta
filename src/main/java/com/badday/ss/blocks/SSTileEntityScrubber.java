@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -22,17 +23,26 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import com.badday.ss.SSConfig;
+import com.badday.ss.core.atmos.FindNearestVentJob;
+import com.badday.ss.core.atmos.GasUtils;
+import com.badday.ss.core.utils.BlockVec3;
+import com.badday.ss.entity.player.SSPlayerData;
 
 public class SSTileEntityScrubber extends TileEntity implements IFluidHandler,IInventory, ISidedInventory, INetworkDataProvider, INetworkUpdateListener,
 		INetworkClientTileEntityEventListener, IEnergySink {
 
-	//private ItemStack dischargeSlot;
+	private final int COOLDOWN = 20;
+	public long ticks = 0;
+	private BlockVec3 nearestAirVent = BlockVec3.INVALID_VECTOR;
+	private FindNearestVentJob job;
+	
 	private ItemStack[] containingItems = new ItemStack[1];
 
 	public FluidTank[] tank = new FluidTank[4];
@@ -91,12 +101,10 @@ public class SSTileEntityScrubber extends TileEntity implements IFluidHandler,II
 		}
 
 		for (int i = 0; i < 4; i++) {
-			FluidStack liquid = tank[i].getFluid();
-			tags.setBoolean("hasFluid" + i, liquid != null);
-			if (liquid != null) {
-				tags.setString("fluidName" + i, liquid.getFluid().getName());
-				tags.setInteger("amount" + i, liquid.amount);
-			}
+			if (tags.getBoolean("hasFluid" + i)) {
+				tank[i].setFluid(FluidRegistry.getFluidStack(tags.getString("fluidName" + i), tags.getInteger("amount" + i)));
+			} else
+				tank[i].setFluid(null);
 		}
 
 		this.energy = tags.getDouble("energy");
@@ -166,7 +174,7 @@ public class SSTileEntityScrubber extends TileEntity implements IFluidHandler,II
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		
+		this.tickBeat();
 		if (!this.worldObj.isRemote) {
 			if (this.maxEnergy - this.energy >= 1.0D) {
 
@@ -179,11 +187,68 @@ public class SSTileEntityScrubber extends TileEntity implements IFluidHandler,II
 					}
 				}
 			}
+			
+			if (this.ticks % (COOLDOWN * 5) == 0) {
+				if (job == null) {
+					job = new FindNearestVentJob(this.worldObj, new BlockVec3(this.xCoord,this.yCoord,this.zCoord));
+					job.run();
+				} else {
+					if (!job.isAlive()) {
+						this.nearestAirVent = job.getNearestVent();
+						job = null;
+					}
+				}
+			}
+			
+			if ((this.ticks % (COOLDOWN * 3) == 0) && (!this.nearestAirVent.equals(BlockVec3.INVALID_VECTOR))) {
+				// Try to get _non_ O2 and N gases and put it into scrubber tank
+				SSTileEntityAirVent airVent = (SSTileEntityAirVent) this.nearestAirVent.getTileEntity(this.worldObj);
+				if (airVent != null) {
+					for (FluidTank fluidtank : airVent.tank.mixtureTank) {
+							if (fluidtank != null && fluidtank.getFluid() != null && !fluidtank.getFluid().getUnlocalizedName().equals("fluid.oxygen") && !fluidtank.getFluid().getUnlocalizedName().equals("fluid.nitrogen")) {
+								FluidStack newRes = fluidtank.drain(15, true);
+								
+								int firstNull=0;
+								int i = 0;
+								boolean inject = false;
+								
+								for (FluidTank t : this.tank) {
+									if (t != null && t.getFluid() != null && t.getFluid().getUnlocalizedName().equals(newRes.getUnlocalizedName())) {
+										t.fill(newRes, true);
+										inject = true;
+										markDirty();
+										break;
+									}
+									if (t == null || t.getFluid() == null) {
+										firstNull = i;
+									}
+									i++;
+								}
+								
+								if (!inject) {
+									markDirty();
+									this.tank[firstNull] = new FluidTank(newRes,FluidContainerRegistry.BUCKET_VOLUME);
+								}
+								
+						}
+					}
+				}
+			}
+			
 		}
 
 		this.guiChargeLevel = Math.min(1.0F, (float) this.energy / this.maxEnergy);
 	}
 	
+	private void tickBeat() {
+
+		if (this.ticks >= Long.MAX_VALUE) {
+			this.ticks = 1;
+		}
+
+		this.ticks++;
+	}
+
 	@Override
 	public boolean acceptsEnergyFrom(TileEntity emitter, ForgeDirection direction) {
 		if (direction.equals(ForgeDirection.DOWN)) return true;
@@ -245,7 +310,7 @@ public class SSTileEntityScrubber extends TileEntity implements IFluidHandler,II
 	public List<String> getNetworkedFields() {
 		Vector<String> vector = new Vector<String>(3);
 		vector.add("tank");
-		//vector.add("dischargeSlot");
+		//vector.add("nearestAirVent");
 		vector.add("energy");
 		vector.add("guiChargeLevel");
 		return vector;
@@ -376,7 +441,7 @@ public class SSTileEntityScrubber extends TileEntity implements IFluidHandler,II
 	@Override
 	public FluidStack drain(ForgeDirection direction, FluidStack arg1, boolean doDrain) {
 		if (direction.ordinal() > 1 && direction.ordinal() < 6) {
-			this.tank[direction.ordinal()].drain(arg1.amount, doDrain);
+			this.tank[direction.ordinal()-2].drain(arg1.amount, doDrain);
 		}
 		return null;
 	}
@@ -384,7 +449,10 @@ public class SSTileEntityScrubber extends TileEntity implements IFluidHandler,II
 	@Override
 	public FluidStack drain(ForgeDirection direction, int maxDrain, boolean doDrain) {
 		if (direction.ordinal() > 1 && direction.ordinal() < 6) {
-			this.tank[direction.ordinal()].drain(maxDrain, doDrain);
+			if (this.tank[direction.ordinal()-2].getFluid() != null) {
+				markDirty();
+				return this.tank[direction.ordinal()-2].drain(maxDrain, doDrain);
+			}
 		}
 		return null;
 	}
@@ -420,4 +488,9 @@ FluidStack fluid = null;
 		return 0;
 	}
 
+	public String getFluidTooltips(int tankId) {
+		if (tank[tankId].getFluid() != null)
+			return tank[tankId].getInfo().fluid.getLocalizedName()+" "+tank[tankId].getFluidAmount()+"/"+tank[tankId].getCapacity();
+		return "empty";
+	}
 }

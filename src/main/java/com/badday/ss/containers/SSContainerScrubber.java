@@ -172,7 +172,7 @@ public class SSContainerScrubber extends Container implements INetworkTileEntity
 	public List<String> getNetworkedFields() {
 		Vector<String> vector = new Vector<String>(3);
 		vector.add("tank");
-		//vector.add("dischargeSlot");
+		//vector.add("nearestAirVent");
 		vector.add("energy");
 		vector.add("guiChargeLevel");
 		return vector;
