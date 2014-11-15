@@ -249,7 +249,7 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 
 	@Override
 	public void writeToNBT(NBTTagCompound tags) {
-		if (SS.Debug) System.out.println("writeToNBT d");
+
 		super.writeToNBT(tags);
 		for (int i = 0; i < 4; i++) {
 			FluidStack liquid = tank[i].getFluid();
@@ -352,8 +352,11 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int arg0, ItemStack arg1) {
-		// TODO Auto-generated method stub
+	public boolean isItemValidForSlot(int slotID, ItemStack itemstack) {
+
+		if (slotID == 0 && itemstack.getItem() instanceof ic2.api.item.ISpecialElectricItem) {
+			return true;
+		}
 		return false;
 	}
 

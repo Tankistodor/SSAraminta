@@ -15,6 +15,7 @@ import com.badday.ss.blocks.SSBlockGasMixer;
 import com.badday.ss.blocks.SSBlockGasPipe;
 import com.badday.ss.blocks.SSBlockGlassCasing;
 import com.badday.ss.blocks.SSBlockMultiFake;
+import com.badday.ss.blocks.SSBlockScrubber;
 import com.badday.ss.blocks.SSBlockWallCasing;
 import com.badday.ss.blocks.SSBlockWallCasingRaw;
 import com.badday.ss.blocks.SSFuidTextrures;
@@ -22,6 +23,7 @@ import com.badday.ss.blocks.SSTileEntityAirVent;
 import com.badday.ss.blocks.SSTileEntityCabinet;
 import com.badday.ss.blocks.SSTileEntityGasMixer;
 import com.badday.ss.blocks.SSTileEntityMultiFake;
+import com.badday.ss.blocks.SSTileEntityScrubber;
 import com.badday.ss.core.utils.SSSettings;
 import com.badday.ss.items.SSItemBlockCabinet;
 import com.badday.ss.items.SSItemBlockGasPipe;
@@ -46,6 +48,7 @@ public class SSConfig {
 	public static Block ssBlockCabinet;
 	public static Block ssBlockGasPipe;
 	public static Block ssBlockGasMixer;
+	public static Block ssBlockScrubber;
 	public static Block fakeBlock;
 	//	
 	public static Fluid fluidMethaneGas;
@@ -188,7 +191,6 @@ public class SSConfig {
 		
 		ssBlockGasPipe = new SSBlockGasPipe("blockGasPipeBlack");
 		GameRegistry.registerBlock(ssBlockGasPipe, SSItemBlockGasPipe.class, "blockGasPipeBlack");
-		//GameRegistry.registerTileEntity(SSTileEntityGasPipe.class, "blockGasPipeBlack");
 
 		ssBlockAirVent = new SSBlockAirVent("ssBlockAirVent");
 		GameRegistry.registerBlock(ssBlockAirVent, "ssBlockAirVent");
@@ -198,8 +200,9 @@ public class SSConfig {
 		GameRegistry.registerBlock(ssBlockGasMixer, "ssBlockGasMixer");
 		GameRegistry.registerTileEntity(SSTileEntityGasMixer.class, "ssBlockGasMixer");
 		
-		//SSAPI.softBlocks.add(ssBlockGas);
-		
+		ssBlockScrubber = new SSBlockScrubber("ssBlockScrubber");
+		GameRegistry.registerBlock(ssBlockScrubber, "ssBlockScrubber");
+		GameRegistry.registerTileEntity(SSTileEntityScrubber.class, "ssBlockScrubber");
 	}
 
 	/**
