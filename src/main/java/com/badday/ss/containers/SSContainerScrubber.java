@@ -17,7 +17,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
-import com.badday.ss.SSConfig;
 import com.badday.ss.blocks.SSTileEntityScrubber;
 
 public class SSContainerScrubber extends Container implements INetworkTileEntityEventListener {
@@ -35,7 +34,7 @@ public class SSContainerScrubber extends Container implements INetworkTileEntity
 
 	protected void layoutContainer(IInventory playerInventory, IInventory chestInventory, int xSize, int ySize) {
 		// Make discharge slot
-		addSlotToContainer(makeSlot(chestInventory, 0, 8 , 8));
+		addSlotToContainer(makeSlot(chestInventory, 0, 8 , 7));
 		
 		// Player Inventory
 		
@@ -60,45 +59,75 @@ public class SSContainerScrubber extends Container implements INetworkTileEntity
 	
 	/**
      * 
-     * 
      * (non-Javadoc)
      * @see net.minecraft.inventory.Container#transferStackInSlot(net.minecraft.entity.player.EntityPlayer, int)
-     */
-    @Override
-    public ItemStack transferStackInSlot(EntityPlayer p, int i)
+     *
+     * Called to transfer a stack from one inventory to the other eg. when shift
+     * clicking.
+     */	
+	@Override
+    public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par1)
     {
-        ItemStack itemstack = null;
-        Slot slot = (Slot) inventorySlots.get(i);
+        ItemStack var2 = null;
+        final Slot slot = (Slot) this.inventorySlots.get(par1);
+        final int b = this.inventorySlots.size();
+
         if (slot != null && slot.getHasStack())
         {
-            ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
-            if (!slot.inventory.isItemValidForSlot(i, itemstack)) {
-            	return null;
-            }
-            if (i < SSConfig.ssCabinetSize) // TankeFix
+            final ItemStack stack = slot.getStack();
+            var2 = stack.copy();
+
+            if (par1 == 0)
             {
-                if (!mergeItemStack(itemstack1, SSConfig.ssCabinetSize, inventorySlots.size(), true))
+                if (!this.mergeItemStack(stack, b - 36, b, true))
                 {
                     return null;
                 }
             }
-            else if (!mergeItemStack(itemstack1, 0, SSConfig.ssCabinetSize, false))
+            else
             {
-                return null;
+                if (stack.getItem() instanceof ic2.api.item.ISpecialElectricItem)
+                {
+                    if (!this.mergeItemStack(stack, 0, 1, false))
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    if (par1 < b - 9)
+                    {
+                        if (!this.mergeItemStack(stack, b - 9, b, false))
+                        {
+                            return null;
+                        }
+                    }
+                    else if (!this.mergeItemStack(stack, b - 36, b - 9, false))
+                    {
+                        return null;
+                    }
+                }
             }
-            if (itemstack1.stackSize == 0)
+
+            if (stack.stackSize == 0)
             {
-                slot.putStack(null);
+                slot.putStack((ItemStack) null);
             }
             else
             {
                 slot.onSlotChanged();
             }
-        }
-        return itemstack;
-    }
 
+            if (stack.stackSize == var2.stackSize)
+            {
+                return null;
+            }
+
+            slot.onPickupFromSlot(par1EntityPlayer, stack);
+        }
+
+        return var2;
+    }
 	
 	@Override
 	public void detectAndSendChanges() {

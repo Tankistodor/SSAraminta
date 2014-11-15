@@ -11,12 +11,12 @@ import ic2.api.network.INetworkUpdateListener;
 import java.util.List;
 import java.util.Vector;
 
-import com.badday.ss.SSConfig;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -27,10 +27,13 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-public class SSTileEntityScrubber extends TileEntity implements IFluidHandler,IInventory, INetworkDataProvider, INetworkUpdateListener,
+import com.badday.ss.SSConfig;
+
+public class SSTileEntityScrubber extends TileEntity implements IFluidHandler,IInventory, ISidedInventory, INetworkDataProvider, INetworkUpdateListener,
 		INetworkClientTileEntityEventListener, IEnergySink {
 
-	private ItemStack dischargeSlot;
+	//private ItemStack dischargeSlot;
+	private ItemStack[] containingItems = new ItemStack[1];
 
 	public FluidTank[] tank = new FluidTank[4];
 
@@ -53,27 +56,69 @@ public class SSTileEntityScrubber extends TileEntity implements IFluidHandler,II
 		return true;
 	}
 	
+	public ItemStack getDischargeSlot() {
+		if (this.containingItems != null && this.containingItems.length > 0) {
+			return this.containingItems[0];
+		} else {
+			this.containingItems = new ItemStack[1];
+		}
+		return this.containingItems[0];
+	}
+	
+	public void setDischargeSlot(ItemStack slot) {
+		if (this.containingItems != null && this.containingItems.length > 0) {
+			this.containingItems[0] = slot;
+		} else {
+			this.containingItems = new ItemStack[1];
+			this.containingItems[0] = slot;
+		}
+ 	}
+	
 	@Override
 	public void readFromNBT(NBTTagCompound tags) {
 		super.readFromNBT(tags);
 
-		for (int i = 0; i < 4; i++) {
-			FluidStack liquid = tank[i].getFluid();
-			tags.setBoolean("hasFluid"+i, liquid != null);
-		    if (liquid != null)
-		        {
-		            tags.setString("fluidName"+i, liquid.getFluid().getName());
-		            tags.setInteger("amount"+i, liquid.amount);
-		        }
+		final NBTTagList var2 = tags.getTagList("Items", 10);
+		this.containingItems = new ItemStack[this.getSizeInventory()];
+
+		for (int var3 = 0; var3 < var2.tagCount(); ++var3) {
+			final NBTTagCompound var4 = var2.getCompoundTagAt(var3);
+			final byte var5 = var4.getByte("Slot");
+
+			if (var5 >= 0 && var5 < this.containingItems.length) {
+				this.containingItems[var5] = ItemStack.loadItemStackFromNBT(var4);
+			}
 		}
 
-		
+		for (int i = 0; i < 4; i++) {
+			FluidStack liquid = tank[i].getFluid();
+			tags.setBoolean("hasFluid" + i, liquid != null);
+			if (liquid != null) {
+				tags.setString("fluidName" + i, liquid.getFluid().getName());
+				tags.setInteger("amount" + i, liquid.amount);
+			}
+		}
+
 		this.energy = tags.getDouble("energy");
 	}
 	
 	@Override
 	public void writeToNBT(NBTTagCompound tags) {
 		super.writeToNBT(tags);
+		
+		final NBTTagList list = new NBTTagList();
+
+		for (int var3 = 0; var3 < this.containingItems.length; ++var3) {
+			if (this.containingItems[var3] != null) {
+				final NBTTagCompound var4 = new NBTTagCompound();
+				var4.setByte("Slot", (byte) var3);
+				this.containingItems[var3].writeToNBT(var4);
+				list.appendTag(var4);
+			}
+		}
+
+		tags.setTag("Items", list);
+		
 		for (int i = 0; i < 4; i++) {
 			FluidStack liquid = tank[i].getFluid();
 			tags.setBoolean("hasFluid"+i, liquid != null);
@@ -125,8 +170,8 @@ public class SSTileEntityScrubber extends TileEntity implements IFluidHandler,II
 		if (!this.worldObj.isRemote) {
 			if (this.maxEnergy - this.energy >= 1.0D) {
 
-				if (this.dischargeSlot != null) {
-					double amount = ElectricItem.manager.discharge(this.dischargeSlot, 1, 1, true, true, false);
+				if (this.getDischargeSlot() != null) {
+					double amount = ElectricItem.manager.discharge(this.getDischargeSlot(), 1, 1, true, true, false);
 					if (amount > 0.0D) {
 						this.energy += amount;
 
@@ -220,16 +265,16 @@ public class SSTileEntityScrubber extends TileEntity implements IFluidHandler,II
 
 	@Override
 	public ItemStack decrStackSize(int i, int j) {
-		if (this.dischargeSlot != null) {
-			if (this.dischargeSlot.stackSize <= j) {
-				ItemStack itemstack = this.dischargeSlot;
-				this.dischargeSlot = null;
+		if (this.containingItems[i] != null) {
+			if (containingItems[i].stackSize <= j) {
+				ItemStack itemstack = containingItems[i];
+				containingItems[i] = null;
 				markDirty();
 				return itemstack;
 			}
-			ItemStack itemstack1 = this.dischargeSlot.splitStack(j);
-			if (this.dischargeSlot.stackSize == 0) {
-				this.dischargeSlot = null;
+			ItemStack itemstack1 = containingItems[i].splitStack(j);
+			if (containingItems[i].stackSize == 0) {
+				containingItems[i] = null;
 			}
 			markDirty();
 			return itemstack1;
@@ -255,9 +300,7 @@ public class SSTileEntityScrubber extends TileEntity implements IFluidHandler,II
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		if (slot == 0)
-			return this.dischargeSlot;
-		return null;
+		return this.containingItems[slot];
 	}
 
 	@Override
@@ -284,6 +327,25 @@ public class SSTileEntityScrubber extends TileEntity implements IFluidHandler,II
 		return false;
 	}
 
+
+	@Override
+    public int[] getAccessibleSlotsFromSide(int side)
+    {
+        return new int[] { 0 };
+    }
+	
+	@Override
+    public boolean canInsertItem(int slotID, ItemStack itemstack, int side)
+    {
+        return this.isItemValidForSlot(slotID, itemstack);
+    }
+	
+	@Override
+    public boolean canExtractItem(int slotID, ItemStack itemstack, int side)
+    {
+        return slotID == 0;
+    }
+	
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
 		return ((worldObj.getTileEntity(xCoord, yCoord, zCoord) == this)
@@ -291,11 +353,12 @@ public class SSTileEntityScrubber extends TileEntity implements IFluidHandler,II
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
-		this.dischargeSlot = stack;
-        if (stack != null && stack.stackSize > getInventoryStackLimit()) {
-                stack.stackSize = getInventoryStackLimit();
-        }  
+	public void setInventorySlotContents(int i, ItemStack itemstack) {
+		this.containingItems[i] = itemstack;
+		if (itemstack != null && itemstack.stackSize > getInventoryStackLimit()) {
+			itemstack.stackSize = getInventoryStackLimit();
+		}
+		markDirty();
 	}
 
 	@Override
