@@ -13,6 +13,7 @@ import com.badday.ss.blocks.SSBlockAirVent;
 import com.badday.ss.blocks.SSBlockCabinet;
 import com.badday.ss.blocks.SSBlockGasMixer;
 import com.badday.ss.blocks.SSBlockGasPipe;
+import com.badday.ss.blocks.SSBlockGasPipeCasing;
 import com.badday.ss.blocks.SSBlockGlassCasing;
 import com.badday.ss.blocks.SSBlockMultiFake;
 import com.badday.ss.blocks.SSBlockScrubber;
@@ -27,6 +28,7 @@ import com.badday.ss.blocks.SSTileEntityScrubber;
 import com.badday.ss.core.utils.SSSettings;
 import com.badday.ss.items.SSItemBlockCabinet;
 import com.badday.ss.items.SSItemBlockGasPipe;
+import com.badday.ss.items.SSItemBlockGasPipeCasing;
 import com.badday.ss.items.SSItemGasAnalyzer;
 import com.badday.ss.items.SSItemHidden;
 import com.badday.ss.items.SSItemMetaBlockWallCasing;
@@ -47,6 +49,7 @@ public class SSConfig {
 	public static Block ssBlockAirVent;
 	public static Block ssBlockCabinet;
 	public static Block ssBlockGasPipe;
+	public static Block ssBlockGasPipeCasing;
 	public static Block ssBlockGasMixer;
 	public static Block ssBlockScrubber;
 	public static Block fakeBlock;
@@ -72,10 +75,10 @@ public class SSConfig {
 			"blockWallCasingPink", "blockWallCasingLime", "blockWallCasingYellow", "blockWallCasingLightBlue", "blockWallCasingMagenta",
 			"blockWallCasingOrange", "blockWallCasingWhite" };
 
-	public static final String[] ssGasPipe_unlocalizedName = { "blockGasPipeBlack", "blockGasPipeRed", "blockGasPipeGreen",
-		"blockGasPipeBrown", "blockGasPipeBlue", "blockGasPipePurple", "blockGasPipeCyan", "blockGasPipeLightGray", "blockGasPipeGray",
-		"blockGasPipePink", "blockGasPipeLime", "blockGasPipeYellow", "blockGasPipeLightBlue", "blockGasPipeMagenta",
-		"blockGasPipeOrange", "blockGasPipeWhite" };
+	public static final String[] ssGasPipeCasing_unlocalizedName = { "blockGasPipeCasingBlack", "blockGasPipeCasingRed", "blockGasPipeCasingGreen",
+		"blockGasPipeCasingBrown", "blockGasPipeCasingBlue", "blockGasPipeCasingPurple", "blockGasPipeCasingCyan", "blockGasPipeCasingLightGray", "blockGasPipeCasingGray",
+		"blockGasPipeCasingPink", "blockGasPipeCasingLime", "blockGasPipeCasingYellow", "blockGasPipeCasingLightBlue", "blockGasPipeCasingMagenta",
+		"blockGasPipeCasingOrange", "blockGasPipeCasingWhite" };
 	
 	public static final String[] ssCabinet_unlocalizedName = { "cabinetGray", "cabinetSecure", "cabinetHydroponic", "cabinetElectric", "cabinetMining", "cabinetWhite",
 			"cabinetO2", "cabinetMedical", "cabinetFire", "cabinetHazard", "cabinetIndustry" };
@@ -189,8 +192,10 @@ public class SSConfig {
 		GameRegistry.registerBlock(ssBlockCabinet, SSItemBlockCabinet.class, "grayCabinet");
 		GameRegistry.registerTileEntity(SSTileEntityCabinet.class, "grayCabinet");
 		
-		ssBlockGasPipe = new SSBlockGasPipe("blockGasPipeBlack");
-		GameRegistry.registerBlock(ssBlockGasPipe, SSItemBlockGasPipe.class, "blockGasPipeBlack");
+		ssBlockGasPipe = new SSBlockGasPipe("blockGasPipe");
+		ssBlockGasPipeCasing = new SSBlockGasPipeCasing("blockGasPipeCasing");
+		GameRegistry.registerBlock(ssBlockGasPipe, SSItemBlockGasPipe.class, "blockGasPipe");
+		GameRegistry.registerBlock(ssBlockGasPipeCasing, SSItemBlockGasPipeCasing.class, "blockGasPipeCasing");
 
 		ssBlockAirVent = new SSBlockAirVent("ssBlockAirVent");
 		GameRegistry.registerBlock(ssBlockAirVent, "ssBlockAirVent");

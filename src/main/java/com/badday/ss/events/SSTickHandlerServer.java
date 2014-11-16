@@ -13,24 +13,6 @@ public class SSTickHandlerServer {
 
 	public final static SSTickHandlerServer instance = new SSTickHandlerServer();
 	
-	/*private static Map<Integer, List<BlockVec3>> edgeChecks = new HashMap<Integer, List<BlockVec3>>();
-
-	public static void restart() {
-		SSTickHandlerServer.edgeChecks.clear();
-	}
-
-	public static void scheduleNewEdgeCheck(int dimID, BlockVec3 edgeBlock) {
-		List<BlockVec3> updateList = SSTickHandlerServer.edgeChecks.get(dimID);
-
-		if (updateList == null) {
-			updateList = new ArrayList<BlockVec3>();
-		}
-
-		updateList.add(edgeBlock);
-		SSTickHandlerServer.edgeChecks.put(dimID, updateList);
-	}
-	*/
-	
 	@SubscribeEvent
 	public void onServerTick(TickEvent.ServerTickEvent event) {
 		if (event.phase == Phase.START) {

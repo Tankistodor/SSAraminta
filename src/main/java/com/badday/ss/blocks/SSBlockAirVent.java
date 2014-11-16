@@ -150,7 +150,7 @@ public class SSBlockAirVent extends BlockContainer implements IGasNetworkElement
 						((IGasNetworkVent) tileEntity).getGasNetwork().removeVent((IGasNetworkVent) tileEntity);
 						// Rebuild new network on UP from Vent
 						if (SS.Debug) System.out.println("Try to rebild on UP");
-						if (world.getBlock(x, y+1, z) == SSConfig.ssBlockGasPipe) {
+						if (world.getBlock(x, y+1, z) == SSConfig.ssBlockGasPipe || world.getBlock(x, y+1, z) == SSConfig.ssBlockGasPipeCasing) {
 							GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkPoint(world,new BlockVec3(x,y+1,z)));
 						}
 						
@@ -161,7 +161,7 @@ public class SSBlockAirVent extends BlockContainer implements IGasNetworkElement
 						((IGasNetworkVent) tileEntity).getGasNetwork().removeVent((IGasNetworkVent) tileEntity);
 						// Rebuild new network on DOWN from Vent
 						if (SS.Debug) System.out.println("Try to rebild on DOWN");
-						if (world.getBlock(x, y-1, z) == SSConfig.ssBlockGasPipe) {
+						if (world.getBlock(x, y-1, z) == SSConfig.ssBlockGasPipe || world.getBlock(x, y-1, z) == SSConfig.ssBlockGasPipeCasing) {
 							GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkPoint(world,new BlockVec3(x,y-1,z)));
 						}
 					}

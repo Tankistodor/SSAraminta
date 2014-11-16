@@ -14,12 +14,11 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidStack;
 
 import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
 import com.badday.ss.api.IGasNetworkElement;
-import com.badday.ss.core.atmos.GasMixture;
+import com.badday.ss.api.IGasNetworkPipe;
 import com.badday.ss.core.atmos.GasUtils;
 import com.badday.ss.core.utils.BlockVec3;
 import com.badday.ss.events.RebuildNetworkPoint;
@@ -27,9 +26,9 @@ import com.badday.ss.events.RebuildNetworkPoint;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SSBlockGasPipe  extends Block implements IGasNetworkElement{
+public class SSBlockGasPipe  extends SSBlockGasPipeBase implements IGasNetworkPipe, IGasNetworkElement{
 	
-	private IIcon[] icons = new IIcon[16];
+	private IIcon[] icons = new IIcon[1];
 	
 	public Vector3 minVector = new Vector3(0.3, 0.3, 0.3);
 	public Vector3 maxVector = new Vector3(0.7, 0.7, 0.7);
@@ -44,12 +43,6 @@ public class SSBlockGasPipe  extends Block implements IGasNetworkElement{
 		this.isBlockContainer = true;
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public int getRenderType() {
-		return SSConfig.gasPipeRenderId;
-	}
-	
 	@Override
 	public String getUnlocalizedName() {
 		return super.getUnlocalizedName().substring(5);
@@ -58,6 +51,7 @@ public class SSBlockGasPipe  extends Block implements IGasNetworkElement{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister icon) {
+		/*
 		this.icons = new IIcon[SSConfig.ssGasPipe_unlocalizedName.length];
 		for (int i = 0; i < SSConfig.ssGasPipe_unlocalizedName.length; i++) {
 			
@@ -69,6 +63,10 @@ public class SSBlockGasPipe  extends Block implements IGasNetworkElement{
 					+ SSConfig.ssGasPipe_unlocalizedName[i]);
 		}
 		this.blockIcon = this.icons[SSConfig.ssGasPipe_unlocalizedName.length-1];
+		*/
+		this.blockIcon = icon.registerIcon(SS.ASSET_PREFIX
+				+ "blockGasPipe");
+		
 	}
 	
 	
@@ -76,6 +74,8 @@ public class SSBlockGasPipe  extends Block implements IGasNetworkElement{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta) {
+		return this.blockIcon;
+		/*
 		if (meta >= this.icons.length) {
 			if (SS.Debug)
 				System.out.println("[" + SS.MODNAME + "] try getIcon Icons.length: "
@@ -83,64 +83,13 @@ public class SSBlockGasPipe  extends Block implements IGasNetworkElement{
 			return null;
 		}
 		try {
+			
 			return this.icons[meta];
 		} catch (Exception e) {
 			SS.LogMSG("Error BlockID: " + this.getUnlocalizedName() + " Meta: " + meta);
 
 		}
-		return null;
-	}
-	
-	@Override
-	public void onBlockAdded(World world, int x, int y, int z) {
-		super.onBlockAdded(world, x, y, z);
-		if (!world.isRemote && GasUtils.getAdjacentAllCount(world, new BlockVec3(x,y,z))>1) { //FIXME - Called 2 times ? Why?
-			// Rebild network
-			GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkPoint(world,new BlockVec3(x,y,z)));
-		}
-		world.markBlockForUpdate(x, y, z);
-	}
-	
-	@Override
-	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-		if (GasUtils.getAdjacentAllCount(world, new BlockVec3(x,y,z)) > 1) {
-			// Rebild network
-			for (BlockVec3 node : GasUtils.getAdjacentAll(world, new BlockVec3(x,y,z))) {
-				if (node != null) {
-					GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkPoint(world,node.clone()));
-				}
-			}
-		}
-		super.breakBlock(world, x, y, z, block, meta);
-	}
-	
-    @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
-    {
-        super.onNeighborBlockChange(world, x, y, z, block);
-        world.func_147479_m(x, y, z);
-        
-        /*if (block instanceof SSBlockAirVent) {
-        	TileEntity tileEntity = world.getTileEntity(x, y, z);
-        	if (tileEntity instanceof IGasNetworkSource || tileEntity instanceof IGasNetworkVent) {
-        		SSGasNetwork gasNetwork = new SSGasNetwork(world);
-    			gasNetwork.rebuildNetworkFromVent(world, new BlockVec3(x,y,z));
-        	}
-        }*/
-    }
-    
-	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float a, float b, float c) {
-		if (world.isRemote)
-			return true;
-
-		if (entityplayer.getCurrentEquippedItem() != null) {
-			String itemName = entityplayer.getCurrentEquippedItem().getUnlocalizedName();
-			if (itemName.equals("item.ss.multitool")) {
-				//GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkEvent(world,new BlockVec3(x,y,z)));
-			}
- 		}
-		return false;
+		return null;*/
 	}
     
     /**
@@ -261,7 +210,14 @@ public class SSBlockGasPipe  extends Block implements IGasNetworkElement{
 
         this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
     }
+
+    @SideOnly(Side.CLIENT)
+	@Override
+	public int getRenderType() {
+		return SSConfig.gasPipeRenderId;
+	}
 	
+    
     @Override
     public boolean shouldSideBeRendered(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
     {

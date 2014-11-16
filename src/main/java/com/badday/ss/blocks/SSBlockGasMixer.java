@@ -116,7 +116,7 @@ public class SSBlockGasMixer extends BlockContainer implements IGasNetworkElemen
 	@Override
 	public void onBlockAdded(World world, int x, int y, int z) {
 		super.onBlockAdded(world, x, y, z);
-		if (!world.isRemote && world.getBlock(x, y+1, z) == SSConfig.ssBlockGasPipe) { 
+		if (!world.isRemote && world.getBlock(x, y+1, z) == SSConfig.ssBlockGasPipe || !world.isRemote && world.getBlock(x, y+1, z) == SSConfig.ssBlockGasPipeCasing) { 
 			// Rebild network
 			GasUtils.registeredEventRebuildGasNetwork(new RebuildNetworkPoint(world,new BlockVec3(x,y+1,z)));
 		}

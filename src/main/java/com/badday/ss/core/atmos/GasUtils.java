@@ -146,7 +146,7 @@ public class GasUtils {
 			}
 						
 			//Pipe
-			if (block.equals(SSConfig.ssBlockGasPipe))
+			if (block.equals(SSConfig.ssBlockGasPipe) || block.equals(SSConfig.ssBlockGasPipeCasing))
 				adjacentConnections[direction.ordinal()] = position.clone().modifyPositionFromSide(direction);
 			
 		}
@@ -183,7 +183,7 @@ public class GasUtils {
 			}
 						
 			//Pipe
-			if (block.equals(SSConfig.ssBlockGasPipe))
+			if (block.equals(SSConfig.ssBlockGasPipe) || block.equals(SSConfig.ssBlockGasPipeCasing))
 				validConnections++;
 			
 		}

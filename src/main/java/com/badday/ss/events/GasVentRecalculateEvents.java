@@ -15,7 +15,7 @@ public class GasVentRecalculateEvents  extends Event {
 		
 		if (vent.getGasNetwork() != null) {
 			
-			if (SS.Debug) vent.getGasNetwork().printDebugInfo();
+			//if (SS.Debug) vent.getGasNetwork().printDebugInfo();
 			
 			vent.getTank().dispel("fluid.oxygen","fluid.carbondioxide",(int) (vent.getBaySize()/99)); // dispel 1% oxygen -> CO2
 			

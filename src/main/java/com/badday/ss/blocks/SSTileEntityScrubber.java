@@ -203,7 +203,7 @@ public class SSTileEntityScrubber extends TileEntity implements IFluidHandler,II
 			if ((this.ticks % (COOLDOWN * 3) == 0) && (!this.nearestAirVent.equals(BlockVec3.INVALID_VECTOR))) {
 				// Try to get _non_ O2 and N gases and put it into scrubber tank
 				SSTileEntityAirVent airVent = (SSTileEntityAirVent) this.nearestAirVent.getTileEntity(this.worldObj);
-				if (airVent != null) {
+				if (airVent != null && this.energy > 15) {
 					for (FluidTank fluidtank : airVent.tank.mixtureTank) {
 							if (fluidtank != null && fluidtank.getFluid() != null && !fluidtank.getFluid().getUnlocalizedName().equals("fluid.oxygen") && !fluidtank.getFluid().getUnlocalizedName().equals("fluid.nitrogen")) {
 								FluidStack newRes = fluidtank.drain(15, true);
@@ -215,6 +215,7 @@ public class SSTileEntityScrubber extends TileEntity implements IFluidHandler,II
 								for (FluidTank t : this.tank) {
 									if (t != null && t.getFluid() != null && t.getFluid().getUnlocalizedName().equals(newRes.getUnlocalizedName())) {
 										t.fill(newRes, true);
+										this.energy -= 15;
 										inject = true;
 										markDirty();
 										break;
@@ -227,6 +228,7 @@ public class SSTileEntityScrubber extends TileEntity implements IFluidHandler,II
 								
 								if (!inject) {
 									markDirty();
+									this.energy -= 15;
 									this.tank[firstNull] = new FluidTank(newRes,FluidContainerRegistry.BUCKET_VOLUME);
 								}
 								

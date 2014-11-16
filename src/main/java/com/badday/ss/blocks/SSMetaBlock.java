@@ -84,10 +84,11 @@ public abstract class SSMetaBlock extends Block {
 	    return ret.replace("item", "block");
 	  }*/
 
+	/*
 	@Override
 	public int getRenderBlockPass() {
 		return 1;
-	}
+	}*/
 	
 	@Override
 	public boolean renderAsNormalBlock() {

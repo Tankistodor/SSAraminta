@@ -57,7 +57,7 @@ public class GasPathfinder {
 				TileEntity tileEntity = obj.getTileEntity(worldObj);
 				Block block = obj.getBlockID(worldObj);
 				
-				if (block != null && block.equals(SSConfig.ssBlockGasPipe))
+				if (block != null && (block.equals(SSConfig.ssBlockGasPipe) || block.equals(SSConfig.ssBlockGasPipeCasing)))
 				{
 					//int meta = obj.getBlockMetadata(worldObj);
 					//if (meta == 1 && direction == ForgeDirection.UP)
