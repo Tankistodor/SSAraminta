@@ -28,6 +28,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class SSBlockGasPipe  extends SSBlockGasPipeBase implements IGasNetworkPipe, IGasNetworkElement{
 	
+	@SideOnly(Side.CLIENT)
 	private IIcon[] icons = new IIcon[1];
 	
 	public Vector3 minVector = new Vector3(0.3, 0.3, 0.3);
@@ -51,19 +52,6 @@ public class SSBlockGasPipe  extends SSBlockGasPipeBase implements IGasNetworkPi
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister icon) {
-		/*
-		this.icons = new IIcon[SSConfig.ssGasPipe_unlocalizedName.length];
-		for (int i = 0; i < SSConfig.ssGasPipe_unlocalizedName.length; i++) {
-			
-			if (SS.Debug)
-				System.out.println("[" + SS.MODNAME + "] try to registerBlockIcon "
-						+ SSConfig.ssGasPipe_unlocalizedName[i] + " " + i);
-			
-			icons[i] = icon.registerIcon(SS.ASSET_PREFIX
-					+ SSConfig.ssGasPipe_unlocalizedName[i]);
-		}
-		this.blockIcon = this.icons[SSConfig.ssGasPipe_unlocalizedName.length-1];
-		*/
 		this.blockIcon = icon.registerIcon(SS.ASSET_PREFIX
 				+ "blockGasPipe");
 		
@@ -75,21 +63,6 @@ public class SSBlockGasPipe  extends SSBlockGasPipeBase implements IGasNetworkPi
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta) {
 		return this.blockIcon;
-		/*
-		if (meta >= this.icons.length) {
-			if (SS.Debug)
-				System.out.println("[" + SS.MODNAME + "] try getIcon Icons.length: "
-						+ this.icons.length + " meta: "+ meta);
-			return null;
-		}
-		try {
-			
-			return this.icons[meta];
-		} catch (Exception e) {
-			SS.LogMSG("Error BlockID: " + this.getUnlocalizedName() + " Meta: " + meta);
-
-		}
-		return null;*/
 	}
     
     /**

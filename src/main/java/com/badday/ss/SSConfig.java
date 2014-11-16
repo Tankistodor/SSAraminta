@@ -15,6 +15,7 @@ import com.badday.ss.blocks.SSBlockGasMixer;
 import com.badday.ss.blocks.SSBlockGasPipe;
 import com.badday.ss.blocks.SSBlockGasPipeCasing;
 import com.badday.ss.blocks.SSBlockGlassCasing;
+import com.badday.ss.blocks.SSBlockIC2CableCasing;
 import com.badday.ss.blocks.SSBlockMultiFake;
 import com.badday.ss.blocks.SSBlockScrubber;
 import com.badday.ss.blocks.SSBlockWallCasing;
@@ -37,6 +38,7 @@ import com.badday.ss.items.SSItemMultitool;
 import com.badday.ss.items.SSItemScrewdriver;
 import com.badday.ss.items.SSItemWelder;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class SSConfig {
@@ -53,6 +55,9 @@ public class SSConfig {
 	public static Block ssBlockGasMixer;
 	public static Block ssBlockScrubber;
 	public static Block fakeBlock;
+	
+	public static Block ssBlockIC2CableCasing;
+	
 	//	
 	public static Fluid fluidMethaneGas;
 	public static Fluid fluidOxygenGas;
@@ -114,6 +119,10 @@ public class SSConfig {
 	public static int gasPipeRenderId;
 
 	static Configuration config;
+	
+	
+	public static boolean cachedIC2Loaded = false;
+	public static boolean cachedIC2LoadedValue = false;
 
 	public static void Load(File file) {
 		
@@ -208,6 +217,9 @@ public class SSConfig {
 		ssBlockScrubber = new SSBlockScrubber("ssBlockScrubber");
 		GameRegistry.registerBlock(ssBlockScrubber, "ssBlockScrubber");
 		GameRegistry.registerTileEntity(SSTileEntityScrubber.class, "ssBlockScrubber");
+		
+		ssBlockIC2CableCasing = new SSBlockIC2CableCasing("blockIC2CableCasing");
+		GameRegistry.registerBlock(ssBlockIC2CableCasing,"blockIC2CableCasing");
 	}
 
 	/**
@@ -244,4 +256,19 @@ public class SSConfig {
 		fluidCarbonDioxide = FluidRegistry.getFluid("carbondioxide");
 	}
 
+	
+	/**
+     * Checks using the FML loader too see if IC2 is loaded
+     */
+    public static boolean isIndustrialCraft2Loaded()
+    {
+        
+		if (!cachedIC2Loaded)
+        {
+            cachedIC2Loaded = true;
+            cachedIC2LoadedValue = Loader.isModLoaded("IC2");
+        }
+
+        return cachedIC2LoadedValue;
+    }
 }

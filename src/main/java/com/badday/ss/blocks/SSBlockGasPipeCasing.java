@@ -15,6 +15,7 @@ import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
 import com.badday.ss.api.IGasNetworkElement;
 import com.badday.ss.api.IGasNetworkPipe;
+import com.badday.ss.api.ISSSealedBlock;
 import com.badday.ss.core.atmos.GasUtils;
 import com.badday.ss.core.utils.BlockVec3;
 import com.badday.ss.events.RebuildNetworkPoint;
@@ -22,8 +23,9 @@ import com.badday.ss.events.RebuildNetworkPoint;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SSBlockGasPipeCasing extends SSBlockGasPipeBase implements IGasNetworkPipe, IGasNetworkElement {
+public class SSBlockGasPipeCasing extends SSBlockGasPipeBase implements IGasNetworkPipe, IGasNetworkElement, ISSSealedBlock {
 
+	@SideOnly(Side.CLIENT)
 	private IIcon[] icons = new IIcon[16];
 	
 	public SSBlockGasPipeCasing(String asset) {

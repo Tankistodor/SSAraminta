@@ -16,6 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class SSBlockScrubber extends BlockContainer {
 
+	@SideOnly(Side.CLIENT)
 	private IIcon[] iconBuffer;
 	private int ICON_BOTTOM = 0, ICON_TOP = 1, ICON_INACTIVE_SIDE = 2, ICON_ACTIVE_SIDE = 3;
 	
