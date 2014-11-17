@@ -197,7 +197,7 @@ public class SpaceEventHandler
 					job.run();
 				}
 				
-				if(SS.Debug) {
+				if(SS.Debug && false) {
 					long time2 = System.nanoTime();
 					System.out.println("[" + SS.MODNAME + "] Distance is: " + distance + " time: " + (time2 - time1) / 1000000.0D + "ms");
 				}

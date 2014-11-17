@@ -14,8 +14,9 @@ import net.minecraftforge.common.MinecraftForge;
 
 import com.badday.ss.agriculture.Agriculture;
 import com.badday.ss.api.SSAPI;
-import com.badday.ss.core.utils.SSCommandPathfinder;
-import com.badday.ss.core.utils.SpaceTpCommand;
+import com.badday.ss.core.utils.commands.SSCommandPathfinder;
+import com.badday.ss.core.utils.commands.SSCommandSetRole;
+import com.badday.ss.core.utils.commands.SSCommandSpaceTp;
 import com.badday.ss.events.AntiFallDamage;
 import com.badday.ss.events.GuiHandler;
 import com.badday.ss.events.SSPacketHandler;
@@ -152,8 +153,9 @@ public class SS {
 	
 	@EventHandler
 	public void serverLoad(FMLServerStartingEvent event) {
-		event.registerServerCommand(new SpaceTpCommand());
+		event.registerServerCommand(new SSCommandSpaceTp());
 		event.registerServerCommand(new SSCommandPathfinder());
+		event.registerServerCommand(new SSCommandSetRole());
 		
 		if (Loader.isModLoaded("PlayerAPI"))
         {

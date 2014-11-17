@@ -18,6 +18,7 @@ public class SSPlayerData implements IPlayerData,IExtendedEntityProperties {
 	public WeakReference<EntityPlayerMP> player;
 	
 	public BlockVec3 playerNearestVent = BlockVec3.INVALID_VECTOR;
+	private SSPlayerRoles playerRole = SSPlayerRoles.ASSISTENT;
 	
 	public SSPlayerData(EntityPlayerMP player) {
 		this.player = new WeakReference<EntityPlayerMP>(player);
@@ -34,14 +35,18 @@ public class SSPlayerData implements IPlayerData,IExtendedEntityProperties {
     }
 	
 	@Override
-	public void loadNBTData(NBTTagCompound arg0) {
-		
+	public void loadNBTData(NBTTagCompound tags) {
+		try {
+			this.playerRole = SSPlayerRoles.valueOf(tags.getString("playerRole"));
+		} catch (Exception e) {
+			this.playerRole = SSPlayerRoles.ASSISTENT;
+		}
 	}
 
 	@Override
-	public void saveNBTData(NBTTagCompound arg0) {
+	public void saveNBTData(NBTTagCompound tags) {
 		
-		
+		tags.setString("playerRole", this.playerRole.toString());
 	}
 	
 	public static SSPlayerData get(EntityPlayerMP player)
@@ -66,4 +71,12 @@ public class SSPlayerData implements IPlayerData,IExtendedEntityProperties {
 		//this.playerNearestVent = oldData.playerNearestVent;
     }
 
+	public void setPlayerRole(SSPlayerRoles role) {
+		this.playerRole = role;
+	}
+	
+	public SSPlayerRoles getPlayerRole() {
+		return this.playerRole;
+	}
+	
 }

@@ -1,7 +1,8 @@
-package com.badday.ss.core.utils;
+package com.badday.ss.core.utils.commands;
 
 import com.badday.ss.SS;
 import com.badday.ss.core.atmos.Pathfinding;
+import com.badday.ss.core.utils.BlockVec3;
 
 import net.minecraft.block.Block;
 import net.minecraft.command.CommandBase;
