@@ -30,6 +30,7 @@ import com.badday.ss.core.utils.SSSettings;
 import com.badday.ss.items.SSItemBlockCabinet;
 import com.badday.ss.items.SSItemBlockGasPipe;
 import com.badday.ss.items.SSItemBlockGasPipeCasing;
+import com.badday.ss.items.SSItemBlockIC2CableCasing;
 import com.badday.ss.items.SSItemGasAnalyzer;
 import com.badday.ss.items.SSItemHidden;
 import com.badday.ss.items.SSItemMetaBlockWallCasing;
@@ -84,6 +85,11 @@ public class SSConfig {
 		"blockGasPipeCasingBrown", "blockGasPipeCasingBlue", "blockGasPipeCasingPurple", "blockGasPipeCasingCyan", "blockGasPipeCasingLightGray", "blockGasPipeCasingGray",
 		"blockGasPipeCasingPink", "blockGasPipeCasingLime", "blockGasPipeCasingYellow", "blockGasPipeCasingLightBlue", "blockGasPipeCasingMagenta",
 		"blockGasPipeCasingOrange", "blockGasPipeCasingWhite" };
+	
+	public static final String[] ssIC2CableCasing_unlocalizedName = { "blockIC2CableCasingBlack", "blockIC2CableCasingRed", "blockIC2CableCasingGreen",
+		"blockIC2CableCasingBrown", "blockIC2CableCasingBlue", "blockIC2CableCasingPurple", "blockIC2CableCasingCyan", "blockIC2CableCasingLightGray", "blockIC2CableCasingGray",
+		"blockIC2CableCasingPink", "blockIC2CableCasingLime", "blockIC2CableCasingYellow", "blockIC2CableCasingLightBlue", "blockIC2CableCasingMagenta",
+		"blockIC2CableCasingOrange", "blockIC2CableCasingWhite" };
 	
 	public static final String[] ssCabinet_unlocalizedName = { "cabinetGray", "cabinetSecure", "cabinetHydroponic", "cabinetElectric", "cabinetMining", "cabinetWhite",
 			"cabinetO2", "cabinetMedical", "cabinetFire", "cabinetHazard", "cabinetIndustry" };
@@ -202,9 +208,11 @@ public class SSConfig {
 		GameRegistry.registerTileEntity(SSTileEntityCabinet.class, "grayCabinet");
 		
 		ssBlockGasPipe = new SSBlockGasPipe("blockGasPipe");
-		ssBlockGasPipeCasing = new SSBlockGasPipeCasing("blockGasPipeCasing");
 		GameRegistry.registerBlock(ssBlockGasPipe, SSItemBlockGasPipe.class, "blockGasPipe");
+		ssBlockGasPipeCasing = new SSBlockGasPipeCasing("blockGasPipeCasing");
 		GameRegistry.registerBlock(ssBlockGasPipeCasing, SSItemBlockGasPipeCasing.class, "blockGasPipeCasing");
+		ssBlockIC2CableCasing = new SSBlockIC2CableCasing("blockIC2CableCasing");
+		GameRegistry.registerBlock(ssBlockIC2CableCasing,SSItemBlockIC2CableCasing.class,"blockIC2CableCasing");
 
 		ssBlockAirVent = new SSBlockAirVent("ssBlockAirVent");
 		GameRegistry.registerBlock(ssBlockAirVent, "ssBlockAirVent");
@@ -218,8 +226,6 @@ public class SSConfig {
 		GameRegistry.registerBlock(ssBlockScrubber, "ssBlockScrubber");
 		GameRegistry.registerTileEntity(SSTileEntityScrubber.class, "ssBlockScrubber");
 		
-		ssBlockIC2CableCasing = new SSBlockIC2CableCasing("blockIC2CableCasing");
-		GameRegistry.registerBlock(ssBlockIC2CableCasing,"blockIC2CableCasing");
 	}
 
 	/**

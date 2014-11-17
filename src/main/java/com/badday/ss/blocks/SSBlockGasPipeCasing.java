@@ -32,7 +32,7 @@ public class SSBlockGasPipeCasing extends SSBlockGasPipeBase implements IGasNetw
 		super(Material.iron);
 		this.setBlockName(asset);
 		this.setBlockTextureName(SS.ASSET_PREFIX + asset);
-		//this.setBlockUnbreakable();
+		this.setBlockUnbreakable();
 		this.setStepSound(soundTypeMetal);
 		this.setCreativeTab(SS.ssTab);
 	}
@@ -47,11 +47,6 @@ public class SSBlockGasPipeCasing extends SSBlockGasPipeBase implements IGasNetw
 	public void registerBlockIcons(IIconRegister icon) {
 		this.icons = new IIcon[SSConfig.ssGasPipeCasing_unlocalizedName.length];
 		for (int i = 0; i < SSConfig.ssGasPipeCasing_unlocalizedName.length; i++) {
-			
-			if (SS.Debug)
-				System.out.println("[" + SS.MODNAME + "] try to registerBlockIcon "
-						+ SSConfig.ssGasPipeCasing_unlocalizedName[i] + " " + i);
-			
 			icons[i] = icon.registerIcon(SS.ASSET_PREFIX
 					+ SSConfig.ssGasPipeCasing_unlocalizedName[i]);
 		}
