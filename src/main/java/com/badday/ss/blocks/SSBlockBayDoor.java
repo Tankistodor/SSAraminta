@@ -3,7 +3,9 @@ package com.badday.ss.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 import com.badday.ss.SS;
@@ -11,13 +13,21 @@ import com.badday.ss.api.IDoorFlags;
 
 public class SSBlockBayDoor extends Block implements ITileEntityProvider{
 
-	protected SSBlockBayDoor(String asset) {
+	public IIcon topLeftIcon;
+	public IIcon tolRightIcon;
+	public IIcon bottomLeftIcon;
+	public IIcon bottomRightIcon;
+	
+	public boolean singleDoor = false;
+	
+	protected SSBlockBayDoor(String asset, boolean singleDoor) {
 		super(Material.iron);
 		this.setBlockName(asset);
 		this.setBlockTextureName(SS.ASSET_PREFIX + asset);
 		this.setBlockUnbreakable();
 		this.setStepSound(soundTypeMetal);
 		this.setCreativeTab(SS.ssTab);
+		this.singleDoor = singleDoor;
 	}
 
 	@Override
@@ -30,13 +40,16 @@ public class SSBlockBayDoor extends Block implements ITileEntityProvider{
 		return (metadata & 3) == IDoorFlags.DIR_EAST || (metadata & 3) == IDoorFlags.DIR_WEST;
 	}
 
-	
-	/*
-	 * 	@Override
+	@Override
 	public void registerBlockIcons(IIconRegister iconRegister)
 	{
-		this.blockIcon = iconRegister.registerIcon(MalisisDoors.modid + ":" + (this.getUnlocalizedName().substring(5)));
-		this.topBlockIcon = iconRegister.registerIcon(MalisisDoors.modid + ":" + (this.getUnlocalizedName().substring(5)) + "_top");
+		this.blockIcon = iconRegister.registerIcon(SS.ASSET_PREFIX + (this.getUnlocalizedName().substring(5)));
+		this.topLeftIcon = iconRegister.registerIcon(SS.ASSET_PREFIX + (this.getUnlocalizedName().substring(5))+"_topLeft");
+		this.topLeftIcon = iconRegister.registerIcon(SS.ASSET_PREFIX + (this.getUnlocalizedName().substring(5))+"_topRight");
+		if (!this.singleDoor) {
+			this.topLeftIcon = iconRegister.registerIcon(SS.ASSET_PREFIX + (this.getUnlocalizedName().substring(5))+"_bottomLeft");
+			this.topLeftIcon = iconRegister.registerIcon(SS.ASSET_PREFIX + (this.getUnlocalizedName().substring(5))+"_bottomRight");
+		}
 	}
 
 	@Override

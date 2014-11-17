@@ -58,10 +58,10 @@ public class SSBlockGasMixer extends BlockContainer implements IGasNetworkElemen
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister par1IconRegister) {
 		iconBuffer = new IIcon[4];
-		iconBuffer[ICON_BOTTOM] = par1IconRegister.registerIcon("ss:blockGasMixerBottom");
-		iconBuffer[ICON_TOP] = par1IconRegister.registerIcon("ss:blockGasMixerTop");
-		iconBuffer[ICON_INACTIVE_SIDE] = par1IconRegister.registerIcon("ss:blockGasMixerSideOff");
-		iconBuffer[ICON_ACTIVE_SIDE] = par1IconRegister.registerIcon("ss:blockGasMixerSideOn");
+		iconBuffer[ICON_BOTTOM] = par1IconRegister.registerIcon(SS.ASSET_PREFIX +"blockGasMixerBottom");
+		iconBuffer[ICON_TOP] = par1IconRegister.registerIcon(SS.ASSET_PREFIX +"blockGasMixerTop");
+		iconBuffer[ICON_INACTIVE_SIDE] = par1IconRegister.registerIcon(SS.ASSET_PREFIX +"blockGasMixerSideOff");
+		iconBuffer[ICON_ACTIVE_SIDE] = par1IconRegister.registerIcon(SS.ASSET_PREFIX +"blockGasMixerSideOn");
 	}
 
 	
