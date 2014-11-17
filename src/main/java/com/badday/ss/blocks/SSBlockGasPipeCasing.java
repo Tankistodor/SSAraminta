@@ -2,23 +2,19 @@ package com.badday.ss.blocks;
 
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
-import net.minecraft.world.World;
+import net.minecraft.world.IBlockAccess;
 
 import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
 import com.badday.ss.api.IGasNetworkElement;
 import com.badday.ss.api.IGasNetworkPipe;
 import com.badday.ss.api.ISSSealedBlock;
-import com.badday.ss.core.atmos.GasUtils;
-import com.badday.ss.core.utils.BlockVec3;
-import com.badday.ss.events.RebuildNetworkPoint;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -79,6 +75,30 @@ public class SSBlockGasPipeCasing extends SSBlockGasPipeBase implements IGasNetw
 		for (int i = 0; i < SSConfig.ssGasPipeCasing_unlocalizedName.length; i++) {
 			list.add(new ItemStack(this, 1, i));
 		}
+	}
+	
+	@Override
+	public boolean isNormalCube(IBlockAccess world, int x, int y, int z)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean renderAsNormalBlock()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean isOpaqueCube()
+	{
+		return false;
+	}
+
+	@Override
+	public int getRenderType()
+	{
+		return -1;
 	}
 	
 }
