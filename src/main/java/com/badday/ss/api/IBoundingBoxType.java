@@ -18,7 +18,7 @@ public enum IBoundingBoxType
 	{
 		if (tileEntity.isOpened() && !topBlock)
 			return null;
-		int dir = tileEntity.getDirection();
+		//int dir = tileEntity.getDirection();
 
 		float x = 0;
 		float y = 0;
@@ -27,6 +27,7 @@ public enum IBoundingBoxType
 		float Y = 1;
 		float Z = 1;
 
+		/*
 		if (dir == SSBlockBayDoor.DIR_NORTH)
 			Z = SSBlockBayDoor.DOOR_WIDTH;
 		if (dir == SSBlockBayDoor.DIR_SOUTH)
@@ -35,7 +36,8 @@ public enum IBoundingBoxType
 			X = SSBlockBayDoor.DOOR_WIDTH;
 		if (dir == SSBlockBayDoor.DIR_EAST)
 			x = 1 - SSBlockBayDoor.DOOR_WIDTH;
-
+		 */
+		
 		if (tileEntity.isOpened() && topBlock)
 		{
 			y += 1 - SSBlockBayDoor.DOOR_WIDTH;

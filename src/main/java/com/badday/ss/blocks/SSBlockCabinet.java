@@ -45,16 +45,6 @@ public class SSBlockCabinet extends BlockContainer {
 		setBlockBounds(1 / 16.0F, 1 / 16.0F, 1 / 16.0F, 15 / 16.0F, 32.0F / 16.0F, 15 / 16.0F);
 	}
 
-	@Override
-	public boolean isOpaqueCube() {
-		return false;
-	}
-
-	@Override
-	public boolean renderAsNormalBlock() {
-		return false;
-	}
-
 	/**
 	 * Overridden by {@link #createTileEntity(World, int)}
 	 */
@@ -251,5 +241,15 @@ public class SSBlockCabinet extends BlockContainer {
     {
         return true;
     }*/
+
+	@Override
+	public boolean isOpaqueCube() {
+		return false;
+	}
+
+	@Override
+	public boolean renderAsNormalBlock() {
+		return false;
+	}
 	
 }

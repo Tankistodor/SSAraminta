@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -32,11 +33,7 @@ public class SSBlockBayDoor extends Block implements ITileEntityProvider{
 	
 	public static final float DOOR_WIDTH = 0.1875F;
 
-	public static final int DIR_WEST = 0;
-	public static final int DIR_NORTH = 1;
-	public static final int DIR_EAST = 2;
-	public static final int DIR_SOUTH = 3;
-	
+	public static final int DIR_EASTWEST = 1 << 1;	
 	public static final int FLAG_OPENED = 1 << 2;
 	public static final int FLAG_TOPBLOCK = 1 << 3;
 	public static final int FLAG_REVERSED = 1 << 4;
@@ -59,13 +56,18 @@ public class SSBlockBayDoor extends Block implements ITileEntityProvider{
 		if ((metadata & FLAG_TOPBLOCK) != 0)
 			return null;
 
-		return new SSTileEntityBayDoor();
+		return new SSTileEntityBayDoor(metadata);
 	}
 
+	@Override
+	public boolean hasTileEntity(int metadata) {
+		return true;
+	}
+	
 	
 	public static boolean isEastOrWest(int metadata)
 	{
-		return (metadata & 3) == SSBlockBayDoor.DIR_EAST || (metadata & 3) == SSBlockBayDoor.DIR_WEST;
+		return (metadata & SSBlockBayDoor.DIR_EASTWEST) != 0;
 	}
 
 	@Override
@@ -85,25 +87,23 @@ public class SSBlockBayDoor extends Block implements ITileEntityProvider{
 	public IIcon getIcon(int side, int metadata)
 	{
 		
+		boolean eastWest = isEastOrWest(metadata);
 		boolean topBlock = (metadata & FLAG_TOPBLOCK) != 0;
 		
+		if (side == 0 || side == 1) 
+			return sideIcon;
 		
-		switch (side)
-		{
-			case 0:
-				return sideIcon;
-			case 1:
-				return sideIcon;
-			case 2:
+		
+		if (eastWest) {
+			if (side == 2 || side == 3) 
 				return topBlock ? this.topLeftIcon : this.bottomLeftIcon;
-			case 3:
-				return sideIcon;
-			case 4:
+			else
+				return sideIcon; 
+		} else {
+			if (side == 5 || side == 4) 
 				return topBlock ? this.topLeftIcon : this.bottomLeftIcon;
-			case 5:
+			else
 				return sideIcon;
-			default:
-				return blockIcon;
 		}
 	}
 
@@ -114,6 +114,21 @@ public class SSBlockBayDoor extends Block implements ITileEntityProvider{
 		if (!(te instanceof SSTileEntityBayDoor))
 			return;
 
+		int facing = MathHelper.floor_double(((player.rotationYaw * 4F) / 360F) + 0.5D) & 3;
+		
+		if (facing == 0 || facing == 2) {
+			world.setBlockMetadataWithNotify(x, y, z, 2, 2);
+		}
+		if (facing == 1 || facing == 3) {
+			world.setBlockMetadataWithNotify(x, y, z, 0, 2);
+		}
+		if (facing == 2) {
+			world.setBlockMetadataWithNotify(x, y, z, 2, 2);
+		}
+		if (facing == 3) {
+			world.setBlockMetadataWithNotify(x, y, z, 0, 2);
+		}
+		
 		((SSTileEntityBayDoor) te).onBlockPlaced(itemStack);
 	}
 

@@ -17,16 +17,18 @@ public class SSTileEntityBayDoor extends TileEntity {
 	
 	private int openingTime = 6;
 	private int lastMetadata = -1;
-		private int timer = 0;
+	private int timer = 0;
 	protected IDoorState state = IDoorState.CLOSED;
 	protected long startTime;
 	protected long startNanoTime;
 	private boolean moving;
 	
+	protected int type = 0;
+	
 	protected SSTileEntityBayDoor topDoor;
 	
-	public SSTileEntityBayDoor () {
-		
+	public SSTileEntityBayDoor (int meta) {
+		this.type = meta;
 	}
 	
 	
@@ -98,6 +100,12 @@ public class SSTileEntityBayDoor extends TileEntity {
 	public int getDirection()
 	{
 		return getBlockMetadata() & 3;
+	}
+	
+	public boolean isEastWest()
+	{
+		return ((getBlockMetadata() & SSBlockBayDoor.DIR_EASTWEST) != 0);
+		//return getBlockMetadata() & 3;
 	}
 	
 	@Override
@@ -186,7 +194,7 @@ public class SSTileEntityBayDoor extends TileEntity {
 	{
 		//if (!descriptor.isDoubleDoor())
 		//	return null;
-
+/*
 		int dir = getDirection();
 		boolean reversed = isReversed();
 		SSTileEntityBayDoor te;
@@ -202,7 +210,7 @@ public class SSTileEntityBayDoor extends TileEntity {
 		else if (dir == SSBlockBayDoor.DIR_WEST)
 			z += (reversed ? -1 : 1);
 
-		te = SSBlockBayDoor.getDoor(worldObj, x, yCoord, z);
+		te = SSBlockBayDoor.getDoor(worldObj, x, yCoord, z);*/
 		//if (te != null && isMatchingDoubleDoor(te))
 		//	return te;
 		//FIXME
@@ -237,15 +245,17 @@ public class SSTileEntityBayDoor extends TileEntity {
 		if (isOpened() == powered && !isMoving())
 			return;
 
+		/*
 		SSTileEntityBayDoor te = getDoubleDoor();
 		if (!powered && te != null && te.isPowered())
 			return;
-
+		*/
+		
 		IDoorState newState = powered ? IDoorState.OPENING : IDoorState.CLOSING;
 		setDoorState(newState);
 
-		if (te != null)
-			te.setDoorState(newState);
+		/*if (te != null)
+			te.setDoorState(newState);*/
 	}
 	
 	

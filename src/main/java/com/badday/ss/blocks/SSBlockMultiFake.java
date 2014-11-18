@@ -151,7 +151,6 @@ public class SSBlockMultiFake extends BlockContainer {
 			((SSTileEntityMultiFake) te).onBlockActivated(world, x, y, z, player);
 			return true;
 		}
-		
 		return true;
 	}
 	
