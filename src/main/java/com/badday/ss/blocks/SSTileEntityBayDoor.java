@@ -1,204 +1,268 @@
 package com.badday.ss.blocks;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.world.World;
 
-import com.badday.ss.api.IDoorFlags;
+import com.badday.ss.api.IBoundingBoxType;
 import com.badday.ss.api.IDoorState;
-import com.badday.ss.core.utils.WorldUtils;
 
 public class SSTileEntityBayDoor extends TileEntity {
 	
-	public static final int maxOpenTime = 10;
-
-	protected boolean removed = false;
+	private int openingTime = 6;
+	private int lastMetadata = -1;
+		private int timer = 0;
 	protected IDoorState state = IDoorState.CLOSED;
 	protected long startTime;
 	protected long startNanoTime;
+	private boolean moving;
 	
 	protected SSTileEntityBayDoor topDoor;
-	protected Set<SSTileEntityBayDoor> childDoors = new HashSet<SSTileEntityBayDoor>();
 	
 	public SSTileEntityBayDoor () {
 		
 	}
 	
-	public int getDirection()
+	
+	@Override
+	public void updateEntity()
 	{
-		return this.blockMetadata & 3;
+		if (!moving)
+			return;
+
+		timer++;
+		if (startTime + openingTime < worldObj.getTotalWorldTime())
+		{
+			setDoorState(state == IDoorState.CLOSING ? IDoorState.CLOSED : IDoorState.OPENED);
+			timer = 0;
+		}
+	}
+	
+	
+	public long getStartTime()
+	{
+		return startTime;
 	}
 
+	public void setStartTime(long startTime)
+	{
+		this.startTime = startTime;
+	}
+	
 	public long getStartNanoTime()
 	{
 		return startNanoTime;
 	}
 
+	public int getTimer()
+	{
+		return timer;
+	}
+
+	public void setTimer(int timer)
+	{
+		this.timer = timer;
+	}
+
+	public IDoorState getState()
+	{
+		return state;
+	}
+
+	public void setState(IDoorState state)
+	{
+		this.state = state;
+	}
+	
+	public boolean isMoving()
+	{
+		return moving;
+	}
+
+	public void setMoving(boolean moving)
+	{
+		this.moving = moving;
+	}
+	
+	/*public IDoorMovement getMovement()
+	{
+		return getDescriptor() != null ? getDescriptor().getMovement() : null;
+	}*/
+
+	public int getDirection()
+	{
+		return getBlockMetadata() & 3;
+	}
+	
+	@Override
+	public int getBlockMetadata()
+	{
+		if (lastMetadata != blockMetadata || blockMetadata == -1)
+		{
+			blockMetadata = SSBlockBayDoor.getFullMetadata(worldObj, xCoord, yCoord, zCoord);
+			lastMetadata = blockMetadata;
+		}
+
+		return blockMetadata;
+	}
+	
 	public boolean isOpened()
 	{
-		return (getBlockMetadata() & IDoorFlags.FLAG_OPENED) != 0;
+		return (getBlockMetadata() & SSBlockBayDoor.FLAG_OPENED) != 0;
 	}
 
 	public boolean isReversed()
 	{
-		return (getBlockMetadata() & IDoorFlags.FLAG_REVERSED) != 0;
+		return (getBlockMetadata() & SSBlockBayDoor.FLAG_REVERSED) != 0;
+	}
+
+	public boolean isPowered()
+	{
+		return getWorldObj().isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)
+				|| getWorldObj().isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord);
 	}
 	
-	public boolean isTopDoor()
-	{
-		return this == getTopDoor();
-	}
-
-	public SSTileEntityBayDoor getTopDoor()
-	{
-		if (this.topDoor == null)
-			this.add();
-		return this.topDoor;
-	}
 	
-	public void add()
+	/**
+	 * Open or close this DoorTileEntity
+	 */
+	public void openOrCloseDoor()
 	{
-		SSTileEntityBayDoor te = findTopBlock();
-		te.setTopBlock(te);
-	}
+		IDoorState newState = state == IDoorState.OPENED ? IDoorState.CLOSING : IDoorState.OPENING;
+		setDoorState(newState);
 
-	public Set<SSTileEntityBayDoor> getChildDoors()
-	{
-		return childDoors;
-	}
-
-	public SSTileEntityBayDoor getDoor(ForgeDirection dir)
-	{
-		SSTileEntityBayDoor te = WorldUtils.get(getWorldObj(), xCoord + dir.offsetX, yCoord
-				+ dir.offsetY, zCoord + dir.offsetZ, SSTileEntityBayDoor.class);
-		if (te == null)
-			return null;
-		if (te.getDirection() != getDirection())
-			return null;
-		if (te.removed)
-			return null;
-
-		return te;
-	}
-
-	public SSTileEntityBayDoor findTopBlock()
-	{
-		SSTileEntityBayDoor te = this;
-		SSTileEntityBayDoor ret = this;
-		while ((te = te.getDoor(ForgeDirection.UP)) != null)
-			ret = te;
-
-		return ret;
-	}
-	
-	public void setTopBlock(SSTileEntityBayDoor topDoor)
-	{
-		childDoors.clear();
-		this.topDoor = topDoor;
-		if (isTopDoor())
-		{
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, getBlockMetadata() | IDoorFlags.FLAG_TOPBLOCK, 2);
-			SSTileEntityBayDoor te = this;
-			while ((te = te.getDoor(ForgeDirection.DOWN)) != null)
-			{
-				te.setTopBlock(this);
-				childDoors.add(te);
-			}
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		}
-		else
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, getBlockMetadata() & ~IDoorFlags.FLAG_TOPBLOCK, 2);
-	}
-	
-	public void remove()
-	{
-		this.removed = true;
-		SSTileEntityBayDoor te = getDoor(ForgeDirection.DOWN);
+		SSTileEntityBayDoor te = getDoubleDoor();
 		if (te != null)
-			te.setTopBlock(te);
-
-		te = getDoor(ForgeDirection.UP);
-		if (te != null)
-		{
-			te = te.findTopBlock();
-			te.setTopBlock(te);
-		}
+			te.setDoorState(newState);
 	}
 
-	public void changeState()
-	{
-		if (!isTopDoor())
-		{
-			getTopDoor().changeState();
-			return;
-		}
-
-		if (state == IDoorState.OPENING || state == IDoorState.CLOSING)
-			return;
-
-		startTime = worldObj.getTotalWorldTime();
-		startNanoTime = System.nanoTime();
-		if (state == IDoorState.CLOSED)
-			this.setState(IDoorState.OPENING);
-		else if (state == IDoorState.OPENED)
-			this.setState(IDoorState.CLOSING);
-
-		SSTileEntityBayDoor te = getDoor(SSBlockBayDoor.isEastOrWest(blockMetadata) ? ForgeDirection.NORTH : ForgeDirection.EAST);
-		if (te != null)
-			te.changeState();
-		te = getDoor(SSBlockBayDoor.isEastOrWest(blockMetadata) ? ForgeDirection.SOUTH : ForgeDirection.WEST);
-		if (te != null)
-			te.changeState();
-
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-	}
-	
-	private void setState(IDoorState newState)
+	/**
+	 * Change the current state of this DoorTileEntity
+	 *
+	 * @param newSate
+	 */
+	public void setDoorState(IDoorState newState)
 	{
 		if (state == newState)
 			return;
 
 		state = newState;
+		if (getWorldObj() == null)
+			return;
 
-		if (getWorldObj() != null)
+		if (state == IDoorState.CLOSING || state == IDoorState.OPENING)
 		{
-			if (state == IDoorState.CLOSED)
-				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, blockMetadata & ~IDoorFlags.FLAG_OPENED, 2);
-			else
-				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, blockMetadata | IDoorFlags.FLAG_OPENED, 2);
+			timer = moving ? openingTime - timer : 0;
+			startTime = worldObj.getTotalWorldTime() - timer;
+			startNanoTime = System.nanoTime();
+			moving = true;
+		}
+		else
+		{
+			int metadata = getBlockMetadata();
+			if (getBlockType() instanceof SSBlockBayDoor)
+				metadata = metadata & 7;
+			metadata = state == IDoorState.OPENED ? metadata | SSBlockBayDoor.FLAG_OPENED : metadata & ~SSBlockBayDoor.FLAG_OPENED;
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, metadata, 2);
+			moving = false;
 		}
 
-		if (isTopDoor())
-		{
-			for (SSTileEntityBayDoor te : childDoors)
-				te.setState(newState);
-		}
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		//FIXME playSound();
+	}
+
+	/**
+	 * Find the corresponding double door for this DoorTileEntity
+	 *
+	 * @return
+	 */
+	public SSTileEntityBayDoor getDoubleDoor()
+	{
+		//if (!descriptor.isDoubleDoor())
+		//	return null;
+
+		int dir = getDirection();
+		boolean reversed = isReversed();
+		SSTileEntityBayDoor te;
+		int x = xCoord;
+		int z = zCoord;
+
+		if (dir == SSBlockBayDoor.DIR_NORTH)
+			x += (reversed ? 1 : -1);
+		else if (dir == SSBlockBayDoor.DIR_SOUTH)
+			x += (reversed ? -1 : 1);
+		else if (dir == SSBlockBayDoor.DIR_EAST)
+			z += (reversed ? 1 : -1);
+		else if (dir == SSBlockBayDoor.DIR_WEST)
+			z += (reversed ? -1 : 1);
+
+		te = SSBlockBayDoor.getDoor(worldObj, x, yCoord, z);
+		//if (te != null && isMatchingDoubleDoor(te))
+		//	return te;
+		//FIXME
+
+		return null;
+	}
+
+	
+	
+	/**
+	 * Play sound for the block
+	 */
+	/**
+	public void playSound()
+	{
+		if (worldObj.isRemote)
+			return;
+
+		String soundPath = null;
+		if (descriptor.getSound() != null)
+			soundPath = descriptor.getSound().getSoundPath(state);
+		if (soundPath != null)
+			getWorldObj().playSoundEffect(xCoord, yCoord, zCoord, soundPath, 1F, 1F);
+	}*/
+	
+	
+	/**
+	 * Change the state of this DoorTileEntity based on powered
+	 */
+	public void setPowered(boolean powered)
+	{
+		if (isOpened() == powered && !isMoving())
+			return;
+
+		SSTileEntityBayDoor te = getDoubleDoor();
+		if (!powered && te != null && te.isPowered())
+			return;
+
+		IDoorState newState = powered ? IDoorState.OPENING : IDoorState.CLOSING;
+		setDoorState(newState);
+
+		if (te != null)
+			te.setDoorState(newState);
 	}
 	
+	
 	@Override
-	public void updateEntity()
+	public void readFromNBT(NBTTagCompound nbt)
 	{
-		if (!isTopDoor())
-			return;
-
-		if (state == IDoorState.CLOSED || state == IDoorState.OPENED)
-			return;
-
-		if (startTime + (childDoors.size() + 1) * maxOpenTime < worldObj.getTotalWorldTime())
-		{
-			if (state == IDoorState.CLOSING)
-				setState(IDoorState.CLOSED);
-			else if (state == IDoorState.OPENING)
-				setState(IDoorState.OPENED);
-		}
+		super.readFromNBT(nbt);
+		setDoorState(IDoorState.values()[nbt.getInteger("state")]);
 	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		nbt.setInteger("state", state.ordinal());
+	}
+	
 	
 	/**
 	 * Specify the bounding box ourselves otherwise, the block bounding box would be use. (And it should be at this point {0, 0, 0})
@@ -206,40 +270,51 @@ public class SSTileEntityBayDoor extends TileEntity {
 	@Override
 	public AxisAlignedBB getRenderBoundingBox()
 	{
-		return AxisAlignedBB.getBoundingBox(xCoord - childDoors.size(), yCoord - childDoors.size(), zCoord - childDoors.size(), xCoord
-				+ childDoors.size() + 1, yCoord + 1, zCoord + childDoors.size() + 1);
+		return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 2, zCoord + 1);
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public boolean shouldRefresh(Block oldBlock, Block newBlock, int oldMeta, int newMeta, World world, int x, int y, int z)
 	{
-		super.writeToNBT(tag);
-		tag.setInteger("state", state.ordinal());
-		tag.setLong("startTime", startTime);
+		return oldBlock != newBlock;
 	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
-		super.readFromNBT(tag);
-		state = IDoorState.values()[tag.getInteger("state")];
-		startTime = tag.getLong("startTime");
-	}
-
+	
+	
 	@Override
 	public Packet getDescriptionPacket()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeToNBT(nbt);
-		add();
 		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, nbt);
-
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
 	{
 		this.readFromNBT(packet.func_148857_g());
-		add();
 	}
+	
+	public boolean isTopBlock(int x, int y, int z)
+	{
+		return x == xCoord && y == yCoord + 1 && z == zCoord;
+	}
+	
+
+	//================
+	
+	
+	public void onBlockPlaced(ItemStack itemStack) {
+		
+	}
+
+
+	public IBoundingBoxType getMovement() {
+		return null;
+	}
+
+
+	public Object getOpeningTime() {
+		return this.openingTime;
+	}
+
 }

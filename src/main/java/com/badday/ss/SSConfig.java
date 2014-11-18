@@ -10,6 +10,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import com.badday.ss.blocks.SSBlockAirVent;
+import com.badday.ss.blocks.SSBlockBayDoor;
 import com.badday.ss.blocks.SSBlockCabinet;
 import com.badday.ss.blocks.SSBlockGasMixer;
 import com.badday.ss.blocks.SSBlockGasPipe;
@@ -59,6 +60,8 @@ public class SSConfig {
 	
 	public static Block ssBlockIC2CableCasing;
 	
+	public static Block ssBlockBayDoor;
+	
 	//	
 	public static Fluid fluidMethaneGas;
 	public static Fluid fluidOxygenGas;
@@ -96,7 +99,7 @@ public class SSConfig {
 
 	// TODO: Добавить
 	public static Block ssBlockAirDetector;
-	public static Block ssBlockDoorGate;
+	
 	public static Block ssBlockDoor2Gate;
 	public static Block ssBlockProtolathe;
 
@@ -226,6 +229,8 @@ public class SSConfig {
 		GameRegistry.registerBlock(ssBlockScrubber, "ssBlockScrubber");
 		GameRegistry.registerTileEntity(SSTileEntityScrubber.class, "ssBlockScrubber");
 		
+		ssBlockBayDoor = new SSBlockBayDoor("bayDoor",true);
+		GameRegistry.registerBlock(ssBlockBayDoor, "bayDoor");
 	}
 
 	/**
