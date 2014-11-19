@@ -19,7 +19,7 @@ import com.badday.ss.core.utils.BlockVec3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SSBlockAirlockDoor  extends Block implements ISSSealedBlock{
+public class SSBlockAirlockDoor extends Block implements ISSSealedBlock {
 
 	public IIcon sideIcon;
 	public IIcon topLeftIcon;

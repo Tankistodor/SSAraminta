@@ -11,7 +11,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 import com.badday.ss.blocks.SSBlockAirVent;
 import com.badday.ss.blocks.SSBlockAirlockDoor;
-import com.badday.ss.blocks.SSBlockBayDoor;
+import com.badday.ss.blocks.SSBlockAirlockFrame;
 import com.badday.ss.blocks.SSBlockCabinet;
 import com.badday.ss.blocks.SSBlockGasMixer;
 import com.badday.ss.blocks.SSBlockGasPipe;
@@ -29,6 +29,7 @@ import com.badday.ss.blocks.SSTileEntityGasMixer;
 import com.badday.ss.blocks.SSTileEntityMultiFake;
 import com.badday.ss.blocks.SSTileEntityScrubber;
 import com.badday.ss.core.utils.SSSettings;
+import com.badday.ss.items.SSItemBlockAirlockFrame;
 import com.badday.ss.items.SSItemBlockCabinet;
 import com.badday.ss.items.SSItemBlockGasPipe;
 import com.badday.ss.items.SSItemBlockGasPipeCasing;
@@ -60,8 +61,6 @@ public class SSConfig {
 	public static Block fakeBlock;
 	
 	public static Block ssBlockIC2CableCasing;
-	
-	public static Block ssBlockBayDoor;
 	
 	public static Block ssBlockAirLockDoor;
 	public static Block ssBlockAirLockFrame;
@@ -233,11 +232,14 @@ public class SSConfig {
 		GameRegistry.registerBlock(ssBlockScrubber, "ssBlockScrubber");
 		GameRegistry.registerTileEntity(SSTileEntityScrubber.class, "ssBlockScrubber");
 		
-		ssBlockBayDoor = new SSBlockBayDoor("bayDoor",true);
-		GameRegistry.registerBlock(ssBlockBayDoor, "bayDoor");
+		//ssBlockBayDoor = new SSBlockBayDoor("bayDoor",true);
+		//GameRegistry.registerBlock(ssBlockBayDoor, "bayDoor");
 		
 		ssBlockAirLockDoor = new SSBlockAirlockDoor("bayDoor2");
 		GameRegistry.registerBlock(ssBlockAirLockDoor, "bayDoor2");
+		
+		ssBlockAirLockFrame = new SSBlockAirlockFrame("blockAirLockFrame");
+		GameRegistry.registerBlock(ssBlockAirLockFrame, SSItemBlockAirlockFrame.class, "blockAirLockFrame");
 	}
 
 	/**

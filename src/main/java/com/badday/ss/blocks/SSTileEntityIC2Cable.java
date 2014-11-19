@@ -12,7 +12,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class SSTileEntityIC2Cable  extends TileEntity implements IEnergyConductor, INetworkTileEntityEventListener {
+public class SSTileEntityIC2Cable extends TileEntity implements IEnergyConductor, INetworkTileEntityEventListener {
 	
 	public boolean addedToEnergyNet = false;
 	public short color = 0;
