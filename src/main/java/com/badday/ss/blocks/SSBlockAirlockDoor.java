@@ -34,6 +34,7 @@ public class SSBlockAirlockDoor extends Block implements ISSSealedBlock {
 		this.setBlockTextureName(SS.ASSET_PREFIX + asset);
 		this.setBlockUnbreakable();
 		this.setStepSound(soundTypeMetal);
+		this.setResistance(SSConfig.ssBayCasingResistance*5);
 		this.setCreativeTab(SS.ssTab);
 	}
 	

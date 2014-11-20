@@ -24,7 +24,7 @@ public class SSBlockWallCasing extends SSMetaBlock implements ISSSealedBlock {
 	public SSBlockWallCasing() {
 		super("blockWallCasing", Material.rock);
 		this.setBlockUnbreakable();
-		this.setResistance(330.0F);
+		this.setResistance(SSConfig.ssBayCasingResistance);
 		this.setStepSound(soundTypeMetal);
 		disableStats();
 	}
@@ -66,10 +66,10 @@ public class SSBlockWallCasing extends SSMetaBlock implements ISSSealedBlock {
 	public boolean onBlockActivated(World world, int x, int y, int z,
 			EntityPlayer entityplayer, int side, float a, float b, float c) {
 		if (world.isRemote)
-			return true;
+			return false;
 		if (entityplayer.getCurrentEquippedItem() != null) {
 
-			if (SS.Debug)
+			if (SS.Debug && false)
 				System.out.println("["
 						+ SS.MODNAME
 						+ "] act "

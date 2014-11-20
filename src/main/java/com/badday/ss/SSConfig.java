@@ -118,6 +118,8 @@ public class SSConfig {
 	 */
 	public static int ssPathfinderMaxDistance = 32; 
 	
+	public static int ssBayCasingResistance = 330;
+	
 	public static int ssCabinetSize =  36;
 	
 	/**
@@ -162,7 +164,7 @@ public class SSConfig {
 		ssAirVentBlockArea = SSSettings.getIntFor(config, "global", "airVentMaxAreaSize",ssAirVentBlockArea,"Max area in bloks for Air Vent");
 		ssPathfinderMaxDistance = SSSettings.getIntFor(config, "global", "PathfinderMaxDistance",ssPathfinderMaxDistance,"Max distance for pathfinder check");
 		ssDefaultTemperature = SSSettings.getIntFor(config, "global", "DefaultTemperature",ssDefaultTemperature,"Default station temperature");
-		
+		ssBayCasingResistance = SSSettings.getIntFor(config, "global", "WallCasingResistance",ssBayCasingResistance,"Default explosion resistance block (330)");
 	}
 
 	public static void LoadItems(File configFile) {

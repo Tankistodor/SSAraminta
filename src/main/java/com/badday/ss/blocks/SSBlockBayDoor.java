@@ -14,6 +14,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.badday.ss.SS;
+import com.badday.ss.SSConfig;
 import com.badday.ss.api.IBoundingBoxType;
 import com.badday.ss.core.utils.WorldUtils;
 
@@ -44,8 +45,10 @@ public class SSBlockBayDoor extends Block implements ITileEntityProvider{
 		this.setBlockTextureName(SS.ASSET_PREFIX + asset);
 		this.setBlockUnbreakable();
 		this.setStepSound(soundTypeMetal);
+		this.setResistance(SSConfig.ssBayCasingResistance*5);
 		this.setCreativeTab(SS.ssTab);
 		this.singleDoor = singleDoor;
+		
 		
 		GameRegistry.registerTileEntity(SSTileEntityBayDoor.class, asset);
 	}
