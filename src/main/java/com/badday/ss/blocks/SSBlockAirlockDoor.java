@@ -15,6 +15,7 @@ import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
 import com.badday.ss.api.ISSSealedBlock;
 import com.badday.ss.core.utils.BlockVec3;
+import com.badday.ss.core.utils.WorldUtils;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -116,6 +117,13 @@ public class SSBlockAirlockDoor extends Block implements ISSSealedBlock {
 	
     }
 
+	@Override
+	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
+		
+		//	world.setBlock(x, y, z, SSConfig.ssBlockAirLockDoor);
+			
+	}
+	
 
     @Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)

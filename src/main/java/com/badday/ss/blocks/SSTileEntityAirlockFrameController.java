@@ -35,7 +35,7 @@ public class SSTileEntityAirlockFrameController extends SSTileEntityAirlockFrame
 	private boolean sideEW = false; 
 	private byte side = 0;
 	
-	private byte status = 0; // 0 - uncomplite; 1 - off
+	private byte status = 0; // 0 - uncomplite; 1 - off; 1 - on
 
 	// Energy
 	public double energy = 0.0D;
@@ -48,8 +48,8 @@ public class SSTileEntityAirlockFrameController extends SSTileEntityAirlockFrame
 			ForgeDirection dir = ForgeDirection.getOrientation(this.side);
 
 			for (int i = 1; i < 3; i++) {
-				this.worldObj.setBlock(this.xCoord + (dir.offsetX * i), this.yCoord, this.zCoord + (dir.offsetY * i), SSConfig.ssBlockAirLockDoor);
-				this.worldObj.setBlock(this.xCoord + (dir.offsetX * i), this.yCoord - 1, this.zCoord + (dir.offsetY * i), SSConfig.ssBlockAirLockDoor);
+				this.worldObj.setBlock(this.xCoord + (dir.offsetX * i), this.yCoord, this.zCoord + (dir.offsetZ * i), SSConfig.ssBlockAirLockDoor);
+				this.worldObj.setBlock(this.xCoord + (dir.offsetX * i), this.yCoord - 1, this.zCoord + (dir.offsetZ * i), SSConfig.ssBlockAirLockDoor);
 			}
 		}
 	}
@@ -59,14 +59,15 @@ public class SSTileEntityAirlockFrameController extends SSTileEntityAirlockFrame
 	 */
 	public void removeAirLock() {
 		if (this.status > 0) {
+			this.setStatus((byte) 0);
 			ForgeDirection dir = ForgeDirection.getOrientation(this.side);
 
 			for (int i = 1; i < 3; i++) {
-				this.worldObj.setBlock(this.xCoord + (dir.offsetX * i), this.yCoord, this.zCoord + (dir.offsetY * i), Blocks.air);
-				this.worldObj.setBlock(this.xCoord + (dir.offsetX * i), this.yCoord - 1, this.zCoord + (dir.offsetY * i), Blocks.air);
+				this.worldObj.setBlock(this.xCoord + (dir.offsetX * i), this.yCoord, this.zCoord + (dir.offsetZ * i), Blocks.air);
+				this.worldObj.setBlock(this.xCoord + (dir.offsetX * i), this.yCoord - 1, this.zCoord + (dir.offsetZ * i), Blocks.air);
 			}
 		}
-		this.status = 0;
+		
 	}
 
 	public int getSide() {
@@ -84,6 +85,10 @@ public class SSTileEntityAirlockFrameController extends SSTileEntityAirlockFrame
 	
 	public void setEW(boolean ew) {
 		this.sideEW = ew;
+	}
+	
+	public int getStatus() {
+		return this.status;
 	}
 	
 	public void setStatus(byte status) {

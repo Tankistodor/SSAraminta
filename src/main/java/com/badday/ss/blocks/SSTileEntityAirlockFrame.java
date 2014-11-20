@@ -24,7 +24,7 @@ public class SSTileEntityAirlockFrame extends TileEntity {
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
-		super.writeToNBT(nbt);
+		//super.writeToNBT(nbt);
 	}
 	
 }
