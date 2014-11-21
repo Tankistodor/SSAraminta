@@ -6,26 +6,35 @@ import ic2.api.energy.tile.IEnergySink;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkDataProvider;
 import ic2.api.network.INetworkUpdateListener;
+import ic2.api.network.NetworkHelper;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
 
-import com.badday.ss.SSConfig;
-import com.badday.ss.core.utils.BlockVec3;
-
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class SSTileEntityAirlockFrameController extends SSTileEntityAirlockFrame implements INetworkUpdateListener, INetworkClientTileEntityEventListener, INetworkDataProvider, IEnergySink {
+import com.badday.ss.SSConfig;
+import com.badday.ss.api.ITEAccess;
+import com.badday.ss.core.utils.BlockVec3;
+import com.badday.ss.entity.player.SSPlayerData;
+import com.badday.ss.entity.player.SSPlayerRoles;
+
+public class SSTileEntityAirlockFrameController extends TileEntity implements ITEAccess, IInventory, INetworkUpdateListener,
+		INetworkClientTileEntityEventListener, INetworkDataProvider, IEnergySink {
 
 	
 	/**
@@ -33,18 +42,24 @@ public class SSTileEntityAirlockFrameController extends SSTileEntityAirlockFrame
 	 * true - e/w airLock
 	 */
 	private boolean sideEW = false; 
+	private boolean constuctionFrameRight = false;
 	private byte side = 0;
 	
-	private byte status = 0; // 0 - uncomplite; 1 - off; 1 - on
+	// 0 - uncomplite;
+	// 1 - off; 
+	//  - on
+	private byte status = 0; 
 
 	// Energy
 	public double energy = 0.0D;
-	public int maxEnergy = 5000;
+	public int maxEnergy = 10000;
 	private boolean addedToEnergyNet = false;
 	public float guiChargeLevel;
 	
+	private HashSet<SSPlayerRoles> acl = new HashSet<SSPlayerRoles>();
+	
 	public void addAirlock() {
-		if (this.status > 0) {
+		if (getConstuctionFrameRight()) {
 			ForgeDirection dir = ForgeDirection.getOrientation(this.side);
 
 			for (int i = 1; i < 3; i++) {
@@ -58,7 +73,7 @@ public class SSTileEntityAirlockFrameController extends SSTileEntityAirlockFrame
 	 * Remove airlock (block break)
 	 */
 	public void removeAirLock() {
-		if (this.status > 0) {
+		if (getConstuctionFrameRight()) {
 			this.setStatus((byte) 0);
 			ForgeDirection dir = ForgeDirection.getOrientation(this.side);
 
@@ -76,6 +91,7 @@ public class SSTileEntityAirlockFrameController extends SSTileEntityAirlockFrame
 	
 	public void setSide(byte side) {
 		this.side = side;
+		this.markDirty();
 	}
 	
 	public boolean getEW() {
@@ -85,14 +101,24 @@ public class SSTileEntityAirlockFrameController extends SSTileEntityAirlockFrame
 	
 	public void setEW(boolean ew) {
 		this.sideEW = ew;
+		this.markDirty();
 	}
 	
-	public int getStatus() {
+	public byte getStatus() {
 		return this.status;
 	}
 	
 	public void setStatus(byte status) {
 		this.status = status;
+		this.markDirty();
+	}
+
+	public boolean getConstuctionFrameRight() {
+		return this.constuctionFrameRight;
+	}
+	
+	public void setConstuctionFrameRight(boolean boolean1) {
+		this.constuctionFrameRight = boolean1;
 	}
 	
 	@Override
@@ -100,8 +126,10 @@ public class SSTileEntityAirlockFrameController extends SSTileEntityAirlockFrame
 	{
 		super.readFromNBT(nbt);
 		setEW(nbt.getBoolean("sideEW"));
+		setConstuctionFrameRight(nbt.getBoolean("constuctionFrameRight"));
 		setSide(nbt.getByte("side"));
 		setStatus(nbt.getByte("status"));
+		
 	}
 
 	@Override
@@ -109,6 +137,7 @@ public class SSTileEntityAirlockFrameController extends SSTileEntityAirlockFrame
 	{
 		super.writeToNBT(nbt);
 		nbt.setBoolean("sideEW", this.sideEW);
+		nbt.setBoolean("constuctionFrameRight", this.constuctionFrameRight);
 		nbt.setByte("side", this.side);
 		nbt.setByte("status", this.status);
 	}
@@ -142,34 +171,6 @@ public class SSTileEntityAirlockFrameController extends SSTileEntityAirlockFrame
 		}
 		super.onChunkUnload();
 	}
-	
-	/*
-	@Override
-	public Packet getDescriptionPacket()
-	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		this.writeToNBT(nbt);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, nbt);
-	}
-
-	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
-	{
-		this.readFromNBT(packet.func_148857_g());
-	}
-	*/
-	
-	@Override
-	public void onNetworkUpdate(String field) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onNetworkEvent(EntityPlayer player, int event) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public List<String> getNetworkedFields() {
@@ -179,7 +180,22 @@ public class SSTileEntityAirlockFrameController extends SSTileEntityAirlockFrame
 		vector.add("status");
 		vector.add("energy");
 		vector.add("guiChargeLevel");
+		vector.add("constuctionFrameRight");
+		//vector.add("acl");
 		return vector;
+	}
+	
+	@Override
+	public void onNetworkUpdate(String field) {
+		if (field.equals("status")) 
+			this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		
+	}
+
+	@Override
+	public void onNetworkEvent(EntityPlayer player, int event) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
@@ -261,7 +277,10 @@ public class SSTileEntityAirlockFrameController extends SSTileEntityAirlockFrame
 				frame.add(new BlockVec3(xCoord+(sx*i), yCoord+1, zCoord+(sz*i)));
 			}
 		} else {
+			setConstuctionFrameRight(false);
+			setStatus(SSBlockAirlockFrameController.MT_UNCOMPLITE);
 			return false;
+			
 		}
 		
 		for (BlockVec3 vec : frame) {
@@ -270,8 +289,101 @@ public class SSTileEntityAirlockFrameController extends SSTileEntityAirlockFrame
 				((SSTileEntityAirlockFrame) t).setMainBlock(this);
 			}
 		}
-		this.status = 1;
+		setConstuctionFrameRight(false);
+		setStatus(SSBlockAirlockFrameController.MT_OPENED);
 		return true;
+	}
+
+	@Override
+	public void closeInventory() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ItemStack decrStackSize(int arg0, int arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getInventoryName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getInventoryStackLimit() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getSizeInventory() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int p_70301_1_) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ItemStack getStackInSlotOnClosing(int p_70304_1_) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean hasCustomInventoryName() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer p_70300_1_) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void openInventory() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setInventorySlotContents(int p_70299_1_, ItemStack p_70299_2_) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isPlayerHaveAccess(Entity player) {
+		if (player instanceof EntityPlayerMP) {
+			SSPlayerData pData = SSPlayerData.get((EntityPlayerMP) player);
+			if (this.acl.contains(pData.getPlayerRole())) return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void addRole(SSPlayerRoles role) {
+		this.acl.add(role);		
+	}
+
+	@Override
+	public void removeRole(SSPlayerRoles role) {
+		if (this.acl.contains(role))
+			this.acl.remove(role);
 	}
 
 }

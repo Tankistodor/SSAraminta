@@ -67,6 +67,15 @@ public class SSConfig {
 	public static Block ssBlockAirLockFrameController;
 	public static Block ssBlockAirLockFrame;
 	
+	
+	// Items
+	public static Item ssScrewDriver;
+	public static Item ssWelder;
+	public static Item ssMultitool;
+	public static Item ssGasAnalyser;
+	//public static Item ssCardEmag;
+		
+	
 	//	
 	public static Fluid fluidMethaneGas;
 	public static Fluid fluidOxygenGas;
@@ -108,11 +117,7 @@ public class SSConfig {
 	public static Block ssBlockDoor2Gate;
 	public static Block ssBlockProtolathe;
 
-	// Items
-	public static Item ssScrewDriver;
-	public static Item ssWelder;
-	public static Item ssMultitool;
-	public static Item ssGasAnalyser;
+	
 	
 	public static int ssAirVentBlockArea = 2048;
 	/**

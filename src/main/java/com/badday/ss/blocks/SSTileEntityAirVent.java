@@ -169,7 +169,7 @@ public class SSTileEntityAirVent extends TileEntity implements IGasNetworkVent {
 	@Override
 	public void writeToNBT(NBTTagCompound tags) {
 		super.writeToNBT(tags);
-		if (SS.Debug) System.out.println("writeToNBT d");
+
 		tags.setInteger("tankCount", this.tank.mixtureTank.size());
 		tags.setInteger("tankCapacity", this.tank.getCapacity());
 		int i = 0;

@@ -21,6 +21,7 @@ public enum SSPlayerRoles {
 	
 	
 	//OTHER
+	MINER,
 	CHEMIST,
 	MEDICAL_DOCTOR,
 	COOK,

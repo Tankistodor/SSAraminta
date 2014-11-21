@@ -1,15 +1,13 @@
 package com.badday.ss.blocks;
 
-import java.util.List;
-
+import ic2.core.IC2;
+import ic2.core.network.NetworkManager;
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
@@ -28,17 +26,17 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SSBlockAirlockFrameController extends Block implements ISSSealedBlock, ITileEntityProvider {
+public class SSBlockAirlockFrameController extends BlockContainer implements ISSSealedBlock {
 
-	public final static int MT_UNCOMPLITE = 0;
-	public final static int MT_OPENED = 1;
-	public final static int MT_OFF = 2;
-	public final static int MT_ON = 3;
-	public final static int MT_ON1 = 4;
-	public final static int MT_ON2 = 5;
-	public final static int MT_ON3 = 6;
-	public final static int MT_ON4 = 7;
-	public final static int MT_LOCKED = 15;
+	public final static byte MT_UNCOMPLITE = 0;
+	public final static byte MT_OPENED = 1;
+	public final static byte MT_OFF = 2;
+	public final static byte MT_ON = 3;
+	public final static byte MT_ON1 = 4;
+	public final static byte MT_ON2 = 5;
+	public final static byte MT_ON3 = 6;
+	public final static byte MT_ON4 = 7;
+	public final static byte MT_LOCKED = 15;
 
 	public IIcon accessOnIcon;
 	public IIcon accessOffIcon;
@@ -116,7 +114,6 @@ public class SSBlockAirlockFrameController extends Block implements ISSSealedBlo
 	 */
 	@Override
 	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
-		int meta = world.getBlockMetadata(x, y, z);
 
 		if (side == ForgeDirection.UP.ordinal() || side == ForgeDirection.DOWN.ordinal())
 			return this.blockIcon;
@@ -125,42 +122,51 @@ public class SSBlockAirlockFrameController extends Block implements ISSSealedBlo
 
 		if (te != null) {
 			if ((side == ForgeDirection.EAST.ordinal() || side == ForgeDirection.WEST.ordinal()) && !te.getEW())
-				return getIconFromMeta(meta);
+				return getIconFromMeta(te.getStatus());
 			if ((side == ForgeDirection.NORTH.ordinal() || side == ForgeDirection.SOUTH.ordinal()) && te.getEW())
-				return getIconFromMeta(meta);
+				return getIconFromMeta(te.getStatus());
 			else
 				return this.blockIcon;
 		}
 		return this.blockIcon;
 
 	}
-
+	
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata) {
 		return new SSTileEntityAirlockFrameController();
 	}
 	
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float a, float b, float c) {
-		if (world.isRemote)
-			return false;
+		if (world.isRemote) {
+			SSTileEntityAirlockFrameController te = WorldUtils.get(world, x, y, z, SSTileEntityAirlockFrameController.class);
+			entityplayer.addChatMessage(new ChatComponentText("[SSAraminta]  CLI TE: " + te.getStatus()));
+			return true;
+		}
+			
 
 		if (entityplayer.getCurrentEquippedItem() != null) {
 			String itemName = entityplayer.getCurrentEquippedItem().getUnlocalizedName();
 			if (itemName.equals("item.ss.multitool")) {
 				SSTileEntityAirlockFrameController te = WorldUtils.get(world, x, y, z, SSTileEntityAirlockFrameController.class);
 				if (te != null) {
-					if (entityplayer.isSneaking()) {
-						boolean right = te.checkStructure();
-						entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] Airlock Structure: " + right));
+					if (!entityplayer.isSneaking() && te.isPlayerHaveAccess(entityplayer)) {
+						boolean right = false;
+						//boolean right = te.checkStructure();
+						entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] SRV Airlock Structure: " + right + " getEW: " + te.getEW()));
 						return true;
 					} else {
-						if (te.getStatus() == 1) {
-							te.setStatus((byte)2);
-							world.setBlockMetadataWithNotify(x, y, z, 2, 2);
+						entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] SRV status: " +te.getStatus()));
+						if (te.getStatus() == MT_OPENED) {
+							te.setStatus(MT_LOCKED);
 						} else {
-							te.setStatus((byte)1);
-							world.setBlockMetadataWithNotify(x, y, z, 1, 2);
+							te.setStatus(MT_OPENED);
 						}
+						//world.markBlockForUpdate(x, y, z);
+						
+						((NetworkManager)IC2.network.get()).updateTileEntityField(te, "status");
+						world.markBlockForUpdate(x, y, z);
+
 						return true;
 					}
 				}
@@ -181,38 +187,30 @@ public class SSBlockAirlockFrameController extends Block implements ISSSealedBlo
         	int facing = MathHelper.floor_double(((entityLiving.rotationYaw * 4F) / 360F) + 0.5D) & 3;
         	tile.setEW((facing == 0 || facing == 2));
         	boolean right = tile.checkStructure();
-        	System.out.println("Structure Airlock: "+ right);
+        	System.out.println("Structure Airlock: "+ right + " " + tile.getEW());
         	tile.addAirlock();
-           	world.setBlockMetadataWithNotify(x, y, z,1,2);
+        	tile.setStatus(MT_OPENED);
+           	tile.markDirty();
+           	
         }
         
+	}
+
+	@Override
+	public void breakBlock(World world, int x, int y, int z, Block block, int par6) {
+		SSTileEntityAirlockFrameController tile = WorldUtils.get(world,x,y,z,SSTileEntityAirlockFrameController.class);
+
+		if (tile != null)
+			tile.removeAirLock();
+		
+		super.breakBlock(world, x, y, z, block, par6);
 	}
 
 	@Override
 	public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
 		return false;
 	}
-
-	@Override
-	public void breakBlock(World world, int x, int y, int z, Block block, int par6) {
-		TileEntity tile = world.getTileEntity(x, y, z);
-
-		if (tile instanceof SSTileEntityAirlockFrameController) {
-			((SSTileEntityAirlockFrameController) tile).removeAirLock();
-		}
-
-		if (tile instanceof SSTileEntityAirlockFrame) {
-			SSTileEntityAirlockFrameController main = ((SSTileEntityAirlockFrame) tile).getMainBlock();
-			if (main instanceof SSTileEntityAirlockFrameController) {
-				main.setStatus((byte)0);
-				world.setBlockMetadataWithNotify(main.xCoord, main.yCoord, main.zCoord, 1,2);
-			}
-			
-		}
-		
-		super.breakBlock(world, x, y, z, block, par6);
-	}
-
+	
 	@Override
 	public int damageDropped(int metadata) {
 		return 0;

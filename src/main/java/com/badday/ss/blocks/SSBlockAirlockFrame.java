@@ -28,7 +28,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SSBlockAirlockFrame extends Block implements ISSSealedBlock, ITileEntityProvider {
+public class SSBlockAirlockFrame extends Block implements ISSSealedBlock {
 
 
 	public SSBlockAirlockFrame(String asset) {
@@ -66,10 +66,11 @@ public class SSBlockAirlockFrame extends Block implements ISSSealedBlock, ITileE
 		return this.blockIcon;
 	}
 
+	/*
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata) {
 		return new SSTileEntityAirlockFrame();
-	}
+	}*/
 	
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float a, float b, float c) {
 		if (world.isRemote)
