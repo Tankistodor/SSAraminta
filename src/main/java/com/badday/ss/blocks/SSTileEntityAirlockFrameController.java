@@ -6,7 +6,8 @@ import ic2.api.energy.tile.IEnergySink;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkDataProvider;
 import ic2.api.network.INetworkUpdateListener;
-import ic2.api.network.NetworkHelper;
+import ic2.core.network.NetworkManager;
+import ic2.core.IC2;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,10 +21,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -32,6 +31,7 @@ import com.badday.ss.api.ITEAccess;
 import com.badday.ss.core.utils.BlockVec3;
 import com.badday.ss.entity.player.SSPlayerData;
 import com.badday.ss.entity.player.SSPlayerRoles;
+import com.badday.ss.items.SSItemCards;
 
 public class SSTileEntityAirlockFrameController extends TileEntity implements ITEAccess, IInventory, INetworkUpdateListener,
 		INetworkClientTileEntityEventListener, INetworkDataProvider, IEnergySink {
@@ -43,6 +43,7 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 	 */
 	private boolean sideEW = false; 
 	private boolean constuctionFrameRight = false;
+	private boolean editMode = false;
 	private byte side = 0;
 	
 	// 0 - uncomplite;
@@ -56,16 +57,145 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 	private boolean addedToEnergyNet = false;
 	public float guiChargeLevel;
 	
+	public long ticks = 0;
+	public int state = 0;
+	public int inc = 0;
+	
 	private HashSet<SSPlayerRoles> acl = new HashSet<SSPlayerRoles>();
 	
-	public void addAirlock() {
+	@SuppressWarnings("rawtypes")
+	@Override
+	public void updateEntity() {
+		super.updateEntity();
+
+		boolean foundPlayer = false;
+		
+		if (!this.worldObj.isRemote) {
+
+			int distance = 3;
+
+			BlockVec3 thisPos = new BlockVec3(this);
+			BlockVec3 minPos = new BlockVec3(this).translate(-distance, -distance, -distance);
+			BlockVec3 maxPos = new BlockVec3(this).translate(distance, distance, distance);
+			AxisAlignedBB matchingRegion = AxisAlignedBB.getBoundingBox(minPos.x, minPos.y, minPos.z, maxPos.x, maxPos.y, maxPos.z);
+			List playersWithin = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, matchingRegion);
+
+			
+
+			for (int i = 0; i < playersWithin.size(); i++) {
+				Object o = playersWithin.get(i);
+
+				if (o instanceof EntityPlayer) {
+					if (this.acl.size() > 0) {
+						try {
+							EntityPlayer player = (EntityPlayer) o;
+							ItemStack itemstack = player.getCurrentEquippedItem();
+							if (isCardHaveAccess(SSItemCards.getCardAcl(itemstack))) {
+								foundPlayer = true;
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+					} else {
+						foundPlayer = true;
+					}
+
+				}
+			}
+
+			
+		}
+		
+		// 0 - closed. scan 
+		// 1 - opening
+		// 2 - open
+		// 3 - closing
+		// 
+		
+		if (this.ticks % 10 == 0) {
+			if (state == 0 && foundPlayer) {
+				    ((NetworkManager) IC2.network.get()).updateTileEntityField(this, "state");
+					state = 1;
+			}
+
+			if (state == 2 && !foundPlayer) {
+				((NetworkManager) IC2.network.get()).updateTileEntityField(this, "state");
+				state = 3;
+			}
+			
+			if (state == 1 && inc < 33)
+				inc ++;
+			
+			if (state == 3 && inc > 1)
+				inc--;
+			
+			if (state == 1 && inc == 32)
+				state = 2;
+			
+			if (state == 3 && inc == 0)
+				state = 0;
+
+			if (state == 1)
+				openDoor();
+			
+			if (state == 3)
+				closeDoor();
+			
+		}
+
+		if (this.ticks >= Long.MAX_VALUE) {
+			this.ticks = 1;
+		}
+
+		this.ticks++;
+
+		
+
+	}
+	
+	public List<BlockVec3> getDoorBlock() {
+		List<BlockVec3> res = new ArrayList<BlockVec3>();
+		
 		if (getConstuctionFrameRight()) {
 			ForgeDirection dir = ForgeDirection.getOrientation(this.side);
 
 			for (int i = 1; i < 3; i++) {
-				this.worldObj.setBlock(this.xCoord + (dir.offsetX * i), this.yCoord, this.zCoord + (dir.offsetZ * i), SSConfig.ssBlockAirLockDoor);
-				this.worldObj.setBlock(this.xCoord + (dir.offsetX * i), this.yCoord - 1, this.zCoord + (dir.offsetZ * i), SSConfig.ssBlockAirLockDoor);
+				res.add(new BlockVec3(this.xCoord + (dir.offsetX * i), this.yCoord, this.zCoord + (dir.offsetZ * i)));
+				res.add(new BlockVec3(this.xCoord + (dir.offsetX * i), this.yCoord - 1, this.zCoord + (dir.offsetZ * i)));
 			}
+		}
+		return res;
+	}
+	
+	public void openDoor() {
+		
+		removeAirLock();
+		this.state = 2;
+		return;
+		/*
+		if (getConstuctionFrameRight()) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.side);
+			float s = 100.0f/(inc+1);
+			for (int i = 1; i < 3; i++) {
+				
+				this.getWorldObj().getBlock(this.xCoord + (dir.offsetX * i), this.yCoord, this.zCoord + (dir.offsetZ * i)).setBlockBounds(0.25f, 0, 0, 0.25f,1.0f-s ,1.0f-s);
+				this.worldObj.markBlockForUpdate(this.xCoord + (dir.offsetX * i), this.yCoord, this.zCoord + (dir.offsetZ * i));
+				//.setBlockBoundsBasedOnState(this.worldObj,this.xCoord + (dir.offsetX * i), this.yCoord+inc, this.zCoord + (dir.offsetZ * i));
+				
+				//this.worldObj.setBlock(this.xCoord + (dir.offsetX * i), this.yCoord, this.zCoord + (dir.offsetZ * i), SSConfig.ssBlockAirLockDoor);
+				//this.worldObj.setBlock(this.xCoord + (dir.offsetX * i), this.yCoord - 1, this.zCoord + (dir.offsetZ * i), SSConfig.ssBlockAirLockDoor);
+			}
+		}*/
+	}
+	
+	public void closeDoor() {
+		addAirlock();	
+		this.state = 0;
+	}
+	
+	public void addAirlock() {
+		for (BlockVec3 block : getDoorBlock()) {
+			block.setBlock(this.worldObj, SSConfig.ssBlockAirLockDoor);
 		}
 	}
 
@@ -73,25 +203,25 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 	 * Remove airlock (block break)
 	 */
 	public void removeAirLock() {
-		if (getConstuctionFrameRight()) {
-			this.setStatus((byte) 0);
-			ForgeDirection dir = ForgeDirection.getOrientation(this.side);
-
-			for (int i = 1; i < 3; i++) {
-				this.worldObj.setBlock(this.xCoord + (dir.offsetX * i), this.yCoord, this.zCoord + (dir.offsetZ * i), Blocks.air);
-				this.worldObj.setBlock(this.xCoord + (dir.offsetX * i), this.yCoord - 1, this.zCoord + (dir.offsetZ * i), Blocks.air);
-			}
+		for (BlockVec3 block : getDoorBlock()) {
+			block.setBlock(this.worldObj, Blocks.air);
 		}
-		
 	}
 
+	public boolean getEditMode() {
+		return this.editMode;
+	}
+	
+	public void setEditMode(boolean mode) {
+		this.editMode = mode;
+	}
+	
 	public int getSide() {
 		return this.side;
 	}
 	
 	public void setSide(byte side) {
 		this.side = side;
-		this.markDirty();
 	}
 	
 	public boolean getEW() {
@@ -101,7 +231,6 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 	
 	public void setEW(boolean ew) {
 		this.sideEW = ew;
-		this.markDirty();
 	}
 	
 	public byte getStatus() {
@@ -110,7 +239,6 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 	
 	public void setStatus(byte status) {
 		this.status = status;
-		this.markDirty();
 	}
 
 	public boolean getConstuctionFrameRight() {
@@ -289,7 +417,7 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 				((SSTileEntityAirlockFrame) t).setMainBlock(this);
 			}
 		}
-		setConstuctionFrameRight(false);
+		setConstuctionFrameRight(true);
 		setStatus(SSBlockAirlockFrameController.MT_OPENED);
 		return true;
 	}
@@ -375,6 +503,21 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 		return false;
 	}
 
+	public boolean isCardHaveAccess(String str) {
+		
+		try {
+			
+			if (this.acl.contains(SSPlayerRoles.valueOf(str))) {
+				return true;
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		} 
+	
+		return false;
+	}
+	
 	@Override
 	public void addRole(SSPlayerRoles role) {
 		this.acl.add(role);		
@@ -386,4 +529,15 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 			this.acl.remove(role);
 	}
 
+	@Override
+	public boolean switchRole(SSPlayerRoles role) {
+		if (this.acl.contains(role)) {
+			this.acl.remove(role);
+			return false;
+		} else {
+			this.acl.add(role);
+			return true;
+		}
+	}
+	
 }

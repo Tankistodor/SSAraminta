@@ -21,6 +21,8 @@ import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
 import com.badday.ss.api.ISSSealedBlock;
 import com.badday.ss.core.utils.WorldUtils;
+import com.badday.ss.entity.player.SSPlayerRoles;
+import com.badday.ss.items.SSItemCards;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -143,28 +145,51 @@ public class SSBlockAirlockFrameController extends BlockContainer implements ISS
 			entityplayer.addChatMessage(new ChatComponentText("[SSAraminta]  CLI TE: " + te.getStatus()));
 			return true;
 		}
-			
 
-		if (entityplayer.getCurrentEquippedItem() != null) {
-			String itemName = entityplayer.getCurrentEquippedItem().getUnlocalizedName();
-			if (itemName.equals("item.ss.multitool")) {
-				SSTileEntityAirlockFrameController te = WorldUtils.get(world, x, y, z, SSTileEntityAirlockFrameController.class);
-				if (te != null) {
+		SSTileEntityAirlockFrameController te = WorldUtils.get(world, x, y, z, SSTileEntityAirlockFrameController.class);
+		if (te != null) {
+
+			if (entityplayer.getCurrentEquippedItem() != null) {
+				String itemName = entityplayer.getCurrentEquippedItem().getUnlocalizedName();
+
+				if (itemName.equals("card_id") && te.getStatus() > MT_OPENED) {
+					if (entityplayer.getCurrentEquippedItem().getItem() instanceof SSItemCards) {
+						String role = SSItemCards.getCardAcl(entityplayer.getCurrentEquippedItem());
+
+						if (role.equals("MASTER_CARD")) {
+							te.setEditMode(!te.getEditMode());
+
+							entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] Set mode to " + te.getEditMode() + " role: " + role));
+						} else if (te.getEditMode()) {
+
+							if (te.switchRole(SSPlayerRoles.valueOf(role)))
+								entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] Added role " + role));
+							else
+								entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] Added remove " + role));
+						}
+					}
+				} else if (itemName.equals("item.ss.multitool")) {
+
+					//te.state = 1;
+					
+					//((NetworkManager) IC2.network.get()).updateTileEntityField(te, "state");
+					//world.markBlockForUpdate(x, y, z);
+					
 					if (!entityplayer.isSneaking() && te.isPlayerHaveAccess(entityplayer)) {
 						boolean right = false;
-						//boolean right = te.checkStructure();
+						// boolean right = te.checkStructure();
 						entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] SRV Airlock Structure: " + right + " getEW: " + te.getEW()));
 						return true;
 					} else {
-						entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] SRV status: " +te.getStatus()));
+						entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] SRV status: " + te.getStatus()));
 						if (te.getStatus() == MT_OPENED) {
 							te.setStatus(MT_LOCKED);
 						} else {
 							te.setStatus(MT_OPENED);
 						}
-						//world.markBlockForUpdate(x, y, z);
-						
-						((NetworkManager)IC2.network.get()).updateTileEntityField(te, "status");
+						// world.markBlockForUpdate(x, y, z);
+
+						((NetworkManager) IC2.network.get()).updateTileEntityField(te, "status");
 						world.markBlockForUpdate(x, y, z);
 
 						return true;
@@ -172,6 +197,7 @@ public class SSBlockAirlockFrameController extends BlockContainer implements ISS
 				}
 			}
 		}
+		
 		return false;
 	}
 
@@ -187,7 +213,15 @@ public class SSBlockAirlockFrameController extends BlockContainer implements ISS
         	int facing = MathHelper.floor_double(((entityLiving.rotationYaw * 4F) / 360F) + 0.5D) & 3;
         	tile.setEW((facing == 0 || facing == 2));
         	boolean right = tile.checkStructure();
-        	System.out.println("Structure Airlock: "+ right + " " + tile.getEW());
+        	if (!right && !world.isRemote) {
+        		world.setBlockToAir(x, y, z);
+        		world.func_147480_a(x,y,z,true);
+        		if (!((EntityPlayer)entityLiving).capabilities.isCreativeMode)
+        			dropBlockAsItem(world, x, y, z,new ItemStack(this));
+        		return;
+        	}
+        		
+        	System.out.println("Structure Airlock: "+ right + " getEW:" + tile.getEW());
         	tile.addAirlock();
         	tile.setStatus(MT_OPENED);
            	tile.markDirty();
