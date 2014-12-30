@@ -17,7 +17,7 @@ public class SSItemGasAnalyzer extends SSItemBaseElectric implements IBoxable {
 	public SSItemGasAnalyzer(String name) {
 		super(name, 100, 1, 1);
 		this.hasSubtypes = false;
-		setUnlocalizedName(name);
+		//setUnlocalizedName(name);
 	    GameRegistry.registerItem(this, name);
 	}
 	

@@ -11,6 +11,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 import com.badday.ss.blocks.SSBlockAirVent;
 import com.badday.ss.blocks.SSBlockAirlockDoor;
+import com.badday.ss.blocks.SSBlockAirlockDoorAir;
 import com.badday.ss.blocks.SSBlockAirlockFrame;
 import com.badday.ss.blocks.SSBlockAirlockFrameController;
 import com.badday.ss.blocks.SSBlockCabinet;
@@ -249,6 +250,9 @@ public class SSConfig {
 		
 		ssBlockAirLockDoor = new SSBlockAirlockDoor("bayDoor2");
 		GameRegistry.registerBlock(ssBlockAirLockDoor, "bayDoor2");
+		
+		ssBlockAir = new SSBlockAirlockDoorAir("blockAir");
+		GameRegistry.registerBlock(ssBlockAir, "blockAir");
 		
 		ssBlockAirLockFrame = new SSBlockAirlockFrame("blockAirLockFrame");
 		GameRegistry.registerBlock(ssBlockAirLockFrame, "blockAirLockFrame");

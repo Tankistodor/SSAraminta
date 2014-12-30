@@ -169,7 +169,8 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 	
 	public void openDoor() {
 		
-		removeAirLock();
+		setAirLockToAir();
+		
 		this.state = 2;
 		return;
 		/*
@@ -208,6 +209,12 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 		}
 	}
 
+	public void setAirLockToAir() {
+		for (BlockVec3 block : getDoorBlock()) {
+			block.setBlock(this.worldObj, SSConfig.ssBlockAir);
+		}
+	}
+	
 	public boolean getEditMode() {
 		return this.editMode;
 	}
