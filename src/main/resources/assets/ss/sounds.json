@@ -4,5 +4,6 @@
 "welder1w": {"category": "master","sounds": [{"name": "welder1w","stream": false}]},
 "welder2w": {"category": "master","sounds": [{"name": "welder2w","stream": false}]},
 "gasAnalyser": {"category": "master","sounds": [{"name": "gasAnalyser","stream": false}]},
-"screech": {"category": "master","sounds": [{"name": "screech","stream": false}]}
+"screech": {"category": "master","sounds": [{"name": "screech","stream": false}]},
+"airlock": {"category": "master","sounds": [{"name": "airlock","stream": false}]}
 }

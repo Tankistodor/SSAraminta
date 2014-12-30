@@ -169,6 +169,8 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 	
 	public void openDoor() {
 		
+		this.worldObj.playSoundEffect(this.xCoord + 0.5f, this.yCoord, this.zCoord + 0.5f, "ss:airlock", 4F, 1F);
+		
 		setAirLockToAir();
 		
 		this.state = 2;
