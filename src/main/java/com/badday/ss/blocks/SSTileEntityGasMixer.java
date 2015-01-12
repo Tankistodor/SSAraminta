@@ -482,8 +482,9 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 		 if (this.energy >= this.maxEnergy) {
 		      return amount;
 		    }
-		    this.energy += amount;
-		    return 0.0D;
+		 double e = Math.min(amount, this.maxEnergy - this.energy);
+		    this.energy += e;
+		    return amount - e;
 	}
 	
 	public double getEnergy() {

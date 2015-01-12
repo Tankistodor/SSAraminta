@@ -485,7 +485,7 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 		for (BlockVec3 vec : frame) {
 			TileEntity t = vec.getTileEntity(this.worldObj);
 			if (t instanceof SSTileEntityAirlockFrame && t != this) {
-				((SSTileEntityAirlockFrame) t).setMainBlock(this);
+				((SSTileEntityAirlockFrame) t).setMainBlock(new BlockVec3(this.xCoord,this.yCoord,this.zCoord));
 			}
 		}
 		setConstuctionFrameRight(true);

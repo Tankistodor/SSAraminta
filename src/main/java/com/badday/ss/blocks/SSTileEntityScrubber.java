@@ -269,11 +269,12 @@ public class SSTileEntityScrubber extends TileEntity implements IFluidHandler,II
 
 	@Override
 	public double injectEnergy(ForgeDirection directionFrom, double amount, double voltage) {
-		if (this.energy >= this.maxEnergy) {
+		 if (this.energy >= this.maxEnergy) {
 		      return amount;
 		    }
-		    this.energy += amount;
-		    return 0;
+		 double e = Math.min(amount, this.maxEnergy - this.energy);
+		    this.energy += e;
+		    return amount - e;
 	}
 
 	public double getEnergy() {

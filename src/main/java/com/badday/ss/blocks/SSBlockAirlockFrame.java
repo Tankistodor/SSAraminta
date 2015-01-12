@@ -3,6 +3,7 @@ package com.badday.ss.blocks;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -28,7 +29,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SSBlockAirlockFrame extends Block implements ISSSealedBlock {
+public class SSBlockAirlockFrame extends BlockContainer implements ISSSealedBlock {
 
 
 	public SSBlockAirlockFrame(String asset) {
@@ -41,6 +42,16 @@ public class SSBlockAirlockFrame extends Block implements ISSSealedBlock {
 		this.setCreativeTab(SS.ssTab);
 
 		GameRegistry.registerTileEntity(SSTileEntityAirlockFrame.class, asset);
+	}
+
+	@Override
+	public TileEntity createNewTileEntity(World arg0, int arg1) {
+		return new SSTileEntityAirlockFrame();
+	}
+	
+	@Override
+	public TileEntity createTileEntity(World world, int meta) {
+		return new SSTileEntityAirlockFrame();
 	}
 
 	@Override
@@ -96,7 +107,10 @@ public class SSBlockAirlockFrame extends Block implements ISSSealedBlock {
 		if (tile instanceof SSTileEntityAirlockFrame) {
 			SSTileEntityAirlockFrameController main = ((SSTileEntityAirlockFrame) tile).getMainBlock();
 			if (main instanceof SSTileEntityAirlockFrameController) {
-				main.setStatus((byte)0);
+				main.openDoor();
+				main.energy = 0;
+				main.setStatus(SSBlockAirlockFrameController.MT_UNCOMPLITE);
+				main.state = 2;
 				world.setBlockMetadataWithNotify(main.xCoord, main.yCoord, main.zCoord, 1,2);
 			}
 		}
