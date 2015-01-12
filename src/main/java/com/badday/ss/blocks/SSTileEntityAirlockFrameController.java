@@ -83,9 +83,8 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 
 		boolean foundPlayer = false;
 
-		if (!this.worldObj.isRemote && this.ticks % 10 == 0 && this.status == SSBlockAirlockFrameController.MT_ON) {
+		if (!this.worldObj.isRemote && this.ticks % 10 == 0 && (this.status == SSBlockAirlockFrameController.MT_ON || this.status == SSBlockAirlockFrameController.MT_OFF)) {
 
-			
 			if (this.maxEnergy - this.energy >= 1.0D) {
 
 				if (this.getDischargeSlot() != null) {
@@ -97,9 +96,27 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 					}
 				}
 			}
-			
+		}
+		
+		if (!this.worldObj.isRemote && this.ticks % 10 == 0) {
+			if (this.energy <= 0 && this.status == SSBlockAirlockFrameController.MT_ON) {
+				this.energy = 0;
+				setStatus(SSBlockAirlockFrameController.MT_OFF);
+				((NetworkManager) IC2.network.get()).updateTileEntityField(this, "status");
+				//worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+				//markDirty();
+			} else if (this.energy > 0 && this.status == SSBlockAirlockFrameController.MT_OFF) {
+				setStatus(SSBlockAirlockFrameController.MT_ON);
+				((NetworkManager) IC2.network.get()).updateTileEntityField(this, "status");
+				//worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+				//markDirty();
+			}
+		}
+		
+		if (!this.worldObj.isRemote && this.ticks % 10 == 0 && this.status == SSBlockAirlockFrameController.MT_ON) {
+		
 			int distance = 3;
-
+			
 			BlockVec3 thisPos = new BlockVec3(this);
 			BlockVec3 minPos = new BlockVec3(this).translate(-distance, -distance, -distance);
 			BlockVec3 maxPos = new BlockVec3(this).translate(distance, distance, distance);
@@ -132,7 +149,7 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 			// 2 - open
 			// 3 - closing
 			//
-
+			
 			if (state == 0 && foundPlayer) {
 				((NetworkManager) IC2.network.get()).updateTileEntityField(this, "state");
 				this.energy -= 1;

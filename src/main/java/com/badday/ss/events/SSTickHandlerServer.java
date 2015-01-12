@@ -16,9 +16,7 @@ public class SSTickHandlerServer {
 	@SubscribeEvent
 	public void onServerTick(TickEvent.ServerTickEvent event) {
 		if (event.phase == Phase.START) {
-		}
-
-		else if (event.phase == Phase.END) {
+		} else if (event.phase == Phase.END) {
 			GasUtils.rebuildGasNetworkEvent();	
 		}
 	}

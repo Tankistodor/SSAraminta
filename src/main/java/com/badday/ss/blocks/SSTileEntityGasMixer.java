@@ -387,7 +387,7 @@ public class SSTileEntityGasMixer extends TileEntity implements IGasNetworkSourc
 
 	@Override
 	public List<String> getNetworkedFields() {
-		Vector<String> vector = new Vector<String>(3);
+		Vector<String> vector = new Vector<String>();
 		vector.add("tank");
 		vector.add("tankTrust");
 		vector.add("totalTrust");

@@ -37,6 +37,7 @@ public class FindNearestVentJob extends Thread {
 		try {
 			Pathfinding finder;
 			List airvents = AirVentNet.getNearbyAirvents(world, coords.x, coords.y, coords.z);
+			
 			if (airvents.isEmpty()) {
 				this.distance = 0; // You are dead, man
 				return;
@@ -47,14 +48,16 @@ public class FindNearestVentJob extends Thread {
 			
 			for(Object airvent: airvents) {
 
-				nearestVent = (BlockVec3) airvent;
+				  //nearestVent = (BlockVec3) airvent;
 			      finder = new Pathfinding(world, (BlockVec3) airvent, coords);
+			      //nearestVent = (BlockVec3) airvent;
 
 			      while (!finder.isDone()) {
 			        
 			        
 			        if (isTerminated() || finder.isDone()) {
-			        	nearestVent = (BlockVec3) airvent;
+			        	//if (finder.getResult().size() > 0)
+			        		nearestVent = (BlockVec3) airvent;
 						break;
 					}
 
@@ -62,6 +65,9 @@ public class FindNearestVentJob extends Thread {
 					long elapsedtime = 0;
 			        
 			        finder.iterate();
+			       
+			        if (finder.getResult().size() > 0)
+		        		nearestVent = (BlockVec3) airvent;
 			        
 			        elapsedtime = new Date().getTime() - startTime;
 					double timeToWait = elapsedtime * 1.5;
@@ -70,7 +76,9 @@ public class FindNearestVentJob extends Thread {
 			      }
 			      
 			if (finder != null) {
-				distance = finder.getResult().size();
+				if (finder.getResult().size() > 0) {
+					distance = finder.getResult().size();
+				}
 			}
 			/*for (Object airvent : airvents) {
 				for (int i = 0; i < maxIterations; ++i) {

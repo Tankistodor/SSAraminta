@@ -143,7 +143,7 @@ public class SSBlockAirlockFrameController extends BlockContainer implements ISS
 					if (te.getEditMode())
 						te.setStatus(MT_LOCKED);
 					else
-						te.setStatus(MT_ON);
+						te.setStatus(MT_OFF);
 					
 					((NetworkManager) IC2.network.get()).updateTileEntityField(te, "status");
 					world.markBlockForUpdate(x, y, z);
@@ -173,9 +173,9 @@ public class SSBlockAirlockFrameController extends BlockContainer implements ISS
 						entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] SRV Airlock Structure: " + right + " getEW: " + te.getEW()));
 						return true;
 					} else {
-						entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] SRV status: " + te.getStatus()));
+						entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] SRV status: " + te.getStatus() + " state: " + te.state + " " + te.energy));
 						if (te.getStatus() == MT_OPENED) {
-							te.setStatus(MT_ON);
+							te.setStatus(MT_OFF);
 						} else {
 							te.setStatus(MT_OPENED);
 						}

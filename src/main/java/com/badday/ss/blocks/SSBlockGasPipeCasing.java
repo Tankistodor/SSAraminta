@@ -76,29 +76,4 @@ public class SSBlockGasPipeCasing extends SSBlockGasPipeBase implements IGasNetw
 			list.add(new ItemStack(this, 1, i));
 		}
 	}
-	
-	@Override
-	public boolean isNormalCube(IBlockAccess world, int x, int y, int z)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean renderAsNormalBlock()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean isOpaqueCube()
-	{
-		return false;
-	}
-
-	@Override
-	public int getRenderType()
-	{
-		return -1;
-	}
-	
 }

@@ -179,9 +179,9 @@ public class SpaceEventHandler
 					job.run();
 				} else {
 					if (!job.isAlive()) {
-						distance = job.getDistance();
 						if (entity instanceof EntityPlayerMP)
 						{
+							distance = job.getDistance();
 							SSPlayerData data = SSPlayerData.get((EntityPlayerMP) entity);
 							data.playerNearestVent = job.getNearestVent();
 						}
@@ -197,9 +197,9 @@ public class SpaceEventHandler
 					job.run();
 				}
 				
-				if(SS.Debug && false) {
+				if(SS.Debug) {
 					long time2 = System.nanoTime();
-					System.out.println("[" + SS.MODNAME + "] Distance is: " + distance + " time: " + (time2 - time1) / 1000000.0D + "ms");
+					System.out.println("[" + SS.MODNAME + "] Distance is: " + distance + " vent: " + job.getNearestVent() + " time: " + (time2 - time1) / 1000000.0D + "ms");
 				}
 				
 				

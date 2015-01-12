@@ -10,19 +10,11 @@ import cpw.mods.fml.common.eventhandler.Event;
 public class GasVentRecalculateEvents  extends Event {
 
 	public GasVentRecalculateEvents(IGasNetworkVent vent) {
-		//network.recalculate();
-		
 		
 		if (vent.getGasNetwork() != null) {
 			
-			//if (SS.Debug) vent.getGasNetwork().printDebugInfo();
-			
 			vent.getTank().dispel("fluid.oxygen","fluid.carbondioxide",(int) (vent.getBaySize()/99)); // dispel 1% oxygen -> CO2
-			
-			//vent.getTank().dispel("fluid.carbondioxide",(int) (vent.getBaySize()/99)); // dispel 1% CO2 - EMULATE SCRUBBER
-			
-			//vent.getTank().dispel("fluid.carbonDioxide.name",(int) (vent.getBaySize()/99)); // dispel 1% CO2 - EMULATE SCRUBBER
-			
+
 			for (IGasNetworkSource src : vent.getGasNetwork().getSources()) {
 								
 				if (vent.getTank().capacity > vent.getTank().getTotalAmount()) {
@@ -31,8 +23,8 @@ public class GasVentRecalculateEvents  extends Event {
 				}
 				
 				if (SS.Debug) {
-					System.out.println("    "+vent.getTank().toString());
-					System.out.println("    Pressure: "+vent.getPressure() + " hPa Atmos right:" + vent.getGasIsNormal());
+					System.out.println("    "+vent+" "+vent.getTank().toString());
+					System.out.println("    "+vent+" Pressure: "+vent.getPressure() + " hPa Atmos right:" + vent.getGasIsNormal());
 				}
 			}
 			

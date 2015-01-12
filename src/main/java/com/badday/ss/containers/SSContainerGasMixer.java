@@ -90,8 +90,12 @@ public class SSContainerGasMixer extends Container implements INetworkTileEntity
 	}
 	
 	public List<String> getNetworkedFields() {
-		Vector<String> vector = new Vector<String>(3);
-		vector.add("status");
+		Vector<String> vector = new Vector<String>();
+		vector.add("tank");
+		vector.add("tankTrust");
+		vector.add("totalTrust");
+		vector.add("energy");
+		vector.add("guiChargeLevel");
 		return vector;
 	}
 
