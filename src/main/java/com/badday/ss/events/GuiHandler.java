@@ -7,14 +7,17 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 
 import com.badday.ss.SS;
+import com.badday.ss.blocks.SSTileEntityAirlockFrameController;
 import com.badday.ss.blocks.SSTileEntityCabinet;
 import com.badday.ss.blocks.SSTileEntityGasMixer;
 import com.badday.ss.blocks.SSTileEntityScrubber;
+import com.badday.ss.containers.SSContainerAirlockController;
 import com.badday.ss.containers.SSContainerCabinet;
 import com.badday.ss.containers.SSContainerGasMixer;
 import com.badday.ss.containers.SSContainerItemGasAnalyser;
 import com.badday.ss.containers.SSContainerScrubber;
 import com.badday.ss.core.utils.WorldUtils;
+import com.badday.ss.gui.SSGuiAirlockController;
 import com.badday.ss.gui.SSGuiCabinet;
 import com.badday.ss.gui.SSGuiGasMixer;
 import com.badday.ss.gui.SSGuiIDs;
@@ -57,6 +60,8 @@ public class GuiHandler implements IGuiHandler {
 	            	return new SSGuiGasMixer(player.inventory, (SSTileEntityGasMixer) tile);
 	            } else if (tile instanceof SSTileEntityScrubber) {
 	            	return new SSGuiScrubber(player.inventory, (SSTileEntityScrubber) tile);
+	            } else if (tile instanceof SSTileEntityAirlockFrameController) {
+	            	return new SSGuiAirlockController(player.inventory, (SSTileEntityAirlockFrameController) tile);
 	            }
 	            
 	        }
@@ -99,6 +104,8 @@ public class GuiHandler implements IGuiHandler {
             	return new SSContainerGasMixer(player.inventory, ((SSTileEntityGasMixer) tile));
             } else if (tile instanceof SSTileEntityScrubber) {
             	return new SSContainerScrubber(player.inventory, ((SSTileEntityScrubber) tile));
+            } else if (tile instanceof SSTileEntityAirlockFrameController) {
+            	return new SSContainerAirlockController(player.inventory, ((SSTileEntityAirlockFrameController) tile));
             }
         }
                 

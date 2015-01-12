@@ -130,6 +130,11 @@ public class SSConfig {
 	public static int ssBayCasingResistance = 330;
 	
 	public static int ssCabinetSize =  36;
+
+	/**
+	 * Render planet 0 - none
+	 */
+	public static int ssRenderPlanet = 1;
 	
 	/**
 	 * Default station temperature in C
@@ -174,6 +179,9 @@ public class SSConfig {
 		ssPathfinderMaxDistance = SSSettings.getIntFor(config, "global", "PathfinderMaxDistance",ssPathfinderMaxDistance,"Max distance for pathfinder check");
 		ssDefaultTemperature = SSSettings.getIntFor(config, "global", "DefaultTemperature",ssDefaultTemperature,"Default station temperature");
 		ssBayCasingResistance = SSSettings.getIntFor(config, "global", "WallCasingResistance",ssBayCasingResistance,"Default explosion resistance block (330)");
+
+		ssRenderPlanet = SSSettings.getIntFor(config, "global", "RenderPlanet",ssRenderPlanet,"Render planet (0 - not render; 1-6 some planet)");
+		
 	}
 
 	public static void LoadItems(File configFile) {

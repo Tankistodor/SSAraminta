@@ -14,6 +14,8 @@ import net.minecraftforge.client.IRenderHandler;
 
 import org.lwjgl.opengl.GL11;
 
+import com.badday.ss.SSConfig;
+
 import cpw.mods.fml.client.FMLClientHandler;
 
 public class SpaceSkyRenderer extends IRenderHandler {
@@ -224,28 +226,29 @@ public class SpaceSkyRenderer extends IRenderHandler {
 		GL11.glPopMatrix();
         GL11.glDisable(GL11.GL_BLEND);
 		
-		
-		// Render Earth +
-		 GL11.glPushMatrix();
-         GL11.glTranslatef(0.0F, -var20 / 10, 0.0F);
-         float scale = 100 * (0.3F - var20 / 10000.0F);
-         scale = Math.max(scale, 0.2F);
-         GL11.glScalef(scale, 0.0F, scale);
-         GL11.glTranslatef(0.0F, -var20, 0.0F);
-         GL11.glRotatef(90F, 0.0F, 1.0F, 0.0F);
-		this.minecraft.renderEngine.bindTexture(overworldTexture);
+		if (SSConfig.ssRenderPlanet > 0) {
+			// Render Earth +
+			GL11.glPushMatrix();
+			GL11.glTranslatef(0.0F, -var20 / 10, 0.0F);
+			float scale = 100 * (0.3F - var20 / 10000.0F);
+			scale = Math.max(scale, 0.2F);
+			GL11.glScalef(scale, 0.0F, scale);
+			GL11.glTranslatef(0.0F, -var20, 0.0F);
+			GL11.glRotatef(90F, 0.0F, 1.0F, 0.0F);
+			this.minecraft.renderEngine.bindTexture(overworldTexture);
 
-		var10 = 1.0F;
-		final float alpha = 0.5F;
-		GL11.glColor4f(Math.min(alpha, 1.0F), Math.min(alpha, 1.0F), Math.min(alpha, 1.0F), Math.min(alpha, 1.0F));
-		var23.startDrawingQuads();
-		var23.addVertexWithUV(-var10, 0, var10, 0.0F, 1.0F);
-		var23.addVertexWithUV(var10, 0, var10, 1.0F, 1.0F);
-		var23.addVertexWithUV(var10, 0, -var10, 1.0F, 0.0F);
-		var23.addVertexWithUV(-var10, 0, -var10, 0.0F, 0.0F);
-		var23.draw();
-		GL11.glPopMatrix();
-		// Render Earth -
+			var10 = 1.0F;
+			final float alpha = 0.5F;
+			GL11.glColor4f(Math.min(alpha, 1.0F), Math.min(alpha, 1.0F), Math.min(alpha, 1.0F), Math.min(alpha, 1.0F));
+			var23.startDrawingQuads();
+			var23.addVertexWithUV(-var10, 0, var10, 0.0F, 1.0F);
+			var23.addVertexWithUV(var10, 0, var10, 1.0F, 1.0F);
+			var23.addVertexWithUV(var10, 0, -var10, 1.0F, 0.0F);
+			var23.addVertexWithUV(-var10, 0, -var10, 0.0F, 0.0F);
+			var23.draw();
+			GL11.glPopMatrix();
+			// Render Earth -
+		}
 		
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 

@@ -321,13 +321,13 @@ public class SSTileEntityScrubber extends TileEntity implements IFluidHandler,II
 	@Override
 	public void openInventory() {
 		if (worldObj == null) return;	
-		worldObj.addBlockEvent(xCoord, yCoord, zCoord, SSConfig.ssBlockCabinet, 1, numUsingPlayers);
+		worldObj.addBlockEvent(xCoord, yCoord, zCoord, SSConfig.ssBlockScrubber, 1, numUsingPlayers);
 	}
 	
 	@Override
 	public void closeInventory() {
 		if (worldObj == null) return;
-		worldObj.addBlockEvent(xCoord, yCoord, zCoord, SSConfig.ssBlockCabinet, 1, numUsingPlayers);
+		worldObj.addBlockEvent(xCoord, yCoord, zCoord, SSConfig.ssBlockScrubber, 1, numUsingPlayers);
 	}
 
 	@Override

@@ -34,10 +34,6 @@ public class SSBlockAirlockFrameController extends BlockContainer implements ISS
 	public final static byte MT_OPENED = 1;
 	public final static byte MT_OFF = 2;
 	public final static byte MT_ON = 3;
-	public final static byte MT_ON1 = 4;
-	public final static byte MT_ON2 = 5;
-	public final static byte MT_ON3 = 6;
-	public final static byte MT_ON4 = 7;
 	public final static byte MT_LOCKED = 15;
 
 	public IIcon accessOnIcon;
@@ -68,10 +64,6 @@ public class SSBlockAirlockFrameController extends BlockContainer implements ISS
 		this.accessOnIcon = iconRegister.registerIcon(SS.ASSET_PREFIX + (this.getUnlocalizedName().substring(5)) + "_on");
 		this.accessOffIcon = iconRegister.registerIcon(SS.ASSET_PREFIX + (this.getUnlocalizedName().substring(5)) + "_off");
 		this.accessLockedIcon = iconRegister.registerIcon(SS.ASSET_PREFIX + (this.getUnlocalizedName().substring(5)) + "_locked");
-		this.accessOn1Icon = iconRegister.registerIcon(SS.ASSET_PREFIX + (this.getUnlocalizedName().substring(5)) + "_p1");
-		this.accessOn2Icon = iconRegister.registerIcon(SS.ASSET_PREFIX + (this.getUnlocalizedName().substring(5)) + "_p2");
-		this.accessOn3Icon = iconRegister.registerIcon(SS.ASSET_PREFIX + (this.getUnlocalizedName().substring(5)) + "_p3");
-		this.accessOn4Icon = iconRegister.registerIcon(SS.ASSET_PREFIX + (this.getUnlocalizedName().substring(5)) + "_p4");
 		this.accessOpenedIcon = iconRegister.registerIcon(SS.ASSET_PREFIX + (this.getUnlocalizedName().substring(5)) + "_opened");
 	}
 
@@ -94,14 +86,6 @@ public class SSBlockAirlockFrameController extends BlockContainer implements ISS
 			return this.accessOffIcon;
 		case MT_ON:
 			return this.accessOnIcon;
-		case MT_ON1:
-			return this.accessOn1Icon;
-		case MT_ON2:
-			return this.accessOn2Icon;
-		case MT_ON3:
-			return this.accessOn3Icon;
-		case MT_ON4:
-			return this.accessOn4Icon;
 		case MT_LOCKED:
 			return this.accessLockedIcon;
 		default:
@@ -141,8 +125,8 @@ public class SSBlockAirlockFrameController extends BlockContainer implements ISS
 	
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float a, float b, float c) {
 		if (world.isRemote) {
-			SSTileEntityAirlockFrameController te = WorldUtils.get(world, x, y, z, SSTileEntityAirlockFrameController.class);
-			entityplayer.addChatMessage(new ChatComponentText("[SSAraminta]  CLI TE: " + te.getStatus()));
+			//SSTileEntityAirlockFrameController te = WorldUtils.get(world, x, y, z, SSTileEntityAirlockFrameController.class);
+			//entityplayer.addChatMessage(new ChatComponentText("[SSAraminta]  CLI TE: " + te.getStatus()));
 			return true;
 		}
 
@@ -151,22 +135,29 @@ public class SSBlockAirlockFrameController extends BlockContainer implements ISS
 
 			if (entityplayer.getCurrentEquippedItem() != null) {
 				String itemName = entityplayer.getCurrentEquippedItem().getUnlocalizedName();
-
-				if (itemName.equals("card_id") && te.getStatus() > MT_OPENED) {
+				System.out.println("itemName "+itemName);
+				// Toggle EditMode
+				if (itemName.equals("card_gold") && (te.getStatus() == MT_ON || te.getStatus() == MT_LOCKED)) {
+					te.setEditMode(!te.getEditMode());
+					
+					if (te.getEditMode())
+						te.setStatus(MT_LOCKED);
+					else
+						te.setStatus(MT_ON);
+					
+					((NetworkManager) IC2.network.get()).updateTileEntityField(te, "status");
+					world.markBlockForUpdate(x, y, z);
+					
+					entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] Set mode to " + te.getEditMode()));
+				}
+					
+				if (itemName.equals("card_id") && te.getStatus() == MT_LOCKED && te.getEditMode()) {					
 					if (entityplayer.getCurrentEquippedItem().getItem() instanceof SSItemCards) {
 						String role = SSItemCards.getCardAcl(entityplayer.getCurrentEquippedItem());
-
-						if (role.equals("MASTER_CARD")) {
-							te.setEditMode(!te.getEditMode());
-
-							entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] Set mode to " + te.getEditMode() + " role: " + role));
-						} else if (te.getEditMode()) {
-
 							if (te.switchRole(SSPlayerRoles.valueOf(role)))
 								entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] Added role " + role));
 							else
 								entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] Added remove " + role));
-						}
 					}
 				} else if (itemName.equals("item.ss.multitool")) {
 
@@ -175,7 +166,8 @@ public class SSBlockAirlockFrameController extends BlockContainer implements ISS
 					//((NetworkManager) IC2.network.get()).updateTileEntityField(te, "state");
 					//world.markBlockForUpdate(x, y, z);
 					
-					if (!entityplayer.isSneaking() && te.isPlayerHaveAccess(entityplayer)) {
+					//if (!entityplayer.isSneaking() && te.isPlayerHaveAccess(entityplayer)) {
+					if (entityplayer.isSneaking()) {
 						boolean right = false;
 						// boolean right = te.checkStructure();
 						entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] SRV Airlock Structure: " + right + " getEW: " + te.getEW()));
@@ -183,7 +175,7 @@ public class SSBlockAirlockFrameController extends BlockContainer implements ISS
 					} else {
 						entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] SRV status: " + te.getStatus()));
 						if (te.getStatus() == MT_OPENED) {
-							te.setStatus(MT_LOCKED);
+							te.setStatus(MT_ON);
 						} else {
 							te.setStatus(MT_OPENED);
 						}
@@ -194,6 +186,9 @@ public class SSBlockAirlockFrameController extends BlockContainer implements ISS
 
 						return true;
 					}
+				} else if (te.getStatus() == MT_OPENED) {
+					entityplayer.openGui(SS.instance, 0, world, x, y, z);
+					return true;
 				}
 			}
 		}

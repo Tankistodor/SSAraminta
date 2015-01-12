@@ -47,7 +47,7 @@ public class SSContainerGasMixer extends Container implements INetworkTileEntity
 	
 	protected void layoutContainer(IInventory playerInventory, IInventory chestInventory, int xSize, int ySize) {
 		// Make charge slot
-		addSlotToContainer(makeSlot(chestInventory, 0, 8 , 8));
+		addSlotToContainer(makeSlot(chestInventory, 0, 8, 8));
 		
 		int leftCol = (xSize - 162) / 2 + 1;
         for (int playerInvRow = 0; playerInvRow < 3; playerInvRow++)
@@ -91,11 +91,7 @@ public class SSContainerGasMixer extends Container implements INetworkTileEntity
 	
 	public List<String> getNetworkedFields() {
 		Vector<String> vector = new Vector<String>(3);
-		vector.add("tank");
-		vector.add("tankTrust");
-		vector.add("totalTrust");
-		vector.add("energy");
-		vector.add("guiChargeLevel");
+		vector.add("status");
 		return vector;
 	}
 

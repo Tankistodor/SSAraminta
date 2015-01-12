@@ -3,6 +3,7 @@ package com.badday.ss.blocks;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySink;
+import ic2.api.item.ElectricItem;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkDataProvider;
 import ic2.api.network.INetworkUpdateListener;
@@ -19,8 +20,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.MinecraftForge;
@@ -33,7 +36,7 @@ import com.badday.ss.entity.player.SSPlayerData;
 import com.badday.ss.entity.player.SSPlayerRoles;
 import com.badday.ss.items.SSItemCards;
 
-public class SSTileEntityAirlockFrameController extends TileEntity implements ITEAccess, IInventory, INetworkUpdateListener,
+public class SSTileEntityAirlockFrameController extends TileEntity implements ITEAccess, IInventory, ISidedInventory, INetworkUpdateListener,
 		INetworkClientTileEntityEventListener, INetworkDataProvider, IEnergySink {
 
 	
@@ -55,13 +58,23 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 	public double energy = 0.0D;
 	public int maxEnergy = 10000;
 	private boolean addedToEnergyNet = false;
-	public float guiChargeLevel;
-	
+		
 	public long ticks = 0;
 	public int state = 0;
 	public int inc = 0;
 	
+	private int numUsingPlayers;
+	
 	private HashSet<SSPlayerRoles> acl = new HashSet<SSPlayerRoles>();
+	
+	/**
+	 * Discharge Slot
+	 */
+	private ItemStack[] containingItems = new ItemStack[1];
+	
+	public SSTileEntityAirlockFrameController() {
+		super();
+	}
 	
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -69,9 +82,22 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 		super.updateEntity();
 
 		boolean foundPlayer = false;
-		
-		if (!this.worldObj.isRemote) {
 
+		if (!this.worldObj.isRemote && this.ticks % 10 == 0 && this.status == SSBlockAirlockFrameController.MT_ON) {
+
+			
+			if (this.maxEnergy - this.energy >= 1.0D) {
+
+				if (this.getDischargeSlot() != null) {
+					double amount = ElectricItem.manager.discharge(this.getDischargeSlot(), 1, 1, true, true, false);
+					if (amount > 0.0D) {
+						this.energy += amount;
+
+					markDirty();
+					}
+				}
+			}
+			
 			int distance = 3;
 
 			BlockVec3 thisPos = new BlockVec3(this);
@@ -79,8 +105,6 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 			BlockVec3 maxPos = new BlockVec3(this).translate(distance, distance, distance);
 			AxisAlignedBB matchingRegion = AxisAlignedBB.getBoundingBox(minPos.x, minPos.y, minPos.z, maxPos.x, maxPos.y, maxPos.z);
 			List playersWithin = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, matchingRegion);
-
-			
 
 			for (int i = 0; i < playersWithin.size(); i++) {
 				Object o = playersWithin.get(i);
@@ -97,50 +121,47 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 							// TODO: handle exception
 						}
 					} else {
-						foundPlayer = true;
+						foundPlayer = false;
 					}
 
 				}
 			}
 
-			
-		}
-		
-		// 0 - closed. scan 
-		// 1 - opening
-		// 2 - open
-		// 3 - closing
-		// 
-		
-		if (this.ticks % 10 == 0) {
+			// 0 - closed. scan
+			// 1 - opening
+			// 2 - open
+			// 3 - closing
+			//
+
 			if (state == 0 && foundPlayer) {
-				    ((NetworkManager) IC2.network.get()).updateTileEntityField(this, "state");
-					state = 1;
+				((NetworkManager) IC2.network.get()).updateTileEntityField(this, "state");
+				this.energy -= 1;
+				state = 1;
 			}
 
 			if (state == 2 && !foundPlayer) {
 				((NetworkManager) IC2.network.get()).updateTileEntityField(this, "state");
 				state = 3;
 			}
-			
+
 			if (state == 1 && inc < 33)
-				inc ++;
-			
+				inc++;
+
 			if (state == 3 && inc > 1)
 				inc--;
-			
+
 			if (state == 1 && inc == 32)
 				state = 2;
-			
+
 			if (state == 3 && inc == 0)
 				state = 0;
 
 			if (state == 1)
 				openDoor();
-			
+
 			if (state == 3)
 				closeDoor();
-			
+
 		}
 
 		if (this.ticks >= Long.MAX_VALUE) {
@@ -149,8 +170,10 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 
 		this.ticks++;
 
-		
-
+	}
+	
+	public boolean hasTileEntity(int metadata) {
+		return true;
 	}
 	
 	public List<BlockVec3> getDoorBlock() {
@@ -175,20 +198,6 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 		
 		this.state = 2;
 		return;
-		/*
-		if (getConstuctionFrameRight()) {
-			ForgeDirection dir = ForgeDirection.getOrientation(this.side);
-			float s = 100.0f/(inc+1);
-			for (int i = 1; i < 3; i++) {
-				
-				this.getWorldObj().getBlock(this.xCoord + (dir.offsetX * i), this.yCoord, this.zCoord + (dir.offsetZ * i)).setBlockBounds(0.25f, 0, 0, 0.25f,1.0f-s ,1.0f-s);
-				this.worldObj.markBlockForUpdate(this.xCoord + (dir.offsetX * i), this.yCoord, this.zCoord + (dir.offsetZ * i));
-				//.setBlockBoundsBasedOnState(this.worldObj,this.xCoord + (dir.offsetX * i), this.yCoord+inc, this.zCoord + (dir.offsetZ * i));
-				
-				//this.worldObj.setBlock(this.xCoord + (dir.offsetX * i), this.yCoord, this.zCoord + (dir.offsetZ * i), SSConfig.ssBlockAirLockDoor);
-				//this.worldObj.setBlock(this.xCoord + (dir.offsetX * i), this.yCoord - 1, this.zCoord + (dir.offsetZ * i), SSConfig.ssBlockAirLockDoor);
-			}
-		}*/
 	}
 	
 	public void closeDoor() {
@@ -247,6 +256,7 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 	}
 	
 	public void setStatus(byte status) {
+		//if (status != SSBlockAirlockFrameController.MT_OPENED) this.closeDoor();
 		this.status = status;
 	}
 
@@ -266,6 +276,23 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 		setConstuctionFrameRight(nbt.getBoolean("constuctionFrameRight"));
 		setSide(nbt.getByte("side"));
 		setStatus(nbt.getByte("status"));
+		int i = nbt.getInteger("roleCount");
+		for (int j = 1; j<=i; j++) {
+			addRole(SSPlayerRoles.valueOf(nbt.getString("role"+j)));
+		}
+		
+		final NBTTagList var2 = nbt.getTagList("Items", 10);
+		this.containingItems = new ItemStack[this.getSizeInventory()];
+
+		for (int var3 = 0; var3 < var2.tagCount(); ++var3) {
+			final NBTTagCompound var4 = var2.getCompoundTagAt(var3);
+			final byte var5 = var4.getByte("Slot");
+
+			if (var5 >= 0 && var5 < this.containingItems.length) {
+				this.containingItems[var5] = ItemStack.loadItemStackFromNBT(var4);
+			}
+		}
+		
 		
 	}
 
@@ -277,6 +304,26 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 		nbt.setBoolean("constuctionFrameRight", this.constuctionFrameRight);
 		nbt.setByte("side", this.side);
 		nbt.setByte("status", this.status);
+		nbt.setInteger("roleCount", this.acl.size());
+		int i = 0;
+		for (SSPlayerRoles r : this.acl) {
+			i++;
+			nbt.setString("role"+i, r.toString());
+		}
+		
+		final NBTTagList list = new NBTTagList();
+
+		for (int var3 = 0; var3 < this.containingItems.length; ++var3) {
+			if (this.containingItems[var3] != null) {
+				final NBTTagCompound var4 = new NBTTagCompound();
+				var4.setByte("Slot", (byte) var3);
+				this.containingItems[var3].writeToNBT(var4);
+				list.appendTag(var4);
+			}
+		}
+
+		nbt.setTag("Items", list);
+		
 	}
 
 	@Override
@@ -311,14 +358,12 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 
 	@Override
 	public List<String> getNetworkedFields() {
-		Vector<String> vector = new Vector<String>(3);
+		Vector<String> vector = new Vector<String>();
 		vector.add("sideEW");
 		vector.add("side");
 		vector.add("status");
 		vector.add("energy");
-		vector.add("guiChargeLevel");
 		vector.add("constuctionFrameRight");
-		//vector.add("acl");
 		return vector;
 	}
 	
@@ -350,7 +395,7 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 	@Override
 	public int getSinkTier() {
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 	@Override
@@ -432,45 +477,64 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 	}
 
 	@Override
+	public void openInventory() {
+		if (worldObj == null) return;	
+		worldObj.addBlockEvent(xCoord, yCoord, zCoord, SSConfig.ssBlockAirLockFrameController, 1, numUsingPlayers);
+	}
+	
+	@Override
 	public void closeInventory() {
-		// TODO Auto-generated method stub
-		
+		if (worldObj == null) return;
+		worldObj.addBlockEvent(xCoord, yCoord, zCoord, SSConfig.ssBlockAirLockFrameController, 1, numUsingPlayers);
 	}
 
 	@Override
-	public ItemStack decrStackSize(int arg0, int arg1) {
-		// TODO Auto-generated method stub
-		return null;
+	public ItemStack decrStackSize(int i, int j) {
+		if (this.containingItems[i] != null) {
+			if (containingItems[i].stackSize <= j) {
+				ItemStack itemstack = containingItems[i];
+				containingItems[i] = null;
+				markDirty();
+				return itemstack;
+			}
+			ItemStack itemstack1 = containingItems[i].splitStack(j);
+			if (containingItems[i].stackSize == 0) {
+				containingItems[i] = null;
+			}
+			markDirty();
+			return itemstack1;
+		} else {
+			return null;
+		}
 	}
 
 	@Override
 	public String getInventoryName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "inventoryAirlockController";
 	}
 
 	@Override
 	public int getInventoryStackLimit() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 	@Override
 	public int getSizeInventory() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int p_70301_1_) {
-		// TODO Auto-generated method stub
-		return null;
+	public ItemStack getStackInSlot(int slot) {
+		return this.containingItems[slot];
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int p_70304_1_) {
-		// TODO Auto-generated method stub
-		return null;
+	public ItemStack getStackInSlotOnClosing(int slot) {
+		ItemStack stack = getStackInSlot(slot);
+        if (stack != null) {
+                setInventorySlotContents(slot, null);
+        }
+        return stack;
 	}
 
 	@Override
@@ -480,27 +544,46 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) {
-		// TODO Auto-generated method stub
+	public boolean isItemValidForSlot(int slotID, ItemStack itemstack) {
+
+		if (itemstack.getItem() instanceof ic2.api.item.ISpecialElectricItem) {
+			return true;
+		}
 		return false;
 	}
 
+
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer p_70300_1_) {
-		// TODO Auto-generated method stub
-		return false;
+    public int[] getAccessibleSlotsFromSide(int side)
+    {
+        return new int[] { };
+    }
+	
+	@Override
+    public boolean canInsertItem(int slotID, ItemStack itemstack, int side)
+    {
+        return this.isItemValidForSlot(slotID, itemstack);
+    }
+	
+	@Override
+    public boolean canExtractItem(int slotID, ItemStack itemstack, int side)
+    {
+        return false;
+    }
+	
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
+		return ((worldObj.getTileEntity(xCoord, yCoord, zCoord) == this)
+				&& (entityplayer.getDistance((double) xCoord + 0.5D, (double) yCoord + 0.5D, (double) zCoord + 0.5D) <= 64D));
 	}
 
 	@Override
-	public void openInventory() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setInventorySlotContents(int p_70299_1_, ItemStack p_70299_2_) {
-		// TODO Auto-generated method stub
-		
+	public void setInventorySlotContents(int i, ItemStack itemstack) {
+		this.containingItems[i] = itemstack;
+		if (itemstack != null && itemstack.stackSize > getInventoryStackLimit()) {
+			itemstack.stackSize = getInventoryStackLimit();
+		}
+		markDirty();
 	}
 
 	@Override
@@ -529,24 +612,47 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 	
 	@Override
 	public void addRole(SSPlayerRoles role) {
-		this.acl.add(role);		
+		this.acl.add(role);
+		this.markDirty();
 	}
 
 	@Override
 	public void removeRole(SSPlayerRoles role) {
-		if (this.acl.contains(role))
+		if (this.acl.contains(role)) {
 			this.acl.remove(role);
+			this.markDirty();
+		}
 	}
 
 	@Override
 	public boolean switchRole(SSPlayerRoles role) {
 		if (this.acl.contains(role)) {
 			this.acl.remove(role);
+			this.markDirty();
 			return false;
 		} else {
 			this.acl.add(role);
+			this.markDirty();
 			return true;
 		}
 	}
+
+	public ItemStack getDischargeSlot() {
+		if (this.containingItems != null && this.containingItems.length > 0) {
+			return this.containingItems[0];
+		} else {
+			this.containingItems = new ItemStack[1];
+		}
+		return this.containingItems[0];
+	}
+	
+	public void setDischargeSlot(ItemStack slot) {
+		if (this.containingItems != null && this.containingItems.length > 0) {
+			this.containingItems[0] = slot;
+		} else {
+			this.containingItems = new ItemStack[1];
+			this.containingItems[0] = slot;
+		}
+ 	}
 	
 }

@@ -60,17 +60,18 @@ public class SSItemCards extends SSItem {
 		}
 
 		// Add Master card
-		ItemStack itemStack = new ItemStack(this, 1, 0);
+		/*ItemStack itemStack = new ItemStack(this, 1, 0);
 		NBTTagCompound tags = new NBTTagCompound();
 		tags.setString("acl_group", "MASTER_CARD");
 		itemStack.setTagCompound(tags);
 		itemList.add(itemStack);
+		*/
 
 		for (int i = 1; i < card_name.length; i++) {
-			itemStack = new ItemStack(this, 1, i);
-			tags = new NBTTagCompound();
-			tags.setString("acl_group", "test" + i);
-			itemStack.setTagCompound(tags);
+			ItemStack itemStack = new ItemStack(this, 1, i);
+			//NBTTagCompound tags = new NBTTagCompound();
+			//tags.setString("acl_group", "test" + i);
+			//itemStack.setTagCompound(tags);
 			itemList.add(itemStack);
 		}
 
@@ -93,6 +94,11 @@ public class SSItemCards extends SSItem {
 		NBTTagCompound tags = stack.getTagCompound();
 		if (tags.hasKey("acl_group")) {
 			list.add("This card group/type: " + tags.getString("acl_group"));
+		}
+		if (tags.hasKey("acl_person")) {
+			list.add("This card owner: " + tags.getString("acl_owner"));
+		} else {
+			list.add("This card owner: blank");
 		}
 
 	}

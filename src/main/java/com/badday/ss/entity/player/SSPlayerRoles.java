@@ -26,6 +26,7 @@ public enum SSPlayerRoles {
 	MEDICAL_DOCTOR,
 	COOK,
 	BARTENDER,
-	DETECTIVE
+	DETECTIVE,
+	MAGE
 
 }
