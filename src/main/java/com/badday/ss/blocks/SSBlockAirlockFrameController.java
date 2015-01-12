@@ -2,6 +2,7 @@ package com.badday.ss.blocks;
 
 import ic2.core.IC2;
 import ic2.core.network.NetworkManager;
+import ic2.core.util.StackUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -125,8 +126,6 @@ public class SSBlockAirlockFrameController extends BlockContainer implements ISS
 	
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float a, float b, float c) {
 		if (world.isRemote) {
-			//SSTileEntityAirlockFrameController te = WorldUtils.get(world, x, y, z, SSTileEntityAirlockFrameController.class);
-			//entityplayer.addChatMessage(new ChatComponentText("[SSAraminta]  CLI TE: " + te.getStatus()));
 			return true;
 		}
 
@@ -135,64 +134,67 @@ public class SSBlockAirlockFrameController extends BlockContainer implements ISS
 
 			if (entityplayer.getCurrentEquippedItem() != null) {
 				String itemName = entityplayer.getCurrentEquippedItem().getUnlocalizedName();
-				System.out.println("itemName "+itemName);
 				// Toggle EditMode
 				if (itemName.equals("card_gold") && (te.getStatus() == MT_ON || te.getStatus() == MT_LOCKED)) {
 					te.setEditMode(!te.getEditMode());
-					
+
 					if (te.getEditMode())
 						te.setStatus(MT_LOCKED);
 					else
 						te.setStatus(MT_OFF);
-					
+
 					((NetworkManager) IC2.network.get()).updateTileEntityField(te, "status");
 					world.markBlockForUpdate(x, y, z);
-					
+
 					entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] Set mode to " + te.getEditMode()));
-				}
-					
-				if (itemName.equals("card_id") && te.getStatus() == MT_LOCKED && te.getEditMode()) {					
+				} else 	if (itemName.equals("card_id") && te.getStatus() == MT_LOCKED && te.getEditMode()) {
 					if (entityplayer.getCurrentEquippedItem().getItem() instanceof SSItemCards) {
 						String role = SSItemCards.getCardAcl(entityplayer.getCurrentEquippedItem());
-							if (te.switchRole(SSPlayerRoles.valueOf(role)))
-								entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] Added role " + role));
-							else
-								entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] Added remove " + role));
+						if (te.switchRole(SSPlayerRoles.valueOf(role)))
+							entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] Added role " + role));
+						else
+							entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] Added remove " + role));
 					}
 				} else if (itemName.equals("item.ss.multitool")) {
 
-					//te.state = 1;
-					
-					//((NetworkManager) IC2.network.get()).updateTileEntityField(te, "state");
-					//world.markBlockForUpdate(x, y, z);
-					
-					//if (!entityplayer.isSneaking() && te.isPlayerHaveAccess(entityplayer)) {
 					if (entityplayer.isSneaking()) {
 						boolean right = false;
-						// boolean right = te.checkStructure();
+
 						entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] SRV Airlock Structure: " + right + " getEW: " + te.getEW()));
 						return true;
 					} else {
-						entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] SRV status: " + te.getStatus() + " state: " + te.state + " " + te.energy));
+						entityplayer.addChatMessage(new ChatComponentText("[SSAraminta] SRV status: " + te.getStatus() + " state: " + te.state + " "
+								+ te.energy));
 						if (te.getStatus() == MT_OPENED) {
 							te.setStatus(MT_OFF);
 						} else {
 							te.setStatus(MT_OPENED);
 						}
-						// world.markBlockForUpdate(x, y, z);
 
 						((NetworkManager) IC2.network.get()).updateTileEntityField(te, "status");
 						world.markBlockForUpdate(x, y, z);
 
 						return true;
 					}
-				} else if (te.getStatus() == MT_OPENED) {
-					entityplayer.openGui(SS.instance, 0, world, x, y, z);
-					return true;
+				} else if (itemName.equals("item.doorDisassembly")) {
+					te.removeAirLock();
+					ItemStack itemStack = new ItemStack(SSConfig.ssBlockAirLockFrameController,1,0);
+					ItemStack cs = te.getDischargeSlot();
+					world.setBlockToAir(x, y, z);
+	    			StackUtil.dropAsEntity(world, x, y, z, itemStack);
+	    			if (cs != null) StackUtil.dropAsEntity(world, x, y, z, cs);
+					
 				}
 			}
+			
+			
+			if (te.getStatus() == MT_OPENED) {
+				entityplayer.openGui(SS.instance, 0, world, x, y, z);
+				return true;
+			}
+			
 		}
-		
+
 		return false;
 	}
 

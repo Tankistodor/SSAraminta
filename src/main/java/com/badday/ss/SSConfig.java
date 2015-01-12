@@ -37,6 +37,7 @@ import com.badday.ss.items.SSItemBlockGasPipe;
 import com.badday.ss.items.SSItemBlockGasPipeCasing;
 import com.badday.ss.items.SSItemBlockIC2CableCasing;
 import com.badday.ss.items.SSItemCards;
+import com.badday.ss.items.SSItemDoorDisassembly;
 import com.badday.ss.items.SSItemGasAnalyzer;
 import com.badday.ss.items.SSItemHidden;
 import com.badday.ss.items.SSItemMetaBlockWallCasing;
@@ -75,6 +76,7 @@ public class SSConfig {
 	public static Item ssWelder;
 	public static Item ssMultitool;
 	public static Item ssGasAnalyser;
+	public static Item ssDoorDisassembly;
 	public static Item ssCardEmag;
 		
 	
@@ -200,6 +202,7 @@ public class SSConfig {
 		ssWelder = new SSItemWelder();
 		ssMultitool = new SSItemMultitool();
 		ssGasAnalyser = new SSItemGasAnalyzer("gasAnalyser");
+		ssDoorDisassembly = new SSItemDoorDisassembly();
 		
 		ssCardEmag = new SSItemCards("cards");
 	}

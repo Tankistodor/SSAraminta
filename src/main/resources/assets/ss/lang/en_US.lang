@@ -59,6 +59,7 @@ item.ss.multitool.name=Multitool Admin tool
 item.ss.multitool.description=Multitool
 item.welder.name=Welder
 item.screwdriver.name=Screwdriver
+item.doorDisassembly.name=Door Disassembly
 item.gasAnalyser.name=Gas Analyser
 card_id.name=ID Card
 card_gold.name=Gold ID Card

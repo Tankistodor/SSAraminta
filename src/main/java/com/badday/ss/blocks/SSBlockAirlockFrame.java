@@ -1,24 +1,17 @@
 package com.badday.ss.blocks;
 
-import java.util.List;
-
+import ic2.core.util.StackUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
@@ -76,17 +69,36 @@ public class SSBlockAirlockFrame extends BlockContainer implements ISSSealedBloc
 	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
 		return this.blockIcon;
 	}
-
-	/*
-	@Override
-	public TileEntity createNewTileEntity(World world, int metadata) {
-		return new SSTileEntityAirlockFrame();
-	}*/
 	
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float a, float b, float c) {
 		if (world.isRemote)
 			return false;
 
+		
+		SSTileEntityAirlockFrame te = WorldUtils.get(world, x, y, z, SSTileEntityAirlockFrame.class);
+		if (te != null) {
+			SSTileEntityAirlockFrameController main = te.getMainBlock();
+			if (main instanceof SSTileEntityAirlockFrameController) {
+				if (entityplayer.getCurrentEquippedItem() != null) {
+					String itemName = entityplayer.getCurrentEquippedItem().getUnlocalizedName();
+					if (itemName.equals("item.doorDisassembly")) {
+
+						main.openDoor();
+						main.energy = 0;
+						main.setStatus(SSBlockAirlockFrameController.MT_UNCOMPLITE);
+						main.state = 2;
+						
+						world.setBlockMetadataWithNotify(main.xCoord, main.yCoord, main.zCoord, 1,2);
+						
+						ItemStack itemStack = new ItemStack(SSConfig.ssBlockAirLockFrameController, 1, 0);
+						
+						world.setBlockToAir(x, y, z);
+						StackUtil.dropAsEntity(world, x, y, z, itemStack);
+					}
+				}
+			}
+		}
+		
 		return false;
 	}
 
