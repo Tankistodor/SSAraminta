@@ -289,6 +289,7 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
+		this.energy = nbt.getDouble("energy");
 		setEW(nbt.getBoolean("sideEW"));
 		setConstuctionFrameRight(nbt.getBoolean("constuctionFrameRight"));
 		setSide(nbt.getByte("side"));
@@ -317,6 +318,7 @@ public class SSTileEntityAirlockFrameController extends TileEntity implements IT
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
+		nbt.setDouble("energy", this.energy);
 		nbt.setBoolean("sideEW", this.sideEW);
 		nbt.setBoolean("constuctionFrameRight", this.constuctionFrameRight);
 		nbt.setByte("side", this.side);

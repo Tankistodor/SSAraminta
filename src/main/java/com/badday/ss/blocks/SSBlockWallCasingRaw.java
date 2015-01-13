@@ -68,7 +68,7 @@ public class SSBlockWallCasingRaw extends SSMetaBlock {
 
 	 public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float a, float b, float c)
 	 {
-	    if (world.isRemote) return true;
+	    if (world.isRemote) return false;
 	    if (entityplayer.getCurrentEquippedItem() != null) {
 
 	    	if (SS.Debug) System.out.println("["+SS.MODNAME+"] act " + entityplayer.getCurrentEquippedItem().getUnlocalizedName());

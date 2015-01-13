@@ -15,6 +15,7 @@ import com.badday.ss.blocks.SSBlockAirlockDoorAir;
 import com.badday.ss.blocks.SSBlockAirlockFrame;
 import com.badday.ss.blocks.SSBlockAirlockFrameController;
 import com.badday.ss.blocks.SSBlockCabinet;
+import com.badday.ss.blocks.SSBlockCardEncoder;
 import com.badday.ss.blocks.SSBlockGasMixer;
 import com.badday.ss.blocks.SSBlockGasPipe;
 import com.badday.ss.blocks.SSBlockGasPipeCasing;
@@ -69,6 +70,7 @@ public class SSConfig {
 	public static Block ssBlockAirLockDoor;
 	public static Block ssBlockAirLockFrameController;
 	public static Block ssBlockAirLockFrame;
+	public static Block ssBlockCardEncoder;
 	
 	
 	// Items
@@ -270,6 +272,9 @@ public class SSConfig {
 		
 		ssBlockAirLockFrameController = new SSBlockAirlockFrameController("blockAirLockFrameController");
 		GameRegistry.registerBlock(ssBlockAirLockFrameController, "blockAirLockFrameController");
+		
+		ssBlockCardEncoder = new SSBlockCardEncoder("blockCardEncoder");
+		GameRegistry.registerBlock(ssBlockCardEncoder, "blockCardEncoder");
 	}
 
 	/**
