@@ -6,6 +6,9 @@ package com.badday.ss.events;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 
+import com.badday.ss.world.island.IslandCloudRenderer;
+import com.badday.ss.world.island.IslandProvider;
+import com.badday.ss.world.island.IslandSkyRenderer;
 import com.badday.ss.world.space.SpaceCloudRenderer;
 import com.badday.ss.world.space.SpaceProvider;
 import com.badday.ss.world.space.SpaceSkyRenderer;
@@ -54,6 +57,18 @@ public class SSTickHandlerClient {
 						world.provider.setCloudRenderer(new SpaceCloudRenderer());
 					}
 				}
+				
+				if (world != null && world.provider instanceof IslandProvider) {
+					if (world.provider.getSkyRenderer() == null) {
+						world.provider.setSkyRenderer(new IslandSkyRenderer());
+					}
+
+					if (world.provider.getCloudRenderer() == null) {
+						world.provider.setCloudRenderer(new IslandCloudRenderer());
+					}
+				}
+
+				
 
 			}
 		}

@@ -1,4 +1,4 @@
-package com.badday.ss.world.space;
+package com.badday.ss.world.island;
 
 import java.util.Random;
 
@@ -20,7 +20,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SpaceSkyRenderer extends IRenderHandler {
+public class IslandSkyRenderer extends IRenderHandler {
 	private static final ResourceLocation overworldTexture = new ResourceLocation("ss:textures/space/overworld.png");
 	private static final ResourceLocation sunTexture = new ResourceLocation("ss:textures/space/sun.png");
 	// private static final ResourceLocation moonTexture = new
@@ -42,10 +42,10 @@ public class SpaceSkyRenderer extends IRenderHandler {
     private float[] colorsSunriseSunset = new float[4];
 	
 
-	public SpaceSkyRenderer() {
+	public IslandSkyRenderer() {
 		GL11.glPushMatrix();
 		GL11.glNewList(this.starGLCallList, GL11.GL_COMPILE);
-		this.renderStars();
+		this.renderStars(); // TODO: Del this.
 		GL11.glEndList();
 		GL11.glPopMatrix();
 		final Tessellator tessellator = Tessellator.instance;
@@ -88,9 +88,9 @@ public class SpaceSkyRenderer extends IRenderHandler {
 
 	@Override
 	public void render(float partialTicks, WorldClient world, Minecraft mc) {
-		SpaceProvider spaceProvider = null;
-		if (world.provider instanceof SpaceProvider) {
-			spaceProvider = (SpaceProvider) world.provider;
+		IslandProvider spaceProvider = null;
+		if (world.provider instanceof IslandProvider) {
+			spaceProvider = (IslandProvider) world.provider;
 		}
 
 		final float var20 = 400.0F + (float) this.minecraft.thePlayer.posY / 2F;

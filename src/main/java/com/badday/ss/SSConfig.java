@@ -140,6 +140,9 @@ public class SSConfig {
 	 */
 	public static int ssRenderPlanet = 1;
 	
+	public static boolean ssEnableSpace= true;
+	public static boolean ssEnableIsland = true;
+	
 	/**
 	 * Default station temperature in C
 	 */
@@ -184,7 +187,8 @@ public class SSConfig {
 		ssDefaultTemperature = SSSettings.getIntFor(config, "global", "DefaultTemperature",ssDefaultTemperature,"Default station temperature");
 		ssBayCasingResistance = SSSettings.getIntFor(config, "global", "WallCasingResistance",ssBayCasingResistance,"Default explosion resistance block (330)");
 
-		ssRenderPlanet = SSSettings.getIntFor(config, "global", "RenderPlanet",ssRenderPlanet,"Render planet (0 - not render; 1-6 some planet)");
+		ssEnableSpace = SSSettings.getBooleanFor(config, "global", "EnableSpace",ssEnableSpace,"Enable Space Dimension");
+		ssEnableIsland = SSSettings.getBooleanFor(config, "global", "EnableIsland",ssEnableIsland,"Enable Island Dimension");
 		
 	}
 

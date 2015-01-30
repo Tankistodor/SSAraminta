@@ -14,6 +14,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 import com.badday.ss.agriculture.Agriculture;
 import com.badday.ss.api.SSAPI;
+import com.badday.ss.core.utils.commands.SSCommandIslandTp;
 import com.badday.ss.core.utils.commands.SSCommandPathfinder;
 import com.badday.ss.core.utils.commands.SSCommandSetRole;
 import com.badday.ss.core.utils.commands.SSCommandSpaceTp;
@@ -24,6 +25,7 @@ import com.badday.ss.events.SSTickHandlerClient;
 import com.badday.ss.events.SSTickHandlerServer;
 import com.badday.ss.events.SoundHandler;
 import com.badday.ss.events.SpaceEventHandler;
+import com.badday.ss.world.island.IslandProvider;
 import com.badday.ss.world.space.BiomeSpace;
 import com.badday.ss.world.space.SpaceProvider;
 
@@ -56,15 +58,21 @@ public class SS {
 	private static final String MODID = "SS";
 	public static final String MODNAME = MODID;
 
-	public static BiomeGenBase spaceBiome;
+
 	
 	public static String ASSET_PREFIX = "ss:";
 	public static CreativeTabs ssTab;
 	
 	public static boolean Debug = true;
 	
+	public static BiomeGenBase spaceBiome;
 	private int spaceProviderID;
 	public int spaceDimID;	
+	
+	public static BiomeGenBase islandBiome;
+	private int islandProviderID;
+	public int islandDimID;	
+	
 
 	@Instance(SS.MODID)
 	public static SS instance;
@@ -82,9 +90,6 @@ public class SS {
 		
 		SSPacketHandler.INSTANCE.ordinal();
 		
-		/*SSPlayerHandler handler = new SSPlayerHandler();
-        MinecraftForge.EVENT_BUS.register(handler);
-        FMLCommonHandler.instance().bus().register(handler);*/
 	}
 	
 	@EventHandler
@@ -97,7 +102,7 @@ public class SS {
 		SSConfig.RegisterBlocks();
 		SSConfig.RegisterGases();
 	
-		
+		// DIMENSIONS
 		
 		spaceBiome = (new BiomeSpace(23)).setColor(0).setDisableRain().setBiomeName("Space");
 		this.spaceProviderID = 14;
@@ -105,6 +110,13 @@ public class SS {
 		this.spaceDimID = DimensionManager.getNextFreeDimId();
 		DimensionManager.registerDimension(spaceDimID,this.spaceProviderID);
 
+		
+		islandBiome = (new BiomeSpace(23)).setColor(0).setDisableRain().setBiomeName("Island Sky");
+		this.islandProviderID = 15;
+		DimensionManager.registerProviderType(islandProviderID, IslandProvider.class, true);
+		this.islandDimID = DimensionManager.getNextFreeDimId();
+		DimensionManager.registerDimension(islandDimID,this.islandProviderID);
+		
 		//DimensionManager.shouldLoadSpawn(spaceDimID);
 		
 		initData();
@@ -128,13 +140,9 @@ public class SS {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 
-		
-			/*SSTickHandlerServer tickHandlerServer = new SSTickHandlerServer();
-			FMLCommonHandler.instance().bus().register(tickHandlerServer);
-			MinecraftForge.EVENT_BUS.register(tickHandlerServer);*/
-			MinecraftForge.EVENT_BUS.register(SSTickHandlerServer.instance);
-			FMLCommonHandler.instance().bus().register(SSTickHandlerServer.instance);
-		
+		MinecraftForge.EVENT_BUS.register(SSTickHandlerServer.instance);
+		FMLCommonHandler.instance().bus().register(SSTickHandlerServer.instance);
+
 		/** Регистрируем рендеринг космоса */
 		if (FMLCommonHandler.instance().getSide().isClient()) {
 			SSTickHandlerClient tickHandlerClient = new SSTickHandlerClient();
@@ -154,6 +162,7 @@ public class SS {
 	@EventHandler
 	public void serverLoad(FMLServerStartingEvent event) {
 		event.registerServerCommand(new SSCommandSpaceTp());
+		event.registerServerCommand(new SSCommandIslandTp());
 		event.registerServerCommand(new SSCommandPathfinder());
 		event.registerServerCommand(new SSCommandSetRole());
 		

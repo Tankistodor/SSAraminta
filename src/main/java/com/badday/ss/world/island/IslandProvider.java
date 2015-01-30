@@ -1,8 +1,9 @@
-package com.badday.ss.world.space;
+package com.badday.ss.world.island;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -16,20 +17,19 @@ import com.badday.ss.SSConfig;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SpaceProvider  extends WorldProvider {
+public class IslandProvider  extends WorldProvider {
 		
 	float gravity = 0.058F;
 	
-	public SpaceProvider() {
-			this.worldChunkMgr = new WorldChunkManagerHell(SS.spaceBiome, 0.0F);
-	        //this.worldChunkMgr = new WorldChunkManagerHell(SS.spaceBiome, 0.0F, 0.0F);
+	public IslandProvider() {
+			this.worldChunkMgr = new WorldChunkManagerHell(SS.islandBiome, 0.0F);
 	        this.hasNoSky = false;
 	}
 	
 
 	@Override
 	public String getDimensionName() {
-		return "Space";
+		return "Island";
 	}
 
 	@Override
@@ -44,13 +44,13 @@ public class SpaceProvider  extends WorldProvider {
 	@Override
 	public String getWelcomeMessage()
 	{
-		return "Entering Space Sector 13";
+		return "Entering Sky Island";
 	}
 
 	@Override
 	public String getDepartMessage()
 	{
-		return "Leaving Space Sector 13";
+		return "Leaving Sky Island";
 	}
 
 	public float getGravity()
@@ -91,7 +91,7 @@ public class SpaceProvider  extends WorldProvider {
     @Override
     public BiomeGenBase getBiomeGenForCoords(int x, int z)
     {
-        return SS.spaceBiome;
+        return SS.islandBiome;
     }
 
     @Override
@@ -127,7 +127,7 @@ public class SpaceProvider  extends WorldProvider {
     @Override
     protected void generateLightBrightnessTable()
     {
-    	float var1 = 0.0F;
+    	float var1 = 12.0F;
 
         for (int var2 = 0; var2 <= 15; ++var2)
         {
@@ -139,27 +139,45 @@ public class SpaceProvider  extends WorldProvider {
     @Override
     public Vec3 getSkyColor(Entity cameraEntity, float partialTicks)
     {
-   		return Vec3.createVectorHelper(0F, 0F, 0F);
+   		return worldObj.getSkyColorBody(cameraEntity, partialTicks);
     }
 
-    @SideOnly(Side.CLIENT)
     @Override
-    public Vec3 getFogColor(float par1, float par2)
-    {
-    	return Vec3.createVectorHelper(0F, 0F, 0F);
-    }
+	@SideOnly(Side.CLIENT)
+	public Vec3 getFogColor(float par1, float par2)
+	{
+		 float f2 = MathHelper.cos(par1 * (float)Math.PI * 2.0F) * 2.0F + 0.5F;
+
+	        if (f2 < 0.0F)
+	        {
+	            f2 = 0.0F;
+	        }
+
+	        if (f2 > 1.0F)
+	        {
+	            f2 = 1.0F;
+	        }
+
+	        float f3 = 0.7529412F;
+	        float f4 = 0.84705883F;
+	        float f5 = 1.0F;
+	        f3 *= f2 * 0.94F + 0.06F;
+	        f4 *= f2 * 0.94F + 0.06F;
+	        f5 *= f2 * 0.91F + 0.09F;
+	        return Vec3.createVectorHelper((double)f3, (double)f4, (double)f5);
+	}
 
     @SideOnly(Side.CLIENT)
     @Override
     public boolean isSkyColored()
     {
-   		return false;
+    	return true;
     }
     
     @Override
     public IChunkProvider createChunkGenerator()
     {
-        return new SpaceGenerator(worldObj, 45);
+        return new IslandGenerator(worldObj, 45);
     }
     
     @Override
@@ -195,7 +213,7 @@ public class SpaceProvider  extends WorldProvider {
     @Override
     public int getRespawnDimension(EntityPlayerMP player)
     {
-        return SS.instance.spaceDimID; // respawn on Earth
+        return SS.instance.islandDimID; // respawn on Earth
     }
     
     @Override
@@ -235,7 +253,7 @@ public class SpaceProvider  extends WorldProvider {
     @Override
     public String getSaveFolder()
     {
-        return (dimensionId == 0 ? null : "SS/Space" + dimensionId);
+        return (dimensionId == 0 ? null : "SS/Island" + dimensionId);
     }
     
     
