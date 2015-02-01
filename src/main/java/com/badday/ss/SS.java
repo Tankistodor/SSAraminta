@@ -25,6 +25,7 @@ import com.badday.ss.events.SSTickHandlerClient;
 import com.badday.ss.events.SSTickHandlerServer;
 import com.badday.ss.events.SoundHandler;
 import com.badday.ss.events.SpaceEventHandler;
+import com.badday.ss.world.island.BiomeIsland;
 import com.badday.ss.world.island.IslandProvider;
 import com.badday.ss.world.space.BiomeSpace;
 import com.badday.ss.world.space.SpaceProvider;
@@ -44,7 +45,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid = "SS", name = "SS", version = "2.0", dependencies = "required-after:IC2; after:gregtech_addon; after:AppliedEnergistics; after:AdvancedSolarPanel; after:AtomicScience; after:ICBM|Explosion; after:MFFS; after:GraviSuite")
+@Mod(modid = "SS", name = "SS", version = "2.2", dependencies = "required-after:IC2; after:gregtech_addon; after:AppliedEnergistics; after:AdvancedSolarPanel; after:AtomicScience; after:ICBM|Explosion; after:MFFS; after:GraviSuite")
 
 public class SS {
 	
@@ -70,7 +71,7 @@ public class SS {
 	public int spaceDimID;	
 	
 	public static BiomeGenBase islandBiome;
-	private int islandProviderID;
+	public static int islandProviderID;
 	public int islandDimID;	
 	
 
@@ -111,7 +112,7 @@ public class SS {
 		DimensionManager.registerDimension(spaceDimID,this.spaceProviderID);
 
 		
-		islandBiome = (new BiomeSpace(23)).setColor(0).setDisableRain().setBiomeName("Island Sky");
+		islandBiome = (new BiomeIsland(24)).setColor(0).setDisableRain().setBiomeName("Island Sky");
 		this.islandProviderID = 15;
 		DimensionManager.registerProviderType(islandProviderID, IslandProvider.class, true);
 		this.islandDimID = DimensionManager.getNextFreeDimId();

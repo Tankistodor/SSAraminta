@@ -32,7 +32,6 @@ import com.badday.ss.blocks.SSTileEntityGasMixer;
 import com.badday.ss.blocks.SSTileEntityMultiFake;
 import com.badday.ss.blocks.SSTileEntityScrubber;
 import com.badday.ss.core.utils.SSSettings;
-import com.badday.ss.items.SSItemBlockAirlockFrame;
 import com.badday.ss.items.SSItemBlockCabinet;
 import com.badday.ss.items.SSItemBlockGasPipe;
 import com.badday.ss.items.SSItemBlockGasPipeCasing;

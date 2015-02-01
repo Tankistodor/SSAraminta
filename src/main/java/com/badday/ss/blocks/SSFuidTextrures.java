@@ -11,7 +11,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
 public class SSFuidTextrures
 {
     public static void init()
@@ -20,6 +19,7 @@ public class SSFuidTextrures
     }
 
 
+    @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onStitch(TextureStitchEvent.Pre event)
     {

@@ -24,6 +24,7 @@ public class SpaceProvider  extends WorldProvider {
 			this.worldChunkMgr = new WorldChunkManagerHell(SS.spaceBiome, 0.0F);
 	        //this.worldChunkMgr = new WorldChunkManagerHell(SS.spaceBiome, 0.0F, 0.0F);
 	        this.hasNoSky = false;
+	        this.isHellWorld = false;
 	}
 	
 
@@ -64,6 +65,7 @@ public class SpaceProvider  extends WorldProvider {
 		return 800;
 	}
 	
+	/*
 	@Override
     public boolean isSurfaceWorld()
     {
@@ -80,7 +82,27 @@ public class SpaceProvider  extends WorldProvider {
     public double getHorizon()
     {
         return 1;
+    }*/
+	
+	@Override
+    public double getHorizon()
+    {
+        return 44.0D;
     }
+
+    @Override
+    public int getAverageGroundLevel()
+    {
+        return 44;
+    }
+
+    @Override
+    public boolean isSurfaceWorld()
+    {
+        return true;
+    }
+
+	
 
     @Override
     public boolean canSnowAt(int x, int y, int z,boolean f)
@@ -135,6 +157,7 @@ public class SpaceProvider  extends WorldProvider {
             this.lightBrightnessTable[var2] = (1.0F - var3) / (var3 * 3.0F + 1.0F) * (1.0F - var1) + var1;
         }
     }
+   
     
     @Override
     public Vec3 getSkyColor(Entity cameraEntity, float partialTicks)

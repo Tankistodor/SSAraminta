@@ -10,6 +10,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.WorldChunkManagerHell;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraftforge.common.DimensionManager;
 
 import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
@@ -22,10 +23,23 @@ public class IslandProvider  extends WorldProvider {
 	float gravity = 0.058F;
 	
 	public IslandProvider() {
-			this.worldChunkMgr = new WorldChunkManagerHell(SS.islandBiome, 0.0F);
-	        this.hasNoSky = false;
+		this.worldChunkMgr = new IslandChunkManager();
+		this.hasNoSky = false;
+		this.isHellWorld = false;
 	}
 	
+	@Override
+	/** tells Minecraft to use our new Terrain Generator */
+	public IChunkProvider createChunkGenerator() {
+		return new IslandGenerator(this.worldObj, this.worldObj.getSeed());
+	}
+	
+	@Override
+	/** tells Minecraft to use our new WorldChunkManager **/
+	public void registerWorldChunkManager() {
+		this.worldChunkMgr = new IslandChunkManager();
+		//this.dimensionId = SS.islandProviderID;
+	}
 
 	@Override
 	public String getDimensionName() {
@@ -64,6 +78,7 @@ public class IslandProvider  extends WorldProvider {
 		return 800;
 	}
 	
+	/*
 	@Override
     public boolean isSurfaceWorld()
     {
@@ -80,7 +95,27 @@ public class IslandProvider  extends WorldProvider {
     public double getHorizon()
     {
         return 1;
+    }*/
+	
+	
+	@Override
+    public double getHorizon()
+    {
+        return 44.0D;
     }
+
+    @Override
+    public int getAverageGroundLevel()
+    {
+        return 44;
+    }
+
+    @Override
+    public boolean isSurfaceWorld()
+    {
+        return true;
+    }
+	
 
     @Override
     public boolean canSnowAt(int x, int y, int z,boolean f)
@@ -124,7 +159,7 @@ public class IslandProvider  extends WorldProvider {
     }
     
     
-    @Override
+    /*@Override
     protected void generateLightBrightnessTable()
     {
     	float var1 = 12.0F;
@@ -134,7 +169,7 @@ public class IslandProvider  extends WorldProvider {
             float var3 = 1.0F - (float)var2 / 15.0F;
             this.lightBrightnessTable[var2] = (1.0F - var3) / (var3 * 3.0F + 1.0F) * (1.0F - var1) + var1;
         }
-    }
+    }*/
     
     @Override
     public Vec3 getSkyColor(Entity cameraEntity, float partialTicks)
@@ -175,12 +210,6 @@ public class IslandProvider  extends WorldProvider {
     }
     
     @Override
-    public IChunkProvider createChunkGenerator()
-    {
-        return new IslandGenerator(worldObj, 45);
-    }
-    
-    @Override
     public boolean getWorldHasVoidParticles()
     {
         return false;
@@ -215,6 +244,7 @@ public class IslandProvider  extends WorldProvider {
     {
         return SS.instance.islandDimID; // respawn on Earth
     }
+    
     
     @Override
     public ChunkCoordinates getEntrancePortalLocation()

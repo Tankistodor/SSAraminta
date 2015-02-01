@@ -23,7 +23,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class SSBlockCardEncoder extends BlockContainer {
 
-	@SideOnly(Side.CLIENT)
 	private IIcon iconFront;
 	
 	public SSBlockCardEncoder(String assetName) {

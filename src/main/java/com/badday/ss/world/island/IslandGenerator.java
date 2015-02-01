@@ -1,5 +1,6 @@
 package com.badday.ss.world.island;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -9,6 +10,7 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSand;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IProgressUpdate;
 import net.minecraft.world.ChunkPosition;
@@ -60,7 +62,28 @@ public class IslandGenerator extends ChunkProviderGenerate implements IChunkProv
 		return true;
 	}
     
-    @Override
+	@Override
+    public Chunk provideChunk(int par1, int par2)
+    {
+        this.rand.setSeed(par1 * 341873128712L + par2 * 132897987541L);
+        final Block[] ids = new Block[32768];
+        Arrays.fill(ids, Blocks.air);
+        final byte[] meta = new byte[32768];
+
+        final Chunk var4 = new Chunk(this.worldObj, ids, meta, par1, par2);
+
+        final byte[] biomesArray = var4.getBiomeArray();
+        for (int i = 0; i < biomesArray.length; ++i)
+        {
+            biomesArray[i] = (byte) BiomeIsland.biom.biomeID;
+        }
+
+
+        var4.generateSkylightMap();
+        return var4;
+    }
+	
+    /*@Override
 	public Chunk provideChunk(int par1, int par2)
 	{
 		this.rand.setSeed(par1 * 341873128712L + par2 * 132897987541L);
@@ -71,7 +94,7 @@ public class IslandGenerator extends ChunkProviderGenerate implements IChunkProv
 		
 		var4.generateSkylightMap();
 		return var4;
-	}
+	}*/
     
 	@Override
 	public boolean chunkExists(int par1, int par2)
@@ -95,11 +118,46 @@ public class IslandGenerator extends ChunkProviderGenerate implements IChunkProv
 		}
 		BlockSand.fallInstantly = false;
 	}
+	
     
 	@Override
 	public String makeString()
 	{
 		return "IslandLevelSource";
 	}
+	
+	private int getIndex(int x, int y, int z)
+    {
+        return (x * 16 + z) * 256 + y;
+    }
+	
+	@Override
+    public void replaceBlocksForBiome(int par1, int par2, Block[] arrayOfIDs, byte[] arrayOfMeta, BiomeGenBase[] par4ArrayOfBiomeGenBase)
+    {
+        final int var5 = 20;
+        final float var6 = 0.03125F;
+        
+        for (int var8 = 0; var8 < 16; ++var8)
+        {
+            for (int var9 = 0; var9 < 16; ++var9)
+            {
+
+                for (int var16 = 17 - 1; var16 >= 0; --var16)
+                {
+                    final int index = this.getIndex(var8, var16, var9);
+
+                    
+                        final Block var18 = arrayOfIDs[index];
+
+                        if (Blocks.lava == var18)
+                        {
+                        	arrayOfIDs[index] = Blocks.air;
+                        }
+
+                }
+            }
+        }
+    }
+	
 
 }

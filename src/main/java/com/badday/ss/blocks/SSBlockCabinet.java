@@ -30,7 +30,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class SSBlockCabinet extends BlockContainer {
 
-	@SideOnly(Side.CLIENT)
 	protected IIcon[] icons;
 	
 	public SSBlockCabinet(String asset) {

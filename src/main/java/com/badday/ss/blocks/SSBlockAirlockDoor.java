@@ -40,16 +40,17 @@ public class SSBlockAirlockDoor extends Block implements ISSSealedBlock {
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister iconRegister)
 	{
-		this.blockIcon = iconRegister.registerIcon(SS.ASSET_PREFIX + (this.getUnlocalizedName().substring(5)));
-		
-		this.blockIcon = iconRegister.registerIcon(SS.ASSET_PREFIX + (this.getUnlocalizedName().substring(5)));
-		this.sideIcon= iconRegister.registerIcon(SS.ASSET_PREFIX + (this.getUnlocalizedName().substring(5))+"_side");
-		this.topLeftIcon = iconRegister.registerIcon(SS.ASSET_PREFIX + (this.getUnlocalizedName().substring(5))+"_topLeft");
-		this.bottomLeftIcon = iconRegister.registerIcon(SS.ASSET_PREFIX + (this.getUnlocalizedName().substring(5))+"_bottomLeft");
-		this.topRightIcon = iconRegister.registerIcon(SS.ASSET_PREFIX + (this.getUnlocalizedName().substring(5))+"_topRight");
-		this.bottomRightIcon = iconRegister.registerIcon(SS.ASSET_PREFIX + (this.getUnlocalizedName().substring(5))+"_bottomRight");
+		//this.blockIcon = iconRegister.registerIcon(SS.ASSET_PREFIX + (this.getUnlocalizedName().substring(5)));
+		String n = SS.ASSET_PREFIX + this.getUnlocalizedName().substring(5);
+		this.blockIcon = iconRegister.registerIcon(n);
+		this.sideIcon= iconRegister.registerIcon(n+"Side");
+		this.topLeftIcon = iconRegister.registerIcon(n+"TopLeft");
+		this.bottomLeftIcon = iconRegister.registerIcon(n+"BottomLeft");
+		this.topRightIcon = iconRegister.registerIcon(n+"TopRight");
+		this.bottomRightIcon = iconRegister.registerIcon(n+"BottomRight");
 	}
 	
 	@Override

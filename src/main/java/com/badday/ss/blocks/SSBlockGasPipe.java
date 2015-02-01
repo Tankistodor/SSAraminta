@@ -28,7 +28,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class SSBlockGasPipe  extends SSBlockGasPipeBase implements IGasNetworkPipe, IGasNetworkElement{
 	
-	@SideOnly(Side.CLIENT)
 	private IIcon[] icons = new IIcon[1];
 	
 	public Vector3 minVector = new Vector3(0.3, 0.3, 0.3);

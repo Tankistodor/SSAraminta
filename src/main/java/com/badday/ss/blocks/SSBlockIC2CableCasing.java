@@ -24,7 +24,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class SSBlockIC2CableCasing extends Block implements ISSSealedBlock {
 
-	@SideOnly(Side.CLIENT)
 	private IIcon[] icons = new IIcon[16];
 	
 	public SSBlockIC2CableCasing(String asset) {

@@ -21,7 +21,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class SSBlockGasPipeCasing extends SSBlockGasPipeBase implements IGasNetworkPipe, IGasNetworkElement, ISSSealedBlock {
 
-	@SideOnly(Side.CLIENT)
 	private IIcon[] icons = new IIcon[16];
 	
 	public SSBlockGasPipeCasing(String asset) {
