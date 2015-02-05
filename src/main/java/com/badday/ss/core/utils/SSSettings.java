@@ -58,6 +58,22 @@ public class SSSettings {
 		}
 	}
 
+  public static float getFloatFor(Configuration config, String heading,
+                              String item, float value) {
+    if (config == null) {
+      return value;
+    } else {
+      try {
+        Property e = config.get(heading, item, value);
+        return (float) e.getDouble(value);
+      } catch (Exception var5) {
+        System.out
+            .println("["+SS.MODNAME+"] Error while trying to add Integer, config wasn\'t loaded properly!");
+        return value;
+      }
+    }
+  }
+
 	public static int getIntFor(Configuration config, String heading,
 			String item, int value, String comment) {
 		if (config == null) {

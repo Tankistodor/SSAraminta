@@ -2,6 +2,8 @@ package com.badday.ss;
 
 import java.io.File;
 
+import com.badday.ss.agriculture.Agriculture;
+import com.badday.ss.agriculture.util.AgricultureConfig;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -171,6 +173,8 @@ public class SSConfig {
 		LoadGlobal(file);
 		LoadItems(file);
 		LoadBlocks(file);
+
+    LoadAgriculture();
 		
 		if (config != null) {
 			config.save();
@@ -178,7 +182,24 @@ public class SSConfig {
 		
 	}
 
-	private static void LoadGlobal(File file) {
+  private static void LoadAgriculture() {
+    AgricultureConfig.ChanterelleMeal = SSSettings.getIntFor(config, "agriculture", "ChanterelleMeal", 1);
+    AgricultureConfig.DestroyingAngelMeal = SSSettings.getIntFor(config, "agriculture", "DestroyingAngelMeal", 1);
+    AgricultureConfig.FlyAmanitaMeal = SSSettings.getIntFor(config, "agriculture", "FlyAmanitaMeal", 1);
+    AgricultureConfig.GlowshroomMeal = SSSettings.getIntFor(config, "agriculture", "GlowshroomMeal", 1);
+    AgricultureConfig.LibertyCapMeal = SSSettings.getIntFor(config, "agriculture", "LibertyCapMeal", 1);
+    AgricultureConfig.PlumpHelmetMeal = SSSettings.getIntFor(config, "agriculture", "PlumpHelmetMeal", 1);
+
+    AgricultureConfig.ChanterelleSaturation = SSSettings.getFloatFor(config, "agriculture", "ChanterelleSaturation", 0.5F);
+    AgricultureConfig.DestroyingAngelSaturation = SSSettings.getFloatFor(config, "agriculture", "DestroyingAngelSaturation", 0.5F);
+    AgricultureConfig.FlyAmanitaSaturation = SSSettings.getFloatFor(config, "agriculture", "FlyAmanitaSaturation", 0.5F);
+    AgricultureConfig.GlowshroomSaturation = SSSettings.getFloatFor(config, "agriculture", "GlowshroomSaturation", 0.5F);
+    AgricultureConfig.LibertyCapSaturation = SSSettings.getFloatFor(config, "agriculture", "LibertyCapSaturation", 0.5F);
+    AgricultureConfig.PlumpHelmetSaturation = SSSettings.getFloatFor(config, "agriculture", "PlumpHelmetSaturation", 0.5F);
+
+  }
+
+  private static void LoadGlobal(File file) {
 		System.out.println("[" + SS.MODNAME + "] Loading Global config");
 		SS.Debug = SSSettings.getBooleanFor(config, "global", "debug", SS.Debug, "Debug mode");
 		ssAirVentBlockArea = SSSettings.getIntFor(config, "global", "airVentMaxAreaSize",ssAirVentBlockArea,"Max area in bloks for Air Vent");
