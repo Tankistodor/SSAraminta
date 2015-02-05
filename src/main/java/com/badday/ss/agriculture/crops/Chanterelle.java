@@ -1,5 +1,8 @@
 package com.badday.ss.agriculture.crops;
 
+import com.badday.ss.agriculture.Agriculture;
+import com.badday.ss.agriculture.items.ChanterelleItem;
+import com.badday.ss.agriculture.items.FlyAmanitaItem;
 import ic2.api.crops.ICropTile;
 import net.minecraft.item.ItemStack;
 
@@ -40,12 +43,7 @@ public class Chanterelle extends BaseCrop {
   }
 
   @Override
-  public boolean canBeHarvested(ICropTile crop) {
-    return false;
-  }
-
-  @Override
   public ItemStack getGain(ICropTile crop) {
-    return null;
+    return new ItemStack(Agriculture.chanterelleItem, 1);
   }
 }

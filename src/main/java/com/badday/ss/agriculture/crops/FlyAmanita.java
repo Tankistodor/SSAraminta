@@ -1,5 +1,7 @@
 package com.badday.ss.agriculture.crops;
 
+import com.badday.ss.agriculture.Agriculture;
+import com.badday.ss.agriculture.items.FlyAmanitaItem;
 import ic2.api.crops.CropCard;
 import ic2.api.crops.ICropTile;
 import net.minecraft.init.Blocks;
@@ -54,12 +56,7 @@ public class FlyAmanita extends BaseCrop {
   }
 
   @Override
-  public boolean canBeHarvested(ICropTile crop) {
-    return crop.getSize() == 4;
-  }
-
-  @Override
   public ItemStack getGain(ICropTile crop) {
-    return new ItemStack(Blocks.red_mushroom);
+    return new ItemStack(Agriculture.flyAmanitaItem, 1);
   }
 }

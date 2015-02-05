@@ -43,4 +43,9 @@ public abstract class BaseCrop extends CropCard {
   }
 
 
+  @Override
+  public boolean canBeHarvested(ICropTile crop) {
+    return crop.getSize() == maxSize();
+  }
+
 }

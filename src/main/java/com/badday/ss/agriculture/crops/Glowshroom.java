@@ -1,5 +1,8 @@
 package com.badday.ss.agriculture.crops;
 
+import com.badday.ss.agriculture.Agriculture;
+import com.badday.ss.agriculture.items.FlyAmanitaItem;
+import com.badday.ss.agriculture.items.GlowshroomItem;
 import ic2.api.crops.ICropTile;
 import net.minecraft.item.ItemStack;
 
@@ -39,15 +42,9 @@ public class Glowshroom extends BaseCrop {
     return new String[] { "Mushroom", "Green", "White", "Food", "Glowing"};
   }
 
-
-  @Override
-  public boolean canBeHarvested(ICropTile crop) {
-    return false;
-  }
-
   @Override
   public ItemStack getGain(ICropTile crop) {
-    return null;
+    return new ItemStack(Agriculture.glowshroomItem, 1);
   }
 
   @Override

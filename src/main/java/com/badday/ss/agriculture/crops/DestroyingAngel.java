@@ -1,5 +1,8 @@
 package com.badday.ss.agriculture.crops;
 
+import com.badday.ss.agriculture.Agriculture;
+import com.badday.ss.agriculture.items.DestroyingAngelItem;
+import com.badday.ss.agriculture.items.FlyAmanitaItem;
 import ic2.api.crops.ICropTile;
 import ic2.core.IC2;
 import net.minecraft.entity.Entity;
@@ -46,13 +49,8 @@ public class DestroyingAngel extends BaseCrop {
   }
 
   @Override
-  public boolean canBeHarvested(ICropTile crop) {
-    return false;
-  }
-
-  @Override
   public ItemStack getGain(ICropTile crop) {
-    return null;
+    return new ItemStack(Agriculture.destroyingAngelItem, 1);
   }
 
   //We are toxic!
