@@ -29,4 +29,9 @@ public enum SSPlayerRoles {
 	DETECTIVE,
 	MAGE
 
+	// Hunter
+	// Beekeeper
+	// Genetic
+	// Quatermaster
+	
 }
