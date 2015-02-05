@@ -4,12 +4,10 @@ import ic2.core.util.Vector3;
 
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
@@ -21,7 +19,6 @@ import com.badday.ss.api.IGasNetworkElement;
 import com.badday.ss.api.IGasNetworkPipe;
 import com.badday.ss.core.atmos.GasUtils;
 import com.badday.ss.core.utils.BlockVec3;
-import com.badday.ss.events.RebuildNetworkPoint;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

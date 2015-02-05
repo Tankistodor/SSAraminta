@@ -2,14 +2,15 @@ package com.badday.ss.items;
 
 import java.util.List;
 
-import com.badday.ss.SSConfig;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+
+import com.badday.ss.SSConfig;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class SSItemBlockIC2CableCasing extends SSItemMetaBlock {
 

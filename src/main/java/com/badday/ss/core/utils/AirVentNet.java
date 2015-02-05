@@ -1,14 +1,12 @@
 package com.badday.ss.core.utils;
 
-import com.badday.ss.SSConfig;
-import com.badday.ss.blocks.SSTileEntityAirVent;
-
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+
+import net.minecraft.world.World;
+
+import com.badday.ss.SSConfig;
 
 /**
  * Created by userad on 25/10/14.

@@ -1,14 +1,13 @@
 package com.badday.ss.core.utils.commands;
 
-import com.badday.ss.SS;
-import com.badday.ss.core.utils.SpaceTeleporter;
-
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.WorldServer;
+
+import com.badday.ss.SS;
+import com.badday.ss.core.utils.SpaceTeleporter;
 
 public class SSCommandIslandTp extends CommandBase
 {

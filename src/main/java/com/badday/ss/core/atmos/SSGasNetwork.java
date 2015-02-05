@@ -3,18 +3,13 @@ package com.badday.ss.core.atmos;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
-import com.badday.ss.SS;
-import com.badday.ss.SSConfig;
 import com.badday.ss.api.IGasNetwork;
 import com.badday.ss.api.IGasNetworkSource;
 import com.badday.ss.api.IGasNetworkVent;
 import com.badday.ss.core.utils.BlockVec3;
-import com.badday.ss.events.RebuildNetworkPoint;
 
 /**
  * 

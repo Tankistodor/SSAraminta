@@ -1,27 +1,19 @@
 package com.badday.ss.containers;
 
-import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import ic2.core.network.NetworkManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
-
-import com.badday.ss.SSConfig;
-import com.badday.ss.core.atmos.FindNearestVentJob;
-import com.badday.ss.core.atmos.GasUtils;
-import com.badday.ss.core.utils.BlockVec3;
-import com.badday.ss.items.SSInventoryItem;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
+
+import com.badday.ss.core.atmos.GasUtils;
+import com.badday.ss.items.SSInventoryItem;
 
 public class SSContainerItemGasAnalyser extends ContainerBase {
 	

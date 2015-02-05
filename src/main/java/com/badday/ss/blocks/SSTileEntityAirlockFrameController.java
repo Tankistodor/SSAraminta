@@ -7,8 +7,8 @@ import ic2.api.item.ElectricItem;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkDataProvider;
 import ic2.api.network.INetworkUpdateListener;
-import ic2.core.network.NetworkManager;
 import ic2.core.IC2;
+import ic2.core.network.NetworkManager;
 
 import java.util.ArrayList;
 import java.util.HashSet;

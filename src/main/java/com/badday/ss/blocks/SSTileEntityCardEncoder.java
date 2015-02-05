@@ -1,8 +1,5 @@
 package com.badday.ss.blocks;
 
-import java.util.List;
-import java.util.Vector;
-
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySink;
@@ -10,11 +7,9 @@ import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkDataProvider;
 import ic2.api.network.INetworkUpdateListener;
 
-import com.badday.ss.api.ITEAccess;
-import com.badday.ss.core.utils.BlockVec3;
-import com.badday.ss.entity.player.SSPlayerRoles;
+import java.util.List;
+import java.util.Vector;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -24,6 +19,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import com.badday.ss.api.ITEAccess;
+import com.badday.ss.entity.player.SSPlayerRoles;
 
 public class SSTileEntityCardEncoder extends TileEntity implements ITEAccess, IInventory, ISidedInventory, INetworkUpdateListener,
 INetworkClientTileEntityEventListener, INetworkDataProvider, IEnergySink {

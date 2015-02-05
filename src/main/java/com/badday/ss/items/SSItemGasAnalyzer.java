@@ -1,13 +1,14 @@
 package com.badday.ss.items;
 
-import com.badday.ss.SS;
-
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IBoxable;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
+import com.badday.ss.SS;
+
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

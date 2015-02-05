@@ -1,10 +1,9 @@
 package com.badday.ss.agriculture.crops;
 
-import com.badday.ss.agriculture.Agriculture;
-import com.badday.ss.agriculture.items.FlyAmanitaItem;
-import com.badday.ss.agriculture.items.PlumpHelmetItem;
 import ic2.api.crops.ICropTile;
 import net.minecraft.item.ItemStack;
+
+import com.badday.ss.agriculture.Agriculture;
 
 /**
  * Created by userad on 04/11/14.

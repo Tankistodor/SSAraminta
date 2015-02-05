@@ -1,10 +1,10 @@
 package com.badday.ss.blocks;
 
-import com.badday.ss.core.utils.BlockVec3;
-import com.badday.ss.core.utils.WorldUtils;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+
+import com.badday.ss.core.utils.BlockVec3;
+import com.badday.ss.core.utils.WorldUtils;
 
 public class SSTileEntityAirlockFrame extends TileEntity {
 

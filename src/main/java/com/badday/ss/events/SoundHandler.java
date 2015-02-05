@@ -1,6 +1,5 @@
 package com.badday.ss.events;
 
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
 
 import com.badday.ss.SS;

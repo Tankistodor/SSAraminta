@@ -20,7 +20,6 @@ import com.badday.ss.core.utils.WorldUtils;
 import com.badday.ss.gui.SSGuiAirlockController;
 import com.badday.ss.gui.SSGuiCabinet;
 import com.badday.ss.gui.SSGuiGasMixer;
-import com.badday.ss.gui.SSGuiIDs;
 import com.badday.ss.gui.SSGuiItemGasAnalyser;
 import com.badday.ss.gui.SSGuiScrubber;
 import com.badday.ss.items.SSInventoryItem;

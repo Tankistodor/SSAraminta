@@ -17,8 +17,6 @@ import org.lwjgl.opengl.GL11;
 import com.badday.ss.SSConfig;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class SpaceSkyRenderer extends IRenderHandler {
 	private static final ResourceLocation overworldTexture = new ResourceLocation("ss:textures/space/overworld.png");

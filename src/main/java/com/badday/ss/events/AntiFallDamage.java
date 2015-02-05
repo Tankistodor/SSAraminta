@@ -1,10 +1,10 @@
 package com.badday.ss.events;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * Гашение урона при падении с джетпаком или квантовыми бутсами

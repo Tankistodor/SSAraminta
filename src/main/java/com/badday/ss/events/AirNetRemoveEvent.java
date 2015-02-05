@@ -1,6 +1,7 @@
 package com.badday.ss.events;
 
 import com.badday.ss.core.utils.BlockVec3;
+
 import cpw.mods.fml.common.eventhandler.Event;
 
 /**

@@ -1,19 +1,12 @@
 package com.badday.ss.world.island;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
-//import micdoodle8.mods.galacticraft.api.vector.Vector3;
-
-//import micdoodle8.mods.galacticraft.core.tile.IMultiBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSand;
-import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IProgressUpdate;
-import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;

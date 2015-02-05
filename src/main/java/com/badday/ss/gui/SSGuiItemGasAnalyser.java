@@ -1,19 +1,17 @@
 package com.badday.ss.gui;
 
-import org.lwjgl.opengl.GL11;
-
-import com.badday.ss.containers.SSContainerItemGasAnalyser;
-import com.badday.ss.core.atmos.GasUtils;
-import com.badday.ss.core.utils.WorldUtils;
-import com.badday.ss.items.SSInventoryItem;
-
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+
+import org.lwjgl.opengl.GL11;
+
+import com.badday.ss.containers.SSContainerItemGasAnalyser;
+import com.badday.ss.core.utils.WorldUtils;
+import com.badday.ss.items.SSInventoryItem;
 
 public class SSGuiItemGasAnalyser extends GuiContainer {
 

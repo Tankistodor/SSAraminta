@@ -6,7 +6,6 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import com.badday.ss.SS;
 import com.badday.ss.blocks.SSTileEntityCabinet;
 import com.badday.ss.containers.SSContainerCabinet;
 

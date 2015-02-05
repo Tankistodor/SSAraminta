@@ -15,7 +15,6 @@ import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
 import com.badday.ss.api.ISSSealedBlock;
 import com.badday.ss.core.utils.BlockVec3;
-import com.badday.ss.core.utils.WorldUtils;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
