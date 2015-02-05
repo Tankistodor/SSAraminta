@@ -1,7 +1,5 @@
 package com.badday.ss.gui;
 
-import org.lwjgl.opengl.GL11;
-
 import ic2.core.IC2;
 import ic2.core.network.NetworkManager;
 import net.minecraft.client.gui.GuiButton;
@@ -9,6 +7,8 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+
+import org.lwjgl.opengl.GL11;
 
 import com.badday.ss.blocks.SSTileEntityAirlockFrameController;
 import com.badday.ss.containers.SSContainerAirlockController;

@@ -1,19 +1,10 @@
 package com.badday.ss.blocks;
 
-import java.util.List;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
-import net.minecraft.world.World;
 
 import com.badday.ss.SS;
-import com.badday.ss.SSConfig;
 import com.badday.ss.api.ISSSealedBlock;
 
 import cpw.mods.fml.relauncher.Side;

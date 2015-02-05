@@ -1,16 +1,16 @@
 package com.badday.ss.core.atmos;
 
 
-import com.badday.ss.SSConfig;
-import com.badday.ss.api.SSAPI;
-import com.badday.ss.core.utils.BlockVec3;
-
-import net.minecraft.world.World;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+
+import net.minecraft.world.World;
+
+import com.badday.ss.SSConfig;
+import com.badday.ss.api.SSAPI;
+import com.badday.ss.core.utils.BlockVec3;
 
 @Deprecated
 public class Pathfinding {

@@ -1,16 +1,28 @@
 package com.badday.ss.agriculture;
 
 
-import com.badday.ss.agriculture.items.*;
-import com.badday.ss.agriculture.util.AgricultureConfig;
-import cpw.mods.fml.common.registry.GameRegistry;
 import ic2.api.crops.Crops;
-import com.badday.ss.agriculture.crops.*;
 import ic2.api.recipe.RecipeInputItemStack;
 import ic2.api.recipe.Recipes;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
+import com.badday.ss.agriculture.crops.Chanterelle;
+import com.badday.ss.agriculture.crops.DestroyingAngel;
+import com.badday.ss.agriculture.crops.FlyAmanita;
+import com.badday.ss.agriculture.crops.Glowshroom;
+import com.badday.ss.agriculture.crops.LibertyCap;
+import com.badday.ss.agriculture.crops.PlumpHelmet;
+import com.badday.ss.agriculture.items.ChanterelleItem;
+import com.badday.ss.agriculture.items.DestroyingAngelItem;
+import com.badday.ss.agriculture.items.FlyAmanitaItem;
+import com.badday.ss.agriculture.items.GlowshroomItem;
+import com.badday.ss.agriculture.items.LibertyCapItem;
+import com.badday.ss.agriculture.items.PlumpHelmetItem;
+import com.badday.ss.agriculture.util.AgricultureConfig;
+
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class Agriculture {
 

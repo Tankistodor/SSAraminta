@@ -1,12 +1,8 @@
 package com.badday.ss.api;
 
-import java.util.Collection;
 import java.util.List;
 
 import com.badday.ss.core.utils.BlockVec3;
-
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 
 /**
  * 

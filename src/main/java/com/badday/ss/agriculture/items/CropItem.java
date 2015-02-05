@@ -1,12 +1,9 @@
 package com.badday.ss.agriculture.items;
 
-import com.badday.ss.items.SSItem;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.item.ItemFood;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemAppleGold;
-import net.minecraft.item.ItemFood;
 
 public abstract class CropItem extends ItemFood {
 

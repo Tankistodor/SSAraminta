@@ -1,17 +1,14 @@
 package com.badday.ss.core.utils.commands;
 
-import com.badday.ss.SS;
-import com.badday.ss.core.atmos.Pathfinding;
-import com.badday.ss.core.utils.BlockVec3;
-
-import net.minecraft.block.Block;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.WorldServer;
+
+import com.badday.ss.SS;
+import com.badday.ss.core.atmos.Pathfinding;
+import com.badday.ss.core.utils.BlockVec3;
 
 public class SSCommandPathfinder extends CommandBase
 {

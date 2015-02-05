@@ -17,7 +17,6 @@ import com.badday.ss.api.IGasNetwork;
 import com.badday.ss.api.IGasNetworkElement;
 import com.badday.ss.api.IGasNetworkVent;
 import com.badday.ss.core.atmos.GasUtils;
-import com.badday.ss.core.atmos.SSGasNetwork;
 import com.badday.ss.core.utils.BlockVec3;
 import com.badday.ss.events.RebuildNetworkPoint;
 

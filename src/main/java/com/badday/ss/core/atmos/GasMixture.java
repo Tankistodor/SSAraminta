@@ -3,12 +3,11 @@ package com.badday.ss.core.atmos;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badday.ss.SSConfig;
-
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+
+import com.badday.ss.SSConfig;
 
 public class GasMixture {
 	

@@ -1,7 +1,6 @@
 package com.badday.ss.items;
 
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
 import com.badday.ss.SS;

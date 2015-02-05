@@ -3,7 +3,6 @@ package com.badday.ss.items;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import ic2.api.item.IItemHudInfo;
-import ic2.core.init.InternalName;
 
 import java.util.LinkedList;
 import java.util.List;

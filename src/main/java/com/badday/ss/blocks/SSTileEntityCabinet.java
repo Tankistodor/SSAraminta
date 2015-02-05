@@ -15,13 +15,11 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
 import com.badday.ss.api.IMultiBlock;
 import com.badday.ss.containers.SSContainerCabinet;
 import com.badday.ss.core.utils.BlockVec3;
 import com.badday.ss.events.SSPacketHandler;
-import com.badday.ss.gui.SSGuiIDs;
 
 public class SSTileEntityCabinet extends TileEntity implements IInventory,IMultiBlock {
 

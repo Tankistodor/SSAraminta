@@ -5,13 +5,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import com.badday.ss.SS;
-
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.biome.BiomeCache;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.WorldChunkManager;
 import net.minecraft.world.gen.layer.IntCache;
+
+import com.badday.ss.SS;
 
 public class IslandChunkManager extends WorldChunkManager {
 	private final BiomeCache biomeCache;

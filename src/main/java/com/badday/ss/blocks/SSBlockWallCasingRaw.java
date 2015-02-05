@@ -4,7 +4,6 @@ import ic2.core.util.StackUtil;
 
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -16,7 +15,6 @@ import net.minecraft.world.World;
 
 import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
-import com.badday.ss.items.SSItemMetaBlock;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

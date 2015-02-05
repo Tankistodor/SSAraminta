@@ -8,8 +8,6 @@ import net.minecraft.world.World;
 import com.badday.ss.api.IMultiBlock;
 import com.badday.ss.core.utils.BlockVec3;
 
-import cpw.mods.fml.relauncher.Side;
-
 public class SSTileEntityMultiFake extends TileEntity {
 
 	public BlockVec3 mainBlockPosition;

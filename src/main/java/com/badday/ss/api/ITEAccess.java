@@ -1,8 +1,8 @@
 package com.badday.ss.api;
 
-import com.badday.ss.entity.player.SSPlayerRoles;
-
 import net.minecraft.entity.Entity;
+
+import com.badday.ss.entity.player.SSPlayerRoles;
 
 public interface ITEAccess {
 

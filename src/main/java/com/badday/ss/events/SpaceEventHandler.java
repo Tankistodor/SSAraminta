@@ -3,12 +3,9 @@ package com.badday.ss.events;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
@@ -17,9 +14,7 @@ import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 
 import com.badday.ss.SS;
-import com.badday.ss.SSConfig;
 import com.badday.ss.core.atmos.FindNearestVentJob;
-import com.badday.ss.core.atmos.GasUtils;
 import com.badday.ss.core.utils.AirVentNet;
 import com.badday.ss.core.utils.BlockVec3;
 import com.badday.ss.entity.player.SSPlayerData;

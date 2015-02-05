@@ -1,8 +1,5 @@
 package com.badday.ss.agriculture.crops;
 
-import com.badday.ss.agriculture.Agriculture;
-import com.badday.ss.agriculture.items.DestroyingAngelItem;
-import com.badday.ss.agriculture.items.FlyAmanitaItem;
 import ic2.api.crops.ICropTile;
 import ic2.core.IC2;
 import net.minecraft.entity.Entity;
@@ -11,6 +8,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+
+import com.badday.ss.agriculture.Agriculture;
 
 /**
  * Created by userad on 04/11/14.

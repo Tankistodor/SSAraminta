@@ -2,8 +2,6 @@ package com.badday.ss;
 
 import java.io.File;
 
-import com.badday.ss.agriculture.Agriculture;
-import com.badday.ss.agriculture.util.AgricultureConfig;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -11,6 +9,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
+import com.badday.ss.agriculture.util.AgricultureConfig;
 import com.badday.ss.blocks.SSBlockAirVent;
 import com.badday.ss.blocks.SSBlockAirlockDoor;
 import com.badday.ss.blocks.SSBlockAirlockDoorAir;

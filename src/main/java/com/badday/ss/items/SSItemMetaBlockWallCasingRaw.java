@@ -3,13 +3,10 @@ package com.badday.ss.items;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
-import com.badday.ss.SS;
 import com.badday.ss.SSConfig;
 
 import cpw.mods.fml.relauncher.Side;

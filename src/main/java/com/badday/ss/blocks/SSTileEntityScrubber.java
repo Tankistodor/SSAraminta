@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -31,9 +30,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 
 import com.badday.ss.SSConfig;
 import com.badday.ss.core.atmos.FindNearestVentJob;
-import com.badday.ss.core.atmos.GasUtils;
 import com.badday.ss.core.utils.BlockVec3;
-import com.badday.ss.entity.player.SSPlayerData;
 
 public class SSTileEntityScrubber extends TileEntity implements IFluidHandler,IInventory, ISidedInventory, INetworkDataProvider, INetworkUpdateListener,
 		INetworkClientTileEntityEventListener, IEnergySink {
