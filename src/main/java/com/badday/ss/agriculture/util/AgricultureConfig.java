@@ -15,4 +15,9 @@ public final class AgricultureConfig {
   public static float GlowshroomSaturation = 0;
   public static float LibertyCapSaturation = 0;
   public static float PlumpHelmetSaturation = 0;
+
+
+  //Recipes
+
+  public static int GlowshroomsToGlowstone;
 }

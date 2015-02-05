@@ -6,7 +6,11 @@ import com.badday.ss.agriculture.util.AgricultureConfig;
 import cpw.mods.fml.common.registry.GameRegistry;
 import ic2.api.crops.Crops;
 import com.badday.ss.agriculture.crops.*;
+import ic2.api.recipe.RecipeInputItemStack;
+import ic2.api.recipe.Recipes;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 public class Agriculture {
 
@@ -42,5 +46,7 @@ public class Agriculture {
     GameRegistry.registerItem(glowshroomItem, "ss.agriculture.glowshroom");
     GameRegistry.registerItem(libertyCapItem, "ss.agriculture.libertycap");
     GameRegistry.registerItem(plumpHelmetItem, "ss.agriculture.plumphelmet");
+
+    Recipes.extractor.addRecipe(new RecipeInputItemStack(new ItemStack(glowshroomItem), AgricultureConfig.GlowshroomsToGlowstone), null, new ItemStack(Items.glowstone_dust, 1));
   }
 }

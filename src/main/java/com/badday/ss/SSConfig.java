@@ -197,6 +197,8 @@ public class SSConfig {
     AgricultureConfig.LibertyCapSaturation = SSSettings.getFloatFor(config, "agriculture", "LibertyCapSaturation", 0.5F);
     AgricultureConfig.PlumpHelmetSaturation = SSSettings.getFloatFor(config, "agriculture", "PlumpHelmetSaturation", 0.5F);
 
+    AgricultureConfig.GlowshroomsToGlowstone = SSSettings.getIntFor(config, "agriculture_recipes", "GlowshroomsToGlowstone", 5);
+
   }
 
   private static void LoadGlobal(File file) {
