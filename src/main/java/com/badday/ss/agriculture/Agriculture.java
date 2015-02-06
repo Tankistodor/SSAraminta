@@ -2,8 +2,10 @@ package com.badday.ss.agriculture;
 
 
 import ic2.api.crops.Crops;
+import ic2.api.item.IC2Items;
 import ic2.api.recipe.RecipeInputItemStack;
 import ic2.api.recipe.Recipes;
+import ic2.core.Ic2Items;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -58,6 +60,14 @@ public class Agriculture {
     GameRegistry.registerItem(glowshroomItem, "ss.agriculture.glowshroom");
     GameRegistry.registerItem(libertyCapItem, "ss.agriculture.libertycap");
     GameRegistry.registerItem(plumpHelmetItem, "ss.agriculture.plumphelmet");
+
+    Recipes.macerator.addRecipe(new RecipeInputItemStack(new ItemStack(flyAmanitaItem), AgricultureConfig.CropsToBiomass), null, Ic2Items.biochaff);
+    Recipes.macerator.addRecipe(new RecipeInputItemStack(new ItemStack(chanterelleItem), AgricultureConfig.CropsToBiomass), null, Ic2Items.biochaff);
+    Recipes.macerator.addRecipe(new RecipeInputItemStack(new ItemStack(destroyingAngelItem), AgricultureConfig.CropsToBiomass), null, Ic2Items.biochaff);
+    Recipes.macerator.addRecipe(new RecipeInputItemStack(new ItemStack(glowshroomItem), AgricultureConfig.CropsToBiomass), null, Ic2Items.biochaff);
+    Recipes.macerator.addRecipe(new RecipeInputItemStack(new ItemStack(libertyCapItem), AgricultureConfig.CropsToBiomass), null, Ic2Items.biochaff);
+    Recipes.macerator.addRecipe(new RecipeInputItemStack(new ItemStack(plumpHelmetItem), AgricultureConfig.CropsToBiomass), null, Ic2Items.biochaff);
+
 
     Recipes.extractor.addRecipe(new RecipeInputItemStack(new ItemStack(glowshroomItem), AgricultureConfig.GlowshroomsToGlowstone), null, new ItemStack(Items.glowstone_dust, 1));
   }

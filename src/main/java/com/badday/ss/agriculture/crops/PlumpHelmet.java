@@ -38,7 +38,7 @@ public class PlumpHelmet extends BaseCrop {
 
   @Override
   public String[] attributes() {
-    return new String[] { "Mushroom", "White", "Food", "Psychedelic", "Poison"};
+    return new String[] { "Mushroom", "White", "Food"};
   }
 
   @Override

@@ -20,4 +20,5 @@ public final class AgricultureConfig {
   //Recipes
 
   public static int GlowshroomsToGlowstone;
+  public static int CropsToBiomass;
 }
