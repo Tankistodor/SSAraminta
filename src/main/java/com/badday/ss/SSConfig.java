@@ -188,6 +188,7 @@ public class SSConfig {
     AgricultureConfig.GlowshroomMeal = SSSettings.getIntFor(config, "agriculture", "GlowshroomMeal", 1);
     AgricultureConfig.LibertyCapMeal = SSSettings.getIntFor(config, "agriculture", "LibertyCapMeal", 1);
     AgricultureConfig.PlumpHelmetMeal = SSSettings.getIntFor(config, "agriculture", "PlumpHelmetMeal", 1);
+    AgricultureConfig.DiamondFruitMeal = SSSettings.getIntFor(config, "agriculture", "DiamondFruitMeal", 5);
 
     AgricultureConfig.ChanterelleSaturation = SSSettings.getFloatFor(config, "agriculture", "ChanterelleSaturation", 0.5F);
     AgricultureConfig.DestroyingAngelSaturation = SSSettings.getFloatFor(config, "agriculture", "DestroyingAngelSaturation", 0.5F);
@@ -195,6 +196,7 @@ public class SSConfig {
     AgricultureConfig.GlowshroomSaturation = SSSettings.getFloatFor(config, "agriculture", "GlowshroomSaturation", 0.5F);
     AgricultureConfig.LibertyCapSaturation = SSSettings.getFloatFor(config, "agriculture", "LibertyCapSaturation", 0.5F);
     AgricultureConfig.PlumpHelmetSaturation = SSSettings.getFloatFor(config, "agriculture", "PlumpHelmetSaturation", 0.5F);
+    AgricultureConfig.DiamondFruitSaturation = SSSettings.getFloatFor(config, "agriculture", "DiamondFruitSaturation", 5F);
 
     AgricultureConfig.GlowshroomsToGlowstone = SSSettings.getIntFor(config, "agriculture_recipes", "GlowshroomsToGlowstone", 5);
     AgricultureConfig.CropsToBiomass = SSSettings.getIntFor(config, "agriculture_recipes", "CropsToBioChaff", 8);

@@ -16,6 +16,8 @@ public final class AgricultureConfig {
   public static float LibertyCapSaturation = 0;
   public static float PlumpHelmetSaturation = 0;
 
+  public static float DiamondFruitSaturation = 0;
+  public static int DiamondFruitMeal = 0;
 
   //Recipes
 
