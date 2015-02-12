@@ -1,5 +1,10 @@
 package com.badday.ss;
 
+import ic2.core.init.InternalName;
+import ic2_fix.ItemDrillDiamondFix;
+import ic2_fix.ItemDrillIridiumFix;
+import ic2_fix.ItemDrillStandardFix;
+
 import java.io.File;
 
 import net.minecraft.block.Block;
@@ -81,6 +86,10 @@ public class SSConfig {
 	public static Item ssDoorDisassembly;
 	public static Item ssCardEmag;
 		
+	
+	public static ItemDrillStandardFix ssStandartDrill;
+	public static ItemDrillDiamondFix ssDiamondDrill;
+	public static ItemDrillIridiumFix ssIridiumDrill;
 	
 	//	
 	public static Fluid fluidMethaneGas;
@@ -234,6 +243,10 @@ public class SSConfig {
 		ssDoorDisassembly = new SSItemDoorDisassembly();
 		
 		ssCardEmag = new SSItemCards("cards");
+		
+		ssStandartDrill = new ItemDrillStandardFix(InternalName.itemToolDrill);
+		ssDiamondDrill = new ItemDrillDiamondFix(InternalName.itemToolDDrill);
+		ssIridiumDrill = new ItemDrillIridiumFix(InternalName.itemToolIridiumDrill);
 	}
 
 	public static void RegisterBlocks() {
