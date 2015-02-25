@@ -17,16 +17,13 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "2.203"
+version = "2.205"
 group= "com.badday.ss" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "SpaceStationAraminta"
 
 minecraft {
-    version = "1.7.10-10.13.1.1222"
+    version = "1.7.10-10.13.2.1291"
     runDir = "eclipse"
-	
-	//replaceIn "SS.java"
-    //replace "@MOD_VERSION@", project.version 
 }
 
 sourceSets.main {
@@ -52,6 +49,7 @@ dependencies {
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+
 }
 
 processResources

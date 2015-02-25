@@ -129,7 +129,7 @@ public class IslandProvider  extends WorldProvider {
     @Override
     public void setAllowedSpawnTypes(boolean allowHostile, boolean allowPeaceful)
     {
-        super.setAllowedSpawnTypes(false, false);
+        super.setAllowedSpawnTypes(false, true);
     }
 
     @Override

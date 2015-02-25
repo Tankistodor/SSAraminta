@@ -4,6 +4,7 @@ SSAraminta.ipr
 SSAraminta.iws
 eclipse/
 .gradle/
+gradle/
 /bin/
 .classpath
 .project
