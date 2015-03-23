@@ -31,7 +31,9 @@ public class SSBlockMultiFake extends BlockContainer {
 		this.setStepSound(Block.soundTypeMetal);
 		this.setBlockTextureName(SS.ASSET_PREFIX + assetName);
 		this.setBlockName(assetName);
-		this.setResistance(1000000000000000.0F);
+		//this.setResistance(1000000000000000.0F);
+		this.blockResistance = 50;
+		this.blockHardness = 50;
 	}
 
 	@Override

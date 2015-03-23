@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -39,6 +40,8 @@ public class SSBlockCabinet extends BlockContainer {
 		this.setStepSound(soundTypeMetal);
 		this.setCreativeTab(SS.ssTab);
 		this.isBlockContainer = true;
+		this.blockResistance = 50;
+		this.blockHardness = 50;
 		// 32 - to blocks on vertical
 		setBlockBounds(1 / 16.0F, 1 / 16.0F, 1 / 16.0F, 15 / 16.0F, 32.0F / 16.0F, 15 / 16.0F);
 	}

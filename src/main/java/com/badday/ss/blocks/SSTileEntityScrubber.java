@@ -202,7 +202,8 @@ public class SSTileEntityScrubber extends TileEntity implements IFluidHandler,II
 				SSTileEntityAirVent airVent = (SSTileEntityAirVent) this.nearestAirVent.getTileEntity(this.worldObj);
 				if (airVent != null && this.energy > 15) {
 					for (FluidTank fluidtank : airVent.tank.mixtureTank) {
-							if (fluidtank != null && fluidtank.getFluid() != null && !fluidtank.getFluid().getUnlocalizedName().equals("fluid.oxygen") && !fluidtank.getFluid().getUnlocalizedName().equals("fluid.nitrogen")) {
+							if (fluidtank != null && fluidtank.getFluid() != null && !fluidtank.getFluid().getUnlocalizedName().equals("fluid.oxygen") && !fluidtank.getFluid().getUnlocalizedName().equals("fluid.nitrogen")
+									&& fluidtank != null && fluidtank.getFluid() != null && !fluidtank.getFluid().getUnlocalizedName().equals("fluid.O.name") && !fluidtank.getFluid().getUnlocalizedName().equals("fluid.N.name")) {
 								FluidStack newRes = fluidtank.drain(15, true);
 								
 								int firstNull=0;

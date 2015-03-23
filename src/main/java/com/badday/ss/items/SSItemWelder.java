@@ -1,5 +1,8 @@
 package com.badday.ss.items;
 
+import com.badday.ss.SSConfig;
+
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -31,11 +34,20 @@ public class SSItemWelder extends SSItem {
 		String rnd = String.valueOf(world.rand.nextInt(2)+1);
 		world.playSoundEffect(x + 0.5f, y, z + 0.5f, "ss:welder"+rnd+"w", 4F, 1F);
 		//System.out.println("[" + SS.MODNAME + "] sound " + "ss:welder"+rnd);
+		Block b = world.getBlock(x, y, z);
+		System.out.println(b.getUnlocalizedName());
+		if ((b != null) && (b.getUnlocalizedName().equals("blockAlloyGlass"))) {
+			world.setBlock(x, y, z, SSConfig.ssBlockGlassCasing, 0, 3);
+			return true;
+		}
+		
 		return false;
 
 	}
 
 	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float xOffset, float yOffset, float zOffset) {
+		/*if (!canTakeDamage(stack, 1))
+			return false;*/
 		return super.onItemUse(stack, player, world, x, y, z, side, xOffset, yOffset, zOffset);
 	}
 	

@@ -69,6 +69,7 @@ public class GasUtils {
 	 * @param fl
 	 * @return
 	 */
+	@Deprecated
 	public static int getMolV(FluidStack fl) {
 		String name = fl.getUnlocalizedName(); 
 		if (name.contains("hydrogen")) { // Водород H
@@ -196,10 +197,12 @@ public class GasUtils {
 		
 		if (pressure < 9 || pressure > 11) return false;
 		
-		int part = tank.getPercentOfGas("fluid.oxygen");
+		//int part = tank.getPercentOfGas("fluid.oxygen");
+		int part = tank.getPercentOfGas("fluid.O.name");
 		if ((part < 18) || (part > 30)) return false;
 		
-		part = tank.getPercentOfGas("fluid.nitrogen");
+		//part = tank.getPercentOfGas("fluid.nitrogen");
+		part = tank.getPercentOfGas("fluid.N.name");
 		if ((part < 70) || (part > 80)) return false;
 
 		return true;

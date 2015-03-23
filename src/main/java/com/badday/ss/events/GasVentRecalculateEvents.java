@@ -13,7 +13,9 @@ public class GasVentRecalculateEvents  extends Event {
 		
 		if (vent.getGasNetwork() != null) {
 			
-			vent.getTank().dispel("fluid.oxygen","fluid.carbondioxide",(int) (vent.getBaySize()/99)); // dispel 1% oxygen -> CO2
+			//TODO Change fluid name to carbondioxide
+			//vent.getTank().dispel("fluid.oxygen","fluid.carbondioxide",(int) (vent.getBaySize()/99)); // dispel 1% oxygen -> CO2
+			vent.getTank().dispel("fluid.carbonDioxide.name","fluid.O.name",(int) (vent.getBaySize()/99)); // dispel 1% oxygen -> CO2
 
 			for (IGasNetworkSource src : vent.getGasNetwork().getSources()) {
 								
